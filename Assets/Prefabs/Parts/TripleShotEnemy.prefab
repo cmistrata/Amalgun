@@ -96,12 +96,12 @@ GameObject:
   - component: {fileID: 8978164147872967256}
   - component: {fileID: 2914580541117462878}
   - component: {fileID: 6009491457302919370}
-  - component: {fileID: 3115663729401671870}
   - component: {fileID: 7281867509208074536}
   - component: {fileID: 7515729053797707190}
   - component: {fileID: -7662154395364199495}
   - component: {fileID: 7497882292262980560}
   - component: {fileID: -5097324341287323123}
+  - component: {fileID: 1527959527618750087}
   m_Layer: 6
   m_Name: TripleShotEnemy
   m_TagString: Untagged
@@ -284,38 +284,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3115663729401671870
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8978164147872967258}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 014bcc7591eb30a4ea7d0c272f3250db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EnemyTurret: {fileID: -2575170758969124365, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
-  PlayerTurret: {fileID: -5942034403687268705, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
-  EnemyBulletSprite: {fileID: -7976837497307082302, guid: 093cf857f2ed5064798f989149c1f99b, type: 3}
-  PlayerBulletSprite: {fileID: 874343242196921964, guid: 093cf857f2ed5064798f989149c1f99b, type: 3}
-  Swivels: 1
-  MaxHealth: 100
-  currentHealth: 0
-  BulletDamage: 100
-  BulletTtlSeconds: 5
-  ContactDamage: 0
-  state: 2
-  ConvertChance: 0.15
-  ProjectilePrefab: {fileID: 9181492146602770738, guid: 1931a75abccf13d41aa87cb7d62995b7, type: 3}
-  ProjectileVelocity: 6
-  InitialProjectileOffset: 0
-  ShotsPerSecond: 0.5
-  ShotSpreadDegrees: 0
-  destroyOnDeath: 0
-  EnemyLogic: {fileID: 0}
-  degreeSpread: 30
 --- !u!82 &7281867509208074536
 AudioSource:
   m_ObjectHideFlags: 0
@@ -523,3 +491,20 @@ MonoBehaviour:
   CannonSpriteRenderer: {fileID: 177318139878952465}
   BulletSpriteEnemy: {fileID: -7976837497307082302, guid: 093cf857f2ed5064798f989149c1f99b, type: 3}
   BulletSpritePlayer: {fileID: 874343242196921964, guid: 093cf857f2ed5064798f989149c1f99b, type: 3}
+--- !u!114 &1527959527618750087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8978164147872967258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 577c3c5f77ca5f24fb4703e4e4a52f9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth: 1
+  currentHealth: 0
+  team: 1
+  ConvertChance: 0.15
+  destroyOnDeath: 0

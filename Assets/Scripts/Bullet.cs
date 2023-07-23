@@ -40,7 +40,6 @@ public class Bullet : MonoBehaviour
             if (!isPlayerBullet && other.gameObject.layer == LayerMask.NameToLayer("PlayerForceField") ||
                 isPlayerBullet && other.gameObject.layer == LayerMask.NameToLayer("EnemyForceField"))
             {
-                Debug.Log("Forcefield took " + Damage + " damage");
                 field.TakeDamage(Damage);
                 Destroy(this.gameObject);
             }
@@ -50,13 +49,13 @@ public class Bullet : MonoBehaviour
         {
             return;
         }
-        if (part.state == PartState.Attachable)
+        if (part.team == Team.Neutral)
         {
             Destroy(this.gameObject);
         }
         // Destroy the bullet and cause damage if it hits an opponent (player bullet hits enemy, or enemy
         // bullet hits player)
-        else if ((isPlayerBullet && part.state == PartState.Enemy) || (!isPlayerBullet && part.state == PartState.Attached))
+        else if ((isPlayerBullet && part.team == Team.Enemy) || (!isPlayerBullet && part.team == Team.Player))
         {
             part.TakeDamage(Damage);
             Destroy(this.gameObject);

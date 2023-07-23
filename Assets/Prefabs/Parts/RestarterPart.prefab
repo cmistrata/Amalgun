@@ -165,25 +165,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 577c3c5f77ca5f24fb4703e4e4a52f9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyTurret: {fileID: -5654580374243558484, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
-  PlayerTurret: {fileID: -239319376499895795, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
-  EnemyBulletSprite: {fileID: -7976837497307082302, guid: 093cf857f2ed5064798f989149c1f99b, type: 3}
-  PlayerBulletSprite: {fileID: 874343242196921964, guid: 093cf857f2ed5064798f989149c1f99b, type: 3}
-  Swivels: 1
-  MaxHealth: 100
+  MaxHealth: 1
   currentHealth: 0
-  BulletDamage: 100
-  BulletTtlSeconds: 5
-  ContactDamage: 0
-  state: 1
+  team: 1
   ConvertChance: 0.15
-  ProjectilePrefab: {fileID: 9181492146602770738, guid: 1931a75abccf13d41aa87cb7d62995b7, type: 3}
-  ProjectileVelocity: 10
-  InitialProjectileOffset: 0
-  ShotsPerSecond: 1.5
-  ShotSpreadDegrees: 0
   destroyOnDeath: 0
-  EnemyLogic: {fileID: 0}
 --- !u!82 &7447294573434778248
 AudioSource:
   m_ObjectHideFlags: 0
@@ -293,7 +279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetDirection: {x: 0, y: 0}
-  MaximumVelocity: 10
+  MaxSpeed: 4
   FrictionDynamicCoefficientWithGround: 25
   Acceleration: 20
 --- !u!1 &7976659284588996996

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
 public class MovingBody : MonoBehaviour
 {
     private float _forceMagnitude;
@@ -19,6 +18,9 @@ public class MovingBody : MonoBehaviour
     void Awake()
     {
         _rb = gameObject.GetComponent<Rigidbody2D>();
+        if (_rb == null ) {
+            Debug.LogError("Moving body doesn't have a rigidbody attached!");
+        }
         _forceMagnitude = (Acceleration + FrictionDynamicCoefficientWithGround) * _rb.mass;
         //_sqrMinimumVelocity = MinimumVelocity * MinimumVelocity;
         _sqrMaximumVelocity = MaxSpeed * MaxSpeed;

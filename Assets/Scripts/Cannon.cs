@@ -4,11 +4,6 @@ using System.Collections.Generic;
 using System.Drawing.Text;
 using UnityEngine;
 
-public enum Team {
-    Player,
-    Enemy,
-    Neutral
-}
 
 public class Cannon : MonoBehaviour
 {
@@ -112,7 +107,7 @@ public class Cannon : MonoBehaviour
         SpriteRenderer sRender = bullet.gameObject.GetComponent<SpriteRenderer>();
         sRender.sprite = Team == Team.Enemy ? BulletSpriteEnemy : BulletSpritePlayer;
 
-        bullet.Damage = 100;
+        bullet.Damage = 1;
         bullet.TimeOutSeconds = 5;
         bullet.isPlayerBullet = Team == Team.Player;
         projectile.GetComponent<Rigidbody2D>().velocity = projectile.transform.right * InitialProjectileSpeed;

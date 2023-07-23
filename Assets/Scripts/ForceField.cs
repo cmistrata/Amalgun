@@ -5,7 +5,7 @@ using UnityEngine;
 public class ForceField : MonoBehaviour
 {
 
-    public float MaxHealth = 200;
+    public float MaxHealth = 2;
     private float currentHealth;
     private ShieldPart shieldPart;
 
@@ -25,7 +25,6 @@ public class ForceField : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        Debug.Log($"Object {gameObject.name} took {damage} damage");
         currentHealth -= damage;
         if (currentHealth <= 0)
         {

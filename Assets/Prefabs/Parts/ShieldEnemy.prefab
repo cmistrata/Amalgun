@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c20ed290eebed04cbd069404b6440de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 200
+  MaxHealth: 2
 --- !u!50 &1502497834346890540
 Rigidbody2D:
   serializedVersion: 4
@@ -510,29 +510,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea80d88803311ae499dad1929baff237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyTurret: {fileID: 8253067358170241579, guid: 154dce629bc17d2438f73a74c06370c0, type: 3}
-  PlayerTurret: {fileID: -6362921169294926415, guid: 154dce629bc17d2438f73a74c06370c0, type: 3}
-  EnemyBulletSprite: {fileID: 0}
-  PlayerBulletSprite: {fileID: 0}
-  Swivels: 0
-  MaxHealth: 100
+  MaxHealth: 1
   currentHealth: 0
-  BulletDamage: 100
-  BulletTtlSeconds: 5
-  ContactDamage: 0
-  state: 2
+  team: 1
   ConvertChance: 0.25
-  ProjectilePrefab: {fileID: 0}
-  ProjectileVelocity: 0
-  InitialProjectileOffset: 0
-  ShotsPerSecond: 0.15
-  ShotSpreadDegrees: 0
   destroyOnDeath: 0
-  EnemyLogic: {fileID: 0}
-  shieldsUp: 0
-  MaxShieldHealth: 100
+  ShieldsUp: 1
+  MaxShieldHealth: 1
   EnemyField: {fileID: 2584948428102396871, guid: 78bc3fe8a2110ce43bd90fdbd356616e, type: 3}
   PlayerField: {fileID: -4014942561402139427, guid: 78bc3fe8a2110ce43bd90fdbd356616e, type: 3}
+  ShieldRechargeTime: 5
 --- !u!114 &-5712851360330590074
 MonoBehaviour:
   m_ObjectHideFlags: 0

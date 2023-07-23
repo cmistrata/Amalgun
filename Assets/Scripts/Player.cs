@@ -26,7 +26,7 @@ public class Player : MonoBehaviour {
     void Start()
     {
         // Acceleration = 50f;
-        CenterPart.state = PartState.Attached;
+        CenterPart.ChangeTeam(Team.Player);
         partGraph.Add(CenterPart, new List<Part>());
     }
 
@@ -75,7 +75,7 @@ public class Player : MonoBehaviour {
             if (hit.transform == part.transform) continue;
 
             var nearbyPart = hit.transform.gameObject.GetComponent<Part>();
-            if (nearbyPart != null && nearbyPart.state == PartState.Attached)
+            if (nearbyPart != null && nearbyPart.team == Team.Player)
             {
                 adjacentParts.Add(nearbyPart);
             }
@@ -93,11 +93,10 @@ public class Player : MonoBehaviour {
         part.transform.parent = transform;
         // Remove the part's RigidBody, but not its collider.
         // This will effectively combine the part's collider into the player's.
-        Destroy(part.GetComponent<MovingBody>());
+        part.GetComponent<MovingBody>().enabled = false;
         Destroy(part.GetComponent<Rigidbody2D>());
 
-        part.GetComponent<Part>().state = PartState.Attached;
-        if (part.GetComponent<Cannon>() != null) part.GetComponent<Cannon>().ChangeTeam(Team.Player);
+        part.GetComponent<Part>().ChangeTeam(Team.Player);
 
         foreach (Part p in adjacentParts)
         {

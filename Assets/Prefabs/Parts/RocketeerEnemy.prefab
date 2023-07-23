@@ -211,25 +211,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 577c3c5f77ca5f24fb4703e4e4a52f9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyTurret: {fileID: -2879541576526938746, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
-  PlayerTurret: {fileID: 4030199882531633486, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
-  EnemyBulletSprite: {fileID: 8911065074050924499, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
-  PlayerBulletSprite: {fileID: -6589266718726209864, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
-  Swivels: 1
-  MaxHealth: 100
+  MaxHealth: 1
   currentHealth: 0
-  BulletDamage: 100
-  BulletTtlSeconds: 3
-  ContactDamage: 0
-  state: 2
+  team: 1
   ConvertChance: 0.15
-  ProjectilePrefab: {fileID: 25809411929553321, guid: fb1cc68fa576f504a824b3bb06c1b115, type: 3}
-  ProjectileVelocity: 5
-  InitialProjectileOffset: 0
-  ShotsPerSecond: 1
-  ShotSpreadDegrees: 0
   destroyOnDeath: 0
-  EnemyLogic: {fileID: 0}
 --- !u!212 &7013661596961964435
 SpriteRenderer:
   m_ObjectHideFlags: 0

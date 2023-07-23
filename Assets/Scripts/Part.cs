@@ -1,6 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+public enum Team {
+    Player,
+    Enemy,
+    Neutral
+}
 
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(AudioSource))]
@@ -11,40 +18,21 @@ public class Part : MonoBehaviour
     private static Sprite[] bases;
     private Sprite EnemyBase;
     private Sprite PlayerBase;
-    public Sprite EnemyTurret;
-    public Sprite PlayerTurret;
-    public Sprite EnemyBulletSprite;
-    public Sprite PlayerBulletSprite;
     private SpriteRenderer BaseRenderer;
-    private SpriteRenderer TurretRenderer;
-    public bool Swivels = true;
     #endregion
 
     [Header("Health info")]
-    public float MaxHealth = 100;
-    public float currentHealth;
-    public int BulletDamage = 100;
-    public float BulletTtlSeconds = 5;
-    public int ContactDamage = 25;
-    public PartState state;
+    public float MaxHealth = 1;
+    public float currentHealth = 1;
+    public Team team = Team.Enemy;
 
     [Range(0, 1)]
     [Header("Conversion RNG")]
     public float ConvertChance = 0.15f;
-
-    #region Shooting parameters
-    [Header("Shooting Parameters")]
-    public GameObject ProjectilePrefab;
-    public float ProjectileVelocity = 10;
-    public float InitialProjectileOffset = 0;
-    public float ShotsPerSecond = 2;
-    public float ShotSpreadDegrees = 0f;
-    protected float shotInterval;
-    protected float shotTimer = 0;
     public float destroyOnDeath = 0;
-    #endregion
 
-    public EnemyController EnemyLogic = null;
+    // Declare the delegate (if using non-generic pattern).
+    public event Action<Team> ChangeTeamEvent;
 
     private Cannon _cannon;
 
@@ -54,36 +42,36 @@ public class Part : MonoBehaviour
 
     virtual public void Start() {
         (EnemyBase, PlayerBase) = PrefabsManager.Instance.GetRandomEnemyAndPlayerBase();
-        if (state != PartState.Enemy) {
-            Destroy(GetComponent<EnemyController>());
-        }
-        else {
-            EnemyLogic = GetComponent<EnemyController>();
-            shotTimer = shotInterval + 1;
-        }
 
         BaseRenderer = GetComponent<SpriteRenderer>();
-        TurretRenderer = GetComponentsInChildren<SpriteRenderer>()[1];
         UpdateSprites();
-        shotInterval = 1 / ShotsPerSecond;
         currentHealth = MaxHealth;
     }
 
-    virtual public void Update()
-    {
-        switch (state)
-        {
-            case PartState.Enemy:
-                EnemyUpdate();
-                break;
-            case PartState.Attachable:
-                AttachableUpdate();
-                break;
-            case PartState.Attached:
-                AttachedUpdate();
-                break;
-        }
+    public void ChangeTeam(Team newTeam) {
+        team = newTeam;
+
+        UpdateSprites();
+        GetComponent<EnemyController>().enabled = team == Team.Enemy;
+        if (_cannon != null) _cannon.ChangeTeam(team);
+        if (ChangeTeamEvent != null) ChangeTeamEvent(newTeam);
     }
+
+    //virtual public void Update()
+    //{
+    //    switch (team)
+    //    {
+    //        case Team.Enemy:
+    //            EnemyUpdate();
+    //            break;
+    //        case Team.Neutral:
+    //            AttachableUpdate();
+    //            break;
+    //        case Team.Player:
+    //            AttachedUpdate();
+    //            break;
+    //    }
+    //}
 
     private void EnemyUpdate()
     {
@@ -91,31 +79,24 @@ public class Part : MonoBehaviour
 
     private void AttachableUpdate()
     {
-        Vector3 playerPos = Player.Instance ? Player.Instance.gameObject.transform.position : new Vector3(1000000, 1000000, 1000000);
-        Vector3 dir = (playerPos - transform.position).normalized;
-        GetComponent<Rigidbody2D>().velocity = dir * .5f;
+        //Vector3 playerPos = Player.Instance ? Player.Instance.gameObject.transform.position : new Vector3(1000000, 1000000, 1000000);
+        //Vector3 dir = (playerPos - transform.position).normalized;
+        //GetComponent<Rigidbody2D>().velocity = dir * .5f;
     }
 
     private void AttachedUpdate()
     {
     }
 
-    private void ResetShotTimer()
-    {
-        shotTimer = shotInterval * Random.Range(.95f, 1.05f);
-    }
-
     virtual protected void UpdateSprites()
     {
-        if (state == PartState.Enemy)
+        if (team == Team.Enemy)
         {
             BaseRenderer.sprite = EnemyBase;
-            TurretRenderer.sprite = EnemyTurret;
         }
         else
         {
             BaseRenderer.sprite = PlayerBase;
-            TurretRenderer.sprite = PlayerTurret;
         }
     }
 
@@ -128,7 +109,7 @@ public class Part : MonoBehaviour
         }
         else if (Player.Instance.CenterPart == this)
         {
-            AudioManager.Instance.PlayCenterPartHitSound(1 + (400f - currentHealth) / 800f);
+            AudioManager.Instance.PlayCenterPartHitSound(1 + (4f - currentHealth) / 8f);
             CameraEffectsManager.Instance.FlashDamageFilter();
         }
     }
@@ -138,12 +119,12 @@ public class Part : MonoBehaviour
     /// </summary>
     public void Die()
     {
-        if (state == PartState.Attached)
+        if (team == Team.Player)
         {
             Player player = transform.GetComponentInParent<Player>();
             if (player == null)
             {
-                Debug.LogError("Part had state Attached but wasn't under the player");
+                Debug.LogError("Part was Team.Player but wasn't under the player");
             }
             else
             {
@@ -161,12 +142,12 @@ public class Part : MonoBehaviour
             }
         }
 
-        else if (state == PartState.Enemy)
+        else if (team == Team.Enemy)
         {
             // An enemy has died, decrease the count
             WavesManager.Instance.EnemyCount--;
             // Convert an enemy with a given chance, or auto convert if it is the last enemy in the wave
-            bool convertPart = Random.Range(0f, 1f) < ConvertChance || WavesManager.Instance.EnemyCount == 0;
+            bool convertPart = UnityEngine.Random.Range(0f, 1f) < ConvertChance || WavesManager.Instance.EnemyCount == 0;
             if (convertPart)
             {
                 ConvertEnemyPart();
@@ -182,9 +163,9 @@ public class Part : MonoBehaviour
             {
                 // Heal player to full
                 var centerPart = Player.Instance.CenterPart;
-                if (centerPart.currentHealth <= centerPart.MaxHealth - 100)
+                if (centerPart.currentHealth <= centerPart.MaxHealth - 1)
                 {
-                    centerPart.currentHealth += 100;
+                    centerPart.currentHealth += 1;
                 }
                 WavesManager.Instance.StartNextWave();
             }
@@ -197,7 +178,7 @@ public class Part : MonoBehaviour
 
     public void PlayDeathEffect()
     {
-        if (state == PartState.Enemy)
+        if (team == Team.Enemy)
         {
             Instantiate(PrefabsManager.Instance.EnemyDeathEffect, transform.position, Quaternion.identity);
             AudioManager.Instance.PlayEnemyDestroy();
@@ -219,7 +200,7 @@ public class Part : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        if (state != PartState.Attachable) return;
+        if (team != Team.Neutral) return;
         bool otherIsThePlayer = other.gameObject.GetComponent<Player>() != null;
         if (otherIsThePlayer)
         {
@@ -227,30 +208,23 @@ public class Part : MonoBehaviour
             return;
         }
         Part otherPart = other.gameObject.GetComponent<Part>();
-        if (otherPart == null || otherPart.state != PartState.Attached) return;
+        if (otherPart == null || otherPart.team != Team.Neutral) return;
 
         Player.Instance.AddPart(this);
     }
 
     public virtual void ConvertEnemyPart()
     {
-        if (state != PartState.Enemy)
+        if (team != Team.Enemy)
         {
             Debug.LogWarning("Tried to convert a part that was not an enemy");
         }
         gameObject.layer = LayerMask.NameToLayer("PlayerPart");
-        state = PartState.Attachable;
-        if (_cannon != null) _cannon.ChangeTeam(Team.Neutral);
+        ChangeTeam(Team.Neutral);
+        team = Team.Neutral;
+        
         currentHealth = MaxHealth;
         UpdateSprites();
-        GetComponent<Rigidbody2D>().isKinematic = false;
-
-        // Floor speed at 10
-        ProjectileVelocity = ProjectileVelocity > 0 ? Mathf.Max(ProjectileVelocity, 10) : 0;
-        // Up attack speed
-        ShotsPerSecond *= 1.2f;
-        shotInterval = 1 / ShotsPerSecond;
-        Destroy(GetComponent<EnemyController>());
     }
 
 }

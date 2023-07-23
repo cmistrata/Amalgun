@@ -53,7 +53,7 @@ public class EnemyController : MonoBehaviour
             return;
         }
         // Check if enemy has collided with a player part
-        if (part.state == PartState.Enemy) {
+        if (part.team == Team.Enemy) {
             Part playerPart = other.gameObject.GetComponent<Part>();
             if (playerPart == null) {
                 return;
@@ -63,7 +63,6 @@ public class EnemyController : MonoBehaviour
             // Get the direction to rebound
             Vector2 reboundDir = (other.transform.position - transform.position).normalized * -1;
             enemyRb2d.velocity = reboundDir * 3;
-            playerPart.TakeDamage(part.ContactDamage);
         }
     }
 

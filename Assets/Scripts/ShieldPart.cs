@@ -5,46 +5,49 @@ using UnityEngine;
 public class ShieldPart : Part
 {
 
-    public bool shieldsUp;
+    public bool ShieldsUp = true;
     private ForceField forceField;
 
-    public float MaxShieldHealth = 100;
+    public float MaxShieldHealth = 1;
     private float currentShieldHealth;
 
     public Sprite EnemyField;
     public Sprite PlayerField;
 
+    public float ShieldRechargeTime = 5f;
+    private float _timeUntilShieldRecharge = 5f;
+
     public override void Start()
     {
         forceField = transform.GetComponentInChildren<ForceField>();
         base.Start();
-        shieldsUp = true;
-        shotTimer = shotInterval;
+        ShieldsUp = true;
+        _timeUntilShieldRecharge = ShieldRechargeTime;
         currentShieldHealth = MaxShieldHealth;
     }
 
-    override public void Update()
+    public void Update()
     {
 
         // Check if this is part of a player that is shooting
         Player player = gameObject.GetComponentInParent<Player>();
-        if (player != null && shotTimer < 0)
+        if (player != null && _timeUntilShieldRecharge < 0)
         {
             EnableShield();
-            shotTimer = shotInterval;
+            _timeUntilShieldRecharge = ShieldRechargeTime;
         }
 
         // Check if this is part of an enemy
         EnemyController enemy = gameObject.GetComponentInParent<EnemyController>();
-        if (enemy != null && shotTimer < 0)
+        if (enemy != null && _timeUntilShieldRecharge < 0)
         {
             EnableShield();
-            shotTimer = shotInterval;
+            _timeUntilShieldRecharge = ShieldRechargeTime;
         }
 
-        if (!shieldsUp)
+        if (!ShieldsUp)
         {
-            shotTimer -= Time.deltaTime;
+            _timeUntilShieldRecharge -= Time.deltaTime;
         }
     }
 
@@ -52,13 +55,13 @@ public class ShieldPart : Part
     {
         forceField.gameObject.SetActive(true);
         forceField.RestoreShield();
-        shieldsUp = true;
+        ShieldsUp = true;
     }
 
     public void DisableShield()
     {
         forceField.gameObject.SetActive(false);
-        shieldsUp = false;
+        ShieldsUp = false;
     }
     override public void ConvertEnemyPart()
     {
@@ -69,7 +72,7 @@ public class ShieldPart : Part
     override protected void UpdateSprites()
     {
         base.UpdateSprites();
-        if (state == PartState.Enemy)
+        if (team == Team.Enemy)
         {
             forceField.gameObject.GetComponent<SpriteRenderer>().sprite = EnemyField;
         }

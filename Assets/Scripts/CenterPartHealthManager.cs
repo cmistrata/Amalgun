@@ -15,12 +15,12 @@ public class CenterPartHealthManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (healthSprites == null || healthSprites.Length < centerPart.MaxHealth / 100)
+        if (healthSprites == null || healthSprites.Length < centerPart.MaxHealth)
         {
             Debug.LogError("Health Sprites for center part not set, or not enough sprites set");
         }
         centerRenderer = GetComponentsInChildren<SpriteRenderer>()[1];
-        centerRenderer.sprite = healthSprites[Mathf.FloorToInt((centerPart.MaxHealth - .01f) / 100)];
+        centerRenderer.sprite = healthSprites[Mathf.FloorToInt(centerPart.MaxHealth - .01f)];
         previousHealth = centerPart.MaxHealth;
     }
 
@@ -29,7 +29,7 @@ public class CenterPartHealthManager : MonoBehaviour
     {
         if (centerPart.currentHealth != previousHealth && centerPart.currentHealth > 0)
         {
-            centerRenderer.sprite = healthSprites[Mathf.FloorToInt((centerPart.currentHealth - .01f) / 100)];
+            centerRenderer.sprite = healthSprites[Mathf.FloorToInt((centerPart.currentHealth - .01f))];
             previousHealth = centerPart.currentHealth;
         }
     }
