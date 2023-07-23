@@ -38,12 +38,12 @@ public class Part : MonoBehaviour
 
     public void Awake() {
         _cannon = GetComponent<Cannon>();
+        BaseRenderer = GetComponent<SpriteRenderer>(); ;
     }
 
     virtual public void Start() {
         (EnemyBase, PlayerBase) = PrefabsManager.Instance.GetRandomEnemyAndPlayerBase();
 
-        BaseRenderer = GetComponent<SpriteRenderer>();
         UpdateSprites();
         currentHealth = MaxHealth;
     }
@@ -52,7 +52,7 @@ public class Part : MonoBehaviour
         team = newTeam;
 
         UpdateSprites();
-        GetComponent<EnemyController>().enabled = team == Team.Enemy;
+        if (GetComponent<EnemyController>() != null) GetComponent<EnemyController>().enabled = team == Team.Enemy;
         if (_cannon != null) _cannon.ChangeTeam(team);
         if (ChangeTeamEvent != null) ChangeTeamEvent(newTeam);
     }
