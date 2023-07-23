@@ -1,0 +1,12 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class DestroyOnAnimationEnd : StateMachineBehaviour
+{
+    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+       Debug.Log("Destroying because of animation");
+       Destroy(animator.gameObject);
+    }
+}
