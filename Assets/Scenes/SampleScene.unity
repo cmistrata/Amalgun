@@ -333,11 +333,6 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 0
---- !u!4 &237595739 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 805146448973360539, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
-  m_PrefabInstance: {fileID: 899842518}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &274214686
 GameObject:
   m_ObjectHideFlags: 0
@@ -989,6 +984,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 1602197611}
     m_Modifications:
     - target: {fileID: 805146448973360230, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+    - target: {fileID: 805146448973360230, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
       propertyPath: m_Name
       value: BasicEnemy
       objectReference: {fileID: 0}
@@ -1036,10 +1035,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7992742610504756757, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
-      propertyPath: state
-      value: 1
-      objectReference: {fileID: 0}
+    - target: {fileID: 2616358684311686207, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 2294096304438465803, guid: 0168d531367f71640a7520f3b28c97ae, type: 3}
+    - target: {fileID: 4448493975295897456, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -5654580374243558484, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1104,6 +1107,14 @@ PrefabInstance:
     - target: {fileID: 805146448973360539, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580546548787403109, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
+      propertyPath: Team
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2580546548787403109, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
+      propertyPath: TargetingStrategy_
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7992742610504756757, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
       propertyPath: state
@@ -2569,7 +2580,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 237595739}
+  - {fileID: 805146448224840781}
   - {fileID: 341587812}
   m_Father: {fileID: 527011804}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2765,6 +2776,11 @@ Transform:
   - {fileID: 1572078767}
   m_Father: {fileID: 1016193778}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &805146448224840781 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 805146448973360539, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
+  m_PrefabInstance: {fileID: 899842518}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &925935911433178124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2818,6 +2834,7 @@ GameObject:
   - component: {fileID: 6216843462133739784}
   - component: {fileID: 925935911433178124}
   - component: {fileID: 7082723169116285006}
+  - component: {fileID: 7082723169116285007}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -3330,6 +3347,32 @@ MonoBehaviour:
   MaxSpeed: 10
   FrictionDynamicCoefficientWithGround: 25
   Acceleration: 20
+--- !u!114 &7082723169116285007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1962654192977937104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a21b24ac88b18c7448dab1c6399ef16a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Team: 0
+  AutoFiring: 1
+  ProjectilePrefab: {fileID: 9181492146602770738, guid: 1931a75abccf13d41aa87cb7d62995b7, type: 3}
+  AutoFireIntervalSeconds: 0.5
+  FireAccuracyInAngles: 0
+  InitialProjectileOffset: 0.5
+  InitialProjectileSpeed: 10
+  PlayerTargetingStrategy: 2
+  EnemyTargetingStrategy: 1
+  CannonSpriteEnemy: {fileID: 0}
+  CannonSpritePlayer: {fileID: 6447303698682095724, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
+  CannonSpriteRenderer: {fileID: 2120252627266922199}
+  BulletSpriteEnemy: {fileID: 0}
+  BulletSpritePlayer: {fileID: 874343242196921964, guid: 093cf857f2ed5064798f989149c1f99b, type: 3}
 --- !u!1001 &8026975251622236748
 PrefabInstance:
   m_ObjectHideFlags: 0
