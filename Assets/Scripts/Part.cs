@@ -24,7 +24,7 @@ public class Part : MonoBehaviour
     [Header("Health info")]
     public float MaxHealth = 1;
     public float currentHealth = 1;
-    public Team team = Team.Enemy;
+    public Team Team = Team.Enemy;
 
     [Range(0, 1)]
     [Header("Conversion RNG")]
@@ -49,48 +49,23 @@ public class Part : MonoBehaviour
     }
 
     public void ChangeTeam(Team newTeam) {
-        team = newTeam;
+        Team = newTeam;
 
         UpdateSprites();
-        if (GetComponent<EnemyController>() != null) GetComponent<EnemyController>().enabled = team == Team.Enemy;
-        if (_cannon != null) _cannon.ChangeTeam(team);
+        if (GetComponent<EnemyController>() != null) GetComponent<EnemyController>().enabled = Team == Team.Enemy;
+        if (Team == Team.Neutral && GetComponent<MovingBody>() != null) GetComponent<MovingBody>().StopMoving();
+        if (_cannon != null) _cannon.ChangeTeam(Team);
+        gameObject.layer = LayerMask.NameToLayer(
+            Team == Team.Player ? Layers.PlayerPart
+            : Team == Team.Enemy ? Layers.EnemyPart
+            : Layers.NeutralPart
+        );
         if (ChangeTeamEvent != null) ChangeTeamEvent(newTeam);
-    }
-
-    //virtual public void Update()
-    //{
-    //    switch (team)
-    //    {
-    //        case Team.Enemy:
-    //            EnemyUpdate();
-    //            break;
-    //        case Team.Neutral:
-    //            AttachableUpdate();
-    //            break;
-    //        case Team.Player:
-    //            AttachedUpdate();
-    //            break;
-    //    }
-    //}
-
-    private void EnemyUpdate()
-    {
-    }
-
-    private void AttachableUpdate()
-    {
-        //Vector3 playerPos = Player.Instance ? Player.Instance.gameObject.transform.position : new Vector3(1000000, 1000000, 1000000);
-        //Vector3 dir = (playerPos - transform.position).normalized;
-        //GetComponent<Rigidbody2D>().velocity = dir * .5f;
-    }
-
-    private void AttachedUpdate()
-    {
     }
 
     virtual protected void UpdateSprites()
     {
-        if (team == Team.Enemy)
+        if (Team == Team.Enemy)
         {
             BaseRenderer.sprite = EnemyBase;
         }
@@ -119,7 +94,7 @@ public class Part : MonoBehaviour
     /// </summary>
     public void Die()
     {
-        if (team == Team.Player)
+        if (Team == Team.Player)
         {
             Player player = transform.GetComponentInParent<Player>();
             if (player == null)
@@ -142,7 +117,7 @@ public class Part : MonoBehaviour
             }
         }
 
-        else if (team == Team.Enemy)
+        else if (Team == Team.Enemy)
         {
             // An enemy has died, decrease the count
             WavesManager.Instance.EnemyCount--;
@@ -178,7 +153,7 @@ public class Part : MonoBehaviour
 
     public void PlayDeathEffect()
     {
-        if (team == Team.Enemy)
+        if (Team == Team.Enemy)
         {
             Instantiate(PrefabsManager.Instance.EnemyDeathEffect, transform.position, Quaternion.identity);
             AudioManager.Instance.PlayEnemyDestroy();
@@ -200,7 +175,7 @@ public class Part : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        if (team != Team.Neutral) return;
+        if (Team != Team.Neutral) return;
         bool otherIsThePlayer = other.gameObject.GetComponent<Player>() != null;
         if (otherIsThePlayer)
         {
@@ -208,20 +183,20 @@ public class Part : MonoBehaviour
             return;
         }
         Part otherPart = other.gameObject.GetComponent<Part>();
-        if (otherPart == null || otherPart.team != Team.Neutral) return;
+        if (otherPart == null || otherPart.Team != Team.Neutral) return;
 
         Player.Instance.AddPart(this);
     }
 
     public virtual void ConvertEnemyPart()
     {
-        if (team != Team.Enemy)
+        if (Team != Team.Enemy)
         {
             Debug.LogWarning("Tried to convert a part that was not an enemy");
         }
         gameObject.layer = LayerMask.NameToLayer("PlayerPart");
         ChangeTeam(Team.Neutral);
-        team = Team.Neutral;
+        Team = Team.Neutral;
         
         currentHealth = MaxHealth;
         UpdateSprites();

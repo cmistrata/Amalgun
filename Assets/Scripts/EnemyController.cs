@@ -53,7 +53,7 @@ public class EnemyController : MonoBehaviour
             return;
         }
         // Check if enemy has collided with a player part
-        if (part.team == Team.Enemy) {
+        if (part.Team == Team.Enemy) {
             Part playerPart = other.gameObject.GetComponent<Part>();
             if (playerPart == null) {
                 return;

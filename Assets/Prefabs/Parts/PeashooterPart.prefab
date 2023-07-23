@@ -20,6 +20,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PeashooterPart
       objectReference: {fileID: 0}
+    - target: {fileID: 805146448973360230, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 805146448973360539, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -59,6 +63,10 @@ PrefabInstance:
     - target: {fileID: 805146448973360539, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1484246569947587728, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2580546548787403109, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
       propertyPath: Team

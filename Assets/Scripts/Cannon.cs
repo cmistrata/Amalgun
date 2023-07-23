@@ -111,6 +111,7 @@ public class Cannon : MonoBehaviour
         bullet.TimeOutSeconds = 5;
         bullet.isPlayerBullet = Team == Team.Player;
         projectile.GetComponent<Rigidbody2D>().velocity = projectile.transform.right * InitialProjectileSpeed;
+        projectile.layer = LayerMask.NameToLayer(Team == Team.Enemy ? Layers.EnemyBullet : Layers.PlayerBullet);
         gameObject.GetComponent<AudioSource>().Play();
     }
 

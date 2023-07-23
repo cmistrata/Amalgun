@@ -49,13 +49,13 @@ public class Bullet : MonoBehaviour
         {
             return;
         }
-        if (part.team == Team.Neutral)
+        if (part.Team == Team.Neutral)
         {
             Destroy(this.gameObject);
         }
         // Destroy the bullet and cause damage if it hits an opponent (player bullet hits enemy, or enemy
         // bullet hits player)
-        else if ((isPlayerBullet && part.team == Team.Enemy) || (!isPlayerBullet && part.team == Team.Player))
+        else if ((isPlayerBullet && part.Team == Team.Enemy) || (!isPlayerBullet && part.Team == Team.Player))
         {
             part.TakeDamage(Damage);
             Destroy(this.gameObject);

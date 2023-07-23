@@ -75,7 +75,7 @@ public class Player : MonoBehaviour {
             if (hit.transform == part.transform) continue;
 
             var nearbyPart = hit.transform.gameObject.GetComponent<Part>();
-            if (nearbyPart != null && nearbyPart.team == Team.Player)
+            if (nearbyPart != null && nearbyPart.Team == Team.Player)
             {
                 adjacentParts.Add(nearbyPart);
             }

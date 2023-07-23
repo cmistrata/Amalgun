@@ -51,4 +51,8 @@ public class MovingBody : MonoBehaviour
             _rb.velocity = _rb.velocity.normalized * MaxSpeed;
         }
     }
+
+    public void StopMoving() {
+        TargetDirection = Vector2.zero;
+    }
 }

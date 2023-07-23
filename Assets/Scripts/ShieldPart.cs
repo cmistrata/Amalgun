@@ -72,7 +72,7 @@ public class ShieldPart : Part
     override protected void UpdateSprites()
     {
         base.UpdateSprites();
-        if (team == Team.Enemy)
+        if (Team == Team.Enemy)
         {
             forceField.gameObject.GetComponent<SpriteRenderer>().sprite = EnemyField;
         }
