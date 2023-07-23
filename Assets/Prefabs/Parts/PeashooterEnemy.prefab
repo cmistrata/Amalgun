@@ -312,12 +312,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Team: 1
   AutoFiring: 1
+  AimingAngle: 0
   ProjectilePrefab: {fileID: 9181492146602770738, guid: 1931a75abccf13d41aa87cb7d62995b7, type: 3}
   AutoFireIntervalSeconds: 3
-  FireAccuracyInAngles: 0
+  FiringInaccuracyAngles: 0
   InitialProjectileOffset: 0.5
   InitialProjectileSpeed: 10
-  TargetingStrategy_: 1
+  NumProjectiles: 1
+  FiringSpreadAngles: 0
+  PlayerTargetingStrategy: 2
+  EnemyTargetingStrategy: 1
   CannonSpriteEnemy: {fileID: -5654580374243558484, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
   CannonSpritePlayer: {fileID: -239319376499895795, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
   CannonSpriteRenderer: {fileID: 4448493975295897456}

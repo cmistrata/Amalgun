@@ -95,12 +95,13 @@ GameObject:
   - component: {fileID: 8978164147872967591}
   - component: {fileID: 8978164147872967256}
   - component: {fileID: 2914580541117462878}
-  - component: {fileID: 5893042466053843483}
   - component: {fileID: 6009491457302919370}
   - component: {fileID: 3115663729401671870}
   - component: {fileID: 7281867509208074536}
   - component: {fileID: 7515729053797707190}
   - component: {fileID: -7662154395364199495}
+  - component: {fileID: 7497882292262980560}
+  - component: {fileID: -5097324341287323123}
   m_Layer: 6
   m_Name: TripleShotEnemy
   m_TagString: Untagged
@@ -187,20 +188,6 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
---- !u!114 &5893042466053843483
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8978164147872967258}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78aa5a1632e445e4d81e7d37b674c9d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Shooting: 0
-  MovingRecalculateIntervalSeconds: 3
 --- !u!82 &6009491457302919370
 AudioSource:
   m_ObjectHideFlags: 0
@@ -490,6 +477,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetDirection: {x: 0, y: 0}
-  MaximumVelocity: 10
+  MaxSpeed: 4
   FrictionDynamicCoefficientWithGround: 25
   Acceleration: 20
+--- !u!114 &7497882292262980560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8978164147872967258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d4a531f3d6af8249b0473c55ab22256, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Shooting: 0
+  MovingRecalculateIntervalSeconds: 3
+--- !u!114 &-5097324341287323123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8978164147872967258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a21b24ac88b18c7448dab1c6399ef16a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Team: 1
+  AutoFiring: 1
+  AimingAngle: 0
+  ProjectilePrefab: {fileID: 9181492146602770738, guid: 1931a75abccf13d41aa87cb7d62995b7, type: 3}
+  AutoFireIntervalSeconds: 2
+  FiringInaccuracyAngles: 0
+  InitialProjectileOffset: 0.5
+  InitialProjectileSpeed: 6
+  NumProjectiles: 3
+  FiringSpreadAngles: 60
+  PlayerTargetingStrategy: 2
+  EnemyTargetingStrategy: 1
+  CannonSpriteEnemy: {fileID: -2575170758969124365, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
+  CannonSpritePlayer: {fileID: -5942034403687268705, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
+  CannonSpriteRenderer: {fileID: 177318139878952465}
+  BulletSpriteEnemy: {fileID: -7976837497307082302, guid: 093cf857f2ed5064798f989149c1f99b, type: 3}
+  BulletSpritePlayer: {fileID: 874343242196921964, guid: 093cf857f2ed5064798f989149c1f99b, type: 3}

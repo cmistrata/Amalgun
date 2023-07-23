@@ -1,6 +1,7 @@
 using NUnit.Framework.Constraints;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using UnityEngine;
 
 public enum Team {
@@ -12,18 +13,20 @@ public enum Team {
 public class Cannon : MonoBehaviour
 {
     [Header("State")]
-    public Team Team = Team.Neutral;
+    public Team Team = Team.Enemy;
     
     public bool AutoFiring = true;
-    private float FiringAngle = 0;
-    private Vector2 _firingDirection = Vector2.up;
+    public float AimingAngle = 0;
+    private Vector2 _aimingDirection = Vector2.up;
 
     [Header("Firing Parameters")]
     public GameObject ProjectilePrefab;
-    public float AutoFireIntervalSeconds = 3;
-    public float FireAccuracyInAngles = 0;
+    public float AutoFireIntervalSeconds = 2.5f;
+    public float FiringInaccuracyAngles = 0;
     public float InitialProjectileOffset = 0.5f;
-    public float InitialProjectileSpeed = 10;
+    public float InitialProjectileSpeed = 6;
+    public float NumProjectiles = 1;
+    public float FiringSpreadAngles = 0;
     public enum TargetingStrategy {
         StaticDirection,
         TargetPlayer,
@@ -61,9 +64,9 @@ public class Cannon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _firingDirection = GetFiringDirection();
-        FiringAngle = Mathf.Atan2(_firingDirection.y, _firingDirection.x) * Mathf.Rad2Deg;
-        CannonSpriteRenderer.transform.rotation = Quaternion.AngleAxis(FiringAngle - 90, Vector3.forward);
+        _aimingDirection = GetAimingDirection();
+        AimingAngle = Mathf.Atan2(_aimingDirection.y, _aimingDirection.x) * Mathf.Rad2Deg;
+        CannonSpriteRenderer.transform.rotation = Quaternion.AngleAxis(AimingAngle - 90, Vector3.forward);
 
         if (AutoFiring && Team != Team.Neutral && !IsInvoking()) {
             Invoke("Fire", AutoFireIntervalSeconds);
@@ -71,25 +74,36 @@ public class Cannon : MonoBehaviour
     }
 
     void Fire() {
-        if (AutoFiring) {
-            FireProjectile(_firingDirection);
+        if (AutoFiring && Team != Team.Neutral) {
+            FireProjectiles();
             Invoke("Fire", AutoFireIntervalSeconds);
         }
     }
 
-    /// <summary>
-    /// Shoots a projectile from this game object towards the screen point given
-    /// </summary>
-    /// <param name="screenPointTarget"></param>
-    /// <param name="projectilePrefab"></param>
-    /// <param name="isPlayer"></param>
-    protected virtual void FireProjectile(Vector2 firingDirection) {
-        float spread = Random.Range(-FireAccuracyInAngles, FireAccuracyInAngles);
-        float firingAngleAfterOffset = FiringAngle + spread;
+    public void FireProjectiles() {
+        if (NumProjectiles == 1) {
+            FireProjectile();
+            return;
+        }
+
+        float currentFiringAngleOffset = -FiringSpreadAngles * .5f;
+        for (int i = 0; i < NumProjectiles; i++) {
+            FireProjectile(currentFiringAngleOffset);
+            // Choose the next angle by moving a fraction of the total firing spread, e.g.:
+            //   For 2 projectiles, would move the entire spread.
+            //   For 3 projectiles, would move half of the spread.
+            currentFiringAngleOffset += FiringSpreadAngles / (NumProjectiles - 1);
+        }        
+    }
+
+
+    void FireProjectile(float aimingAngleOffset = 0) {
+        float inaccuracyOffset = Random.Range(-FiringInaccuracyAngles, FiringInaccuracyAngles);
+        float firingAngleAfterOffset = AimingAngle + aimingAngleOffset + inaccuracyOffset;
 
         GameObject projectile = Instantiate(
             ProjectilePrefab,
-            transform.position + (Vector3)(InitialProjectileOffset * _firingDirection.normalized),
+            transform.position + (Vector3)(InitialProjectileOffset * _aimingDirection.normalized),
             Quaternion.AngleAxis(firingAngleAfterOffset, Vector3.forward),
             GameObjectsContainer.Instance.bulletsContainer
         );
@@ -105,15 +119,15 @@ public class Cannon : MonoBehaviour
         gameObject.GetComponent<AudioSource>().Play();
     }
 
-    Vector2 GetFiringDirection() {
+    Vector2 GetAimingDirection() {
         switch (_currentTargetingStrategy) {
             case TargetingStrategy.TargetPlayer:
-                return Player.Instance != null ? Player.Instance.transform.position - transform.position : _firingDirection;
+                return Player.Instance != null ? Player.Instance.transform.position - transform.position : _aimingDirection;
             case TargetingStrategy.TargetMouseCursor:
                 Vector3 cameraPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 return cameraPosition - transform.position;
             case TargetingStrategy.StaticDirection: default:
-                return _firingDirection;
+                return _aimingDirection;
         }
     }
 

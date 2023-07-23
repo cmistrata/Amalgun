@@ -11,17 +11,16 @@ public class TripleShotPart : Part
     //    float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
     //    GameObject[] projectiles = new GameObject[3];
-    //    projectiles[0] = Instantiate(projectilePrefab, transform.position + (InitialProjectileOffset*dir), 
+    //    projectiles[0] = Instantiate(projectilePrefab, transform.position + (InitialProjectileOffset * dir),
     //                                        Quaternion.AngleAxis(angle, Vector3.forward), transform?.parent?.parent);
-    //    projectiles[1] = Instantiate(projectilePrefab, transform.position + (InitialProjectileOffset*dir), 
+    //    projectiles[1] = Instantiate(projectilePrefab, transform.position + (InitialProjectileOffset * dir),
     //                                        Quaternion.AngleAxis(angle + 30, Vector3.forward), transform?.parent?.parent);
-    //    projectiles[2] = Instantiate(projectilePrefab, transform.position + (InitialProjectileOffset*dir), 
+    //    projectiles[2] = Instantiate(projectilePrefab, transform.position + (InitialProjectileOffset * dir),
     //                                        Quaternion.AngleAxis(angle - 30, Vector3.forward), transform?.parent?.parent);
 
     //    Debug.Log("Triple Shot!");
 
-    //    foreach (GameObject projectile in projectiles)
-    //    {
+    //    foreach (GameObject projectile in projectiles) {
     //        Bullet bullet = projectile.GetComponent<Bullet>();
     //        SpriteRenderer sRender = bullet.gameObject.GetComponent<SpriteRenderer>();
     //        sRender.sprite = (state == PartState.Enemy ? EnemyBulletSprite : PlayerBulletSprite);

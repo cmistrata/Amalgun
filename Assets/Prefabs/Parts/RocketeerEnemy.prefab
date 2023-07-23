@@ -10,14 +10,15 @@ GameObject:
   m_Component:
   - component: {fileID: 4820418113810323439}
   - component: {fileID: 4820418113810323438}
-  - component: {fileID: 4820418113810323437}
   - component: {fileID: 3972553355864516160}
   - component: {fileID: 8366006647769797581}
   - component: {fileID: 8165284141451864538}
   - component: {fileID: 7013661596961964435}
   - component: {fileID: 2077340361115197952}
+  - component: {fileID: 1811319307415542243}
+  - component: {fileID: 5556766063275214871}
   m_Layer: 6
-  m_Name: Rocketeer
+  m_Name: RocketeerEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66,20 +67,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &4820418113810323437
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4820418113810323436}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78aa5a1632e445e4d81e7d37b674c9d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Shooting: 0
-  MovingRecalculateIntervalSeconds: 3
 --- !u!58 &3972553355864516160
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -308,9 +295,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetDirection: {x: 0, y: 0}
-  MaximumVelocity: 10
+  MaxSpeed: 4
   FrictionDynamicCoefficientWithGround: 25
   Acceleration: 20
+--- !u!114 &1811319307415542243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4820418113810323436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a21b24ac88b18c7448dab1c6399ef16a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Team: 1
+  AutoFiring: 1
+  AimingAngle: 0
+  ProjectilePrefab: {fileID: 25809411929553321, guid: fb1cc68fa576f504a824b3bb06c1b115, type: 3}
+  AutoFireIntervalSeconds: 3
+  FiringInaccuracyAngles: 0
+  InitialProjectileOffset: 0.5
+  InitialProjectileSpeed: 5
+  NumProjectiles: 1
+  FiringSpreadAngles: 0
+  PlayerTargetingStrategy: 2
+  EnemyTargetingStrategy: 1
+  CannonSpriteEnemy: {fileID: -2879541576526938746, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
+  CannonSpritePlayer: {fileID: 4030199882531633486, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
+  CannonSpriteRenderer: {fileID: 17847114721132976}
+  BulletSpriteEnemy: {fileID: 8911065074050924499, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
+  BulletSpritePlayer: {fileID: -6589266718726209864, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
+--- !u!114 &5556766063275214871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4820418113810323436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d4a531f3d6af8249b0473c55ab22256, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Shooting: 0
+  MovingRecalculateIntervalSeconds: 3
 --- !u!1 &9058137530348183598
 GameObject:
   m_ObjectHideFlags: 0

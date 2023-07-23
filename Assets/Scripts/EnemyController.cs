@@ -22,6 +22,7 @@ public class EnemyController : MonoBehaviour
     }
     void Start()
     {
+        _movingBody.TargetDirection = DetermineTargetDirection();
         _movingRecalculateTimer = MovingRecalculateIntervalSeconds;
     }
     void Update()
