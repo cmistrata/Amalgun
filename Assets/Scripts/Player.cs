@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MovingBody))]
-public class Player : MonoBehaviour {
+public class Player : Part {
+    private Rigidbody2D _rb;
+    private MovingBody _movingBody;
     public bool Shooting = false;
     public Part CenterPart;
     [SerializeField]
     private Dictionary<Part, List<Part>> partGraph = new Dictionary<Part, List<Part>>();
     public static Player Instance;
-    private Rigidbody2D _rb;
-    private MovingBody _movingBody;
+    
     public readonly float ATTACHED_PART_MASS = .5f;
     public float rotationSpeed = 100f;
 
@@ -33,22 +34,27 @@ public class Player : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        CheckInputs();
-
-        float clockwiseRotation = Input.GetAxis("Rotate Clockwise");
-        transform.Rotate(new Vector3(0, 0, -clockwiseRotation * rotationSpeed * Time.deltaTime));
-
-
-        // CheckOutOfBounds();
+        CheckInputs();   
     }
 
     void CheckInputs()
     {
-
         // Movement
         Vector2 newTargetDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         _movingBody.TargetDirection = newTargetDirection.normalized;
+        float clockwiseRotation = Input.GetAxis("Rotate Clockwise");
+        transform.Rotate(new Vector3(0, 0, -clockwiseRotation * rotationSpeed * Time.deltaTime));
+    }
+
+    public void TakeDamage(float damage) {
+        currentHealth -= damage;
+        if (currentHealth <= 0) {
+            Die();
+        } else if (Player.Instance.CenterPart == this) {
+            AudioManager.Instance.PlayCenterPartHitSound(1 + (4f - currentHealth) / 8f);
+            CameraEffectsManager.Instance.FlashDamageFilter();
+        }
     }
 
 
@@ -119,7 +125,6 @@ public class Player : MonoBehaviour {
     /// <param name="part">the part to detatch</param>
     public void DetatchPart(Part part)
     {
-
         // The only time Detatch should be called is when a Part loses all its health.
         // If this happens on the CenterPart, we should destroy the player's parts and
         // trigger a GameOver();

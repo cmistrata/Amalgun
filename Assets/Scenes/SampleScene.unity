@@ -1117,6 +1117,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7992742610504756757, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
+      propertyPath: team
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7992742610504756757, guid: 3f4ebf0b46fafdc47a08c1f0dfadadc2, type: 3}
       propertyPath: state
       value: 1
       objectReference: {fileID: 0}
@@ -2905,25 +2909,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 577c3c5f77ca5f24fb4703e4e4a52f9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyTurret: {fileID: 0}
-  PlayerTurret: {fileID: 6447303698682095724, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
-  EnemyBulletSprite: {fileID: 0}
-  PlayerBulletSprite: {fileID: 874343242196921964, guid: 093cf857f2ed5064798f989149c1f99b, type: 3}
-  Swivels: 0
-  MaxHealth: 400
+  MaxHealth: 4
   currentHealth: 0
-  BulletDamage: 100
-  BulletTtlSeconds: 5
-  ContactDamage: 25
-  state: 0
+  Team: 1
   ConvertChance: 0.15
-  ProjectilePrefab: {fileID: 9181492146602770738, guid: 1931a75abccf13d41aa87cb7d62995b7, type: 3}
-  ProjectileVelocity: 10
-  InitialProjectileOffset: 0
-  ShotsPerSecond: 0.5
-  ShotSpreadDegrees: 0
   destroyOnDeath: 0
-  EnemyLogic: {fileID: 0}
 --- !u!4 &1962654192977937116
 Transform:
   m_ObjectHideFlags: 0
@@ -3247,7 +3237,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: becb0ce8dada24048a07c8ad3af0c7dc, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.6
+  m_Volume: 0.054
   m_Pitch: 1.48
   Loop: 0
   Mute: 0
@@ -3361,11 +3351,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Team: 0
   AutoFiring: 1
+  AimingAngle: 0
   ProjectilePrefab: {fileID: 9181492146602770738, guid: 1931a75abccf13d41aa87cb7d62995b7, type: 3}
   AutoFireIntervalSeconds: 0.5
-  FireAccuracyInAngles: 0
+  FiringInaccuracyAngles: 0
   InitialProjectileOffset: 0.5
   InitialProjectileSpeed: 10
+  NumProjectiles: 1
+  FiringSpreadAngles: 0
   PlayerTargetingStrategy: 2
   EnemyTargetingStrategy: 1
   CannonSpriteEnemy: {fileID: 0}

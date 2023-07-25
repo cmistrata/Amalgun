@@ -34,10 +34,7 @@ public class Part : MonoBehaviour
     // Declare the delegate (if using non-generic pattern).
     public event Action<Team> ChangeTeamEvent;
 
-    private Cannon _cannon;
-
     public void Awake() {
-        _cannon = GetComponent<Cannon>();
         BaseRenderer = GetComponent<SpriteRenderer>(); ;
     }
 
@@ -54,7 +51,6 @@ public class Part : MonoBehaviour
         UpdateSprites();
         if (GetComponent<EnemyController>() != null) GetComponent<EnemyController>().enabled = Team == Team.Enemy;
         if (Team == Team.Neutral && GetComponent<MovingBody>() != null) GetComponent<MovingBody>().StopMoving();
-        if (_cannon != null) _cannon.ChangeTeam(Team);
         gameObject.layer = LayerMask.NameToLayer(
             Team == Team.Player ? Layers.PlayerPart
             : Team == Team.Enemy ? Layers.EnemyPart
@@ -94,48 +90,35 @@ public class Part : MonoBehaviour
     /// </summary>
     public void Die()
     {
-        if (Team == Team.Player)
-        {
+        if (Team == Team.Player)  {
             Player player = transform.GetComponentInParent<Player>();
-            if (player == null)
-            {
+            if (player == null) {
                 Debug.LogError("Part was Team.Player but wasn't under the player");
-            }
-            else
-            {
+            } else {
                 player.DetatchPart(this);
                 PlayDeathEffect();
             }
-            if (this == Player.Instance.CenterPart)
-            {
+            
+            if (this == Player.Instance.CenterPart) {
                 Player.Instance.DestroyAllParts();
                 Player.Instance.gameObject.SetActive(false);
-            }
-            else
-            {
+            } else {
                 Destroy(gameObject);
             }
-        }
-
-        else if (Team == Team.Enemy)
-        {
+        } else if (Team == Team.Enemy) {
             // An enemy has died, decrease the count
             WavesManager.Instance.EnemyCount--;
             // Convert an enemy with a given chance, or auto convert if it is the last enemy in the wave
             bool convertPart = UnityEngine.Random.Range(0f, 1f) < ConvertChance || WavesManager.Instance.EnemyCount == 0;
-            if (convertPart)
-            {
+            if (convertPart) {
                 ConvertEnemyPart();
                 AudioManager.Instance.PlayUISound(1.4f);
-            }
-            else
-            {
+            } else {
                 PlayDeathEffect();
                 Destroy(gameObject);
             }
             // If there are no enemies left, spawn the next wave
-            if (WavesManager.Instance.EnemyCount == 0)
-            {
+            if (WavesManager.Instance.EnemyCount == 0) {
                 // Heal player to full
                 var centerPart = Player.Instance.CenterPart;
                 if (centerPart.currentHealth <= centerPart.MaxHealth - 1)
@@ -144,9 +127,7 @@ public class Part : MonoBehaviour
                 }
                 WavesManager.Instance.StartNextWave();
             }
-        }
-        else
-        {
+        } else {
             Debug.LogError("Die() was called on unattached part.");
         }
     }

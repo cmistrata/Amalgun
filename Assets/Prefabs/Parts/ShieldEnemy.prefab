@@ -236,7 +236,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -7305920153957307050, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
+  m_Sprite: {fileID: 8253067358170241579, guid: 154dce629bc17d2438f73a74c06370c0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -512,7 +512,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 1
   currentHealth: 0
-  team: 1
+  Team: 1
   ConvertChance: 0.25
   destroyOnDeath: 0
   ShieldsUp: 1

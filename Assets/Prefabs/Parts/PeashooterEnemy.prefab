@@ -265,7 +265,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 1
   currentHealth: 0
-  team: 1
+  Team: 1
   ConvertChance: 0.15
   destroyOnDeath: 0
 --- !u!114 &-5756053478003309240
