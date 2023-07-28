@@ -263,6 +263,7 @@ GameObject:
   - component: {fileID: 2075396308075979054}
   - component: {fileID: -5712851360330590074}
   - component: {fileID: -6877000185120202937}
+  - component: {fileID: -6162105314578757798}
   m_Layer: 6
   m_Name: ShieldEnemy
   m_TagString: Untagged
@@ -550,3 +551,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Shooting: 0
   MovingRecalculateIntervalSeconds: 3
+--- !u!114 &-6162105314578757798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8748162862675150912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6bfd12bdbb66c54dbe22590a0e8678d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Team: 1

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4015055453694570408}
   - component: {fileID: 7447294573434778248}
   - component: {fileID: -2970837212214017082}
+  - component: {fileID: 6118890858379908853}
   m_Layer: 7
   m_Name: RestarterPart
   m_TagString: Untagged
@@ -167,7 +168,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 1
   currentHealth: 0
-  team: 1
+  Team: 1
   ConvertChance: 0.15
   destroyOnDeath: 0
 --- !u!82 &7447294573434778248
@@ -282,6 +283,19 @@ MonoBehaviour:
   MaxSpeed: 4
   FrictionDynamicCoefficientWithGround: 25
   Acceleration: 20
+--- !u!114 &6118890858379908853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4015055453694570410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6bfd12bdbb66c54dbe22590a0e8678d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Team: 1
 --- !u!1 &7976659284588996996
 GameObject:
   m_ObjectHideFlags: 0

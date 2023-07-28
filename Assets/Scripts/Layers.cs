@@ -1,11 +1,13 @@
+using UnityEngine;
+
 public class Layers {
-    public const string EnemyPart = "EnemyPart";
-    public const string PlayerPart = "PlayerPart";
-    public const string NeutralPart = "NeutralPart";
+    public static readonly int EnemyPart = LayerMask.NameToLayer("EnemyPart");
+    public static readonly int PlayerPart = LayerMask.NameToLayer("PlayerPart");
+    public static readonly int NeutralPart = LayerMask.NameToLayer("NeutralPart");
 
-    public const string EnemyBullet = "EnemyBullet";
-    public const string PlayerBullet = "PlayerBullet";
+    public static readonly int EnemyBullet = LayerMask.NameToLayer("EnemyBullet");
+    public static readonly int PlayerBullet = LayerMask.NameToLayer("PlayerBullet");
 
-    public const string EnemyForceField = "EnemyForceField";
-    public const string PlayerForceField = "PlayerForceField";
+    public static readonly int EnemyForceField = LayerMask.NameToLayer("EnemyForceField");
+    public static readonly int PlayerForceField = LayerMask.NameToLayer("PlayerForceField");
 }

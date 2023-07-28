@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: -5756053478003309240}
   - component: {fileID: 2580546548787403109}
   - component: {fileID: -7521667648792917121}
+  - component: {fileID: -6990527881962897186}
   m_Layer: 6
   m_Name: PeashooterEnemy
   m_TagString: Untagged
@@ -296,7 +297,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a21b24ac88b18c7448dab1c6399ef16a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Team: 1
   AutoFiring: 1
   AimingAngle: 0
   ProjectilePrefab: {fileID: 9181492146602770738, guid: 1931a75abccf13d41aa87cb7d62995b7, type: 3}
@@ -327,6 +327,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Shooting: 0
   MovingRecalculateIntervalSeconds: 3
+--- !u!114 &-6990527881962897186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805146448973360230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6bfd12bdbb66c54dbe22590a0e8678d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Team: 1
 --- !u!1 &1484246569947587728
 GameObject:
   m_ObjectHideFlags: 0

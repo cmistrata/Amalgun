@@ -13,13 +13,7 @@ public enum Team {
 [RequireComponent(typeof(AudioSource))]
 public class Part : MonoBehaviour
 {
-    #region Rendering
-    [Header("Rendering")]
-    private static Sprite[] bases;
-    private Sprite EnemyBase;
-    private Sprite PlayerBase;
-    private SpriteRenderer BaseRenderer;
-    #endregion
+    private TeamTracker _teamTracker;
 
     [Header("Health info")]
     public float MaxHealth = 1;
@@ -31,44 +25,12 @@ public class Part : MonoBehaviour
     public float ConvertChance = 0.15f;
     public float destroyOnDeath = 0;
 
-    // Declare the delegate (if using non-generic pattern).
-    public event Action<Team> ChangeTeamEvent;
-
     public void Awake() {
-        BaseRenderer = GetComponent<SpriteRenderer>(); ;
+        _teamTracker = GetComponent<TeamTracker>();
     }
 
     virtual public void Start() {
-        (EnemyBase, PlayerBase) = PrefabsManager.Instance.GetRandomEnemyAndPlayerBase();
-
-        UpdateSprites();
         currentHealth = MaxHealth;
-    }
-
-    public void ChangeTeam(Team newTeam) {
-        Team = newTeam;
-
-        UpdateSprites();
-        if (GetComponent<EnemyController>() != null) GetComponent<EnemyController>().enabled = Team == Team.Enemy;
-        if (Team == Team.Neutral && GetComponent<MovingBody>() != null) GetComponent<MovingBody>().StopMoving();
-        gameObject.layer = LayerMask.NameToLayer(
-            Team == Team.Player ? Layers.PlayerPart
-            : Team == Team.Enemy ? Layers.EnemyPart
-            : Layers.NeutralPart
-        );
-        if (ChangeTeamEvent != null) ChangeTeamEvent(newTeam);
-    }
-
-    virtual protected void UpdateSprites()
-    {
-        if (Team == Team.Enemy)
-        {
-            BaseRenderer.sprite = EnemyBase;
-        }
-        else
-        {
-            BaseRenderer.sprite = PlayerBase;
-        }
     }
 
     public void TakeDamage(float damage)
@@ -90,7 +52,7 @@ public class Part : MonoBehaviour
     /// </summary>
     public void Die()
     {
-        if (Team == Team.Player)  {
+        if (_teamTracker.Team == Team.Player)  {
             Player player = transform.GetComponentInParent<Player>();
             if (player == null) {
                 Debug.LogError("Part was Team.Player but wasn't under the player");
@@ -105,7 +67,7 @@ public class Part : MonoBehaviour
             } else {
                 Destroy(gameObject);
             }
-        } else if (Team == Team.Enemy) {
+        } else if (_teamTracker.Team == Team.Enemy) {
             // An enemy has died, decrease the count
             WavesManager.Instance.EnemyCount--;
             // Convert an enemy with a given chance, or auto convert if it is the last enemy in the wave
@@ -134,7 +96,7 @@ public class Part : MonoBehaviour
 
     public void PlayDeathEffect()
     {
-        if (Team == Team.Enemy)
+        if (_teamTracker.Team == Team.Enemy)
         {
             Instantiate(PrefabsManager.Instance.EnemyDeathEffect, transform.position, Quaternion.identity);
             AudioManager.Instance.PlayEnemyDestroy();
@@ -156,31 +118,29 @@ public class Part : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        if (Team != Team.Neutral) return;
+        if (_teamTracker.Team != Team.Neutral) return;
         bool otherIsThePlayer = other.gameObject.GetComponent<Player>() != null;
         if (otherIsThePlayer)
         {
             Player.Instance.AddPart(this);
             return;
         }
-        Part otherPart = other.gameObject.GetComponent<Part>();
-        if (otherPart == null || otherPart.Team != Team.Neutral) return;
+        TeamTracker otherPartTeamTracker = other.gameObject.GetComponent<TeamTracker>();
+        if (otherPartTeamTracker == null || otherPartTeamTracker.Team != Team.Neutral) return;
 
         Player.Instance.AddPart(this);
     }
 
     public virtual void ConvertEnemyPart()
     {
-        if (Team != Team.Enemy)
+        if (_teamTracker.Team != Team.Enemy)
         {
             Debug.LogWarning("Tried to convert a part that was not an enemy");
         }
         gameObject.layer = LayerMask.NameToLayer("PlayerPart");
-        ChangeTeam(Team.Neutral);
-        Team = Team.Neutral;
+        _teamTracker.ChangeTeam(Team.Neutral);
         
         currentHealth = MaxHealth;
-        UpdateSprites();
     }
 
 }

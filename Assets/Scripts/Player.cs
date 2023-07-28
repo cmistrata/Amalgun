@@ -27,7 +27,7 @@ public class Player : Part {
     void Start()
     {
         // Acceleration = 50f;
-        CenterPart.ChangeTeam(Team.Player);
+        CenterPart.gameObject.GetComponent<TeamTracker>().ChangeTeam(Team.Player);
         partGraph.Add(CenterPart, new List<Part>());
     }
 
@@ -102,7 +102,7 @@ public class Player : Part {
         part.GetComponent<MovingBody>().enabled = false;
         Destroy(part.GetComponent<Rigidbody2D>());
 
-        part.GetComponent<Part>().ChangeTeam(Team.Player);
+        part.GetComponent<TeamTracker>().ChangeTeam(Team.Player);
 
         foreach (Part p in adjacentParts)
         {

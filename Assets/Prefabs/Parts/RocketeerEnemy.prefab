@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2077340361115197952}
   - component: {fileID: 1811319307415542243}
   - component: {fileID: 5556766063275214871}
+  - component: {fileID: -4360022278235037094}
   m_Layer: 6
   m_Name: RocketeerEnemy
   m_TagString: Untagged
@@ -213,7 +214,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 1
   currentHealth: 0
-  team: 1
+  Team: 1
   ConvertChance: 0.15
   destroyOnDeath: 0
 --- !u!212 &7013661596961964435
@@ -296,7 +297,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a21b24ac88b18c7448dab1c6399ef16a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Team: 1
   AutoFiring: 1
   AimingAngle: 0
   ProjectilePrefab: {fileID: 25809411929553321, guid: fb1cc68fa576f504a824b3bb06c1b115, type: 3}
@@ -327,6 +327,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Shooting: 0
   MovingRecalculateIntervalSeconds: 3
+--- !u!114 &-4360022278235037094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4820418113810323436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6bfd12bdbb66c54dbe22590a0e8678d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Team: 1
 --- !u!1 &9058137530348183598
 GameObject:
   m_ObjectHideFlags: 0

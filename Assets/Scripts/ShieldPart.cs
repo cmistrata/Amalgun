@@ -69,16 +69,16 @@ public class ShieldPart : Part
         forceField.gameObject.layer = LayerMask.NameToLayer("PlayerForceField");
     }
 
-    override protected void UpdateSprites()
-    {
-        base.UpdateSprites();
-        if (Team == Team.Enemy)
-        {
-            forceField.gameObject.GetComponent<SpriteRenderer>().sprite = EnemyField;
-        }
-        else
-        {
-            forceField.gameObject.GetComponent<SpriteRenderer>().sprite = PlayerField;
-        }
-    }
+    //override protected void UpdateSprites()
+    //{
+    //    base.UpdateSprites();
+    //    if (Team == Team.Enemy)
+    //    {
+    //        forceField.gameObject.GetComponent<SpriteRenderer>().sprite = EnemyField;
+    //    }
+    //    else
+    //    {
+    //        forceField.gameObject.GetComponent<SpriteRenderer>().sprite = PlayerField;
+    //    }
+    //}
 }

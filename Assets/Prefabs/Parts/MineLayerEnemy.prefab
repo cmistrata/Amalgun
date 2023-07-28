@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: -8981728127433673474}
   - component: {fileID: -1207324347816423000}
   - component: {fileID: 227434394799894491}
+  - component: {fileID: -8121385896953479287}
   m_Layer: 6
   m_Name: MineLayerEnemy
   m_TagString: Untagged
@@ -213,7 +214,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 1
   currentHealth: 0
-  team: 1
+  Team: 1
   ConvertChance: 0.15
   destroyOnDeath: 0
 --- !u!212 &8747913867326373176
@@ -296,7 +297,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a21b24ac88b18c7448dab1c6399ef16a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Team: 1
   AutoFiring: 1
   AimingAngle: 0
   ProjectilePrefab: {fileID: 926786631089616638, guid: 44865557eb363b945b944de797214bd2, type: 3}
@@ -327,6 +327,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Shooting: 0
   MovingRecalculateIntervalSeconds: 10
+--- !u!114 &-8121385896953479287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 878157195452766203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6bfd12bdbb66c54dbe22590a0e8678d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Team: 1
 --- !u!1 &3968409116031626630
 GameObject:
   m_ObjectHideFlags: 0
