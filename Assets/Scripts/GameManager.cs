@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
         WavesManager.Instance.StartNextWave();
         MusicManager.Instance.RestartEasySong();
         State = GameState.Playing;
-        Player.Instance.Shooting = true;
+        //Player.Instance.Shooting = true;
     }
 
     /// <summary>

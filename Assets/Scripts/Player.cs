@@ -1,146 +1,128 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-[RequireComponent(typeof(MovingBody))]
-public class Player : Part {
+
+
+public class Player : MonoBehaviour {
+    public int MaxHealth = 4;
+    public int CurrentHealth = 4;
     private Rigidbody2D _rb;
     private MovingBody _movingBody;
-    public bool Shooting = false;
-    public Part CenterPart;
-    [SerializeField]
-    private Dictionary<Part, List<Part>> partGraph = new Dictionary<Part, List<Part>>();
-    public static Player Instance;
-    
-    public readonly float ATTACHED_PART_MASS = .5f;
-    public float rotationSpeed = 100f;
+    private Cannon _cannon;
 
-    private void Awake()
-    {
-        Instance = this;
+    [SerializeField]
+    private Dictionary<GameObject, List<GameObject>> partGraph = new();
+    public static Player Instance;
+
+    public float RotationSpeed = 100f;
+    public float NewPartMassIncrease = .1f;
+
+    private void Awake() {
         _rb = GetComponent<Rigidbody2D>();
         _movingBody = GetComponent<MovingBody>();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        // Acceleration = 50f;
-        CenterPart.gameObject.GetComponent<TeamTracker>().ChangeTeam(Team.Player);
-        partGraph.Add(CenterPart, new List<Part>());
+        _cannon = GetComponent<Cannon>();
+        partGraph.Add(gameObject, new List<GameObject>());
+        Instance = this;
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        CheckInputs();   
-    }
-
-    void CheckInputs()
-    {
+    void Update() {
         // Movement
         Vector2 newTargetDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
         _movingBody.TargetDirection = newTargetDirection.normalized;
         float clockwiseRotation = Input.GetAxis("Rotate Clockwise");
-        transform.Rotate(new Vector3(0, 0, -clockwiseRotation * rotationSpeed * Time.deltaTime));
+        transform.Rotate(new Vector3(0, 0, -clockwiseRotation * RotationSpeed * Time.deltaTime));
     }
 
-    public void TakeDamage(float damage) {
-        currentHealth -= damage;
-        if (currentHealth <= 0) {
+    public void TakeDamage(int damage) {
+        CurrentHealth -= damage;
+        if (CurrentHealth <= 0) {
             Die();
-        } else if (Player.Instance.CenterPart == this) {
-            AudioManager.Instance.PlayCenterPartHitSound(1 + (4f - currentHealth) / 8f);
-            CameraEffectsManager.Instance.FlashDamageFilter();
+            return;
         }
+
+        AudioManager.Instance.PlayPlayerDamagedSound(1 + (4f - CurrentHealth) / 8f);
+        CameraEffectsManager.Instance.FlashDamageFilter();
     }
 
 
     /// <summary>
     /// Adds a part to the player and updates the part graph
     /// </summary>
-    /// <param name="part">the new part</param>
+    /// <param name="neutralPart">the new part</param>
     /// <param name="adjacentParts">existing parts adjacent to new part</param>
-    public void AddPart(Part part)
-    {
-        List<Collider2D> hits = new List<Collider2D>();
-        ContactFilter2D filter = new ContactFilter2D();
+    public void ConnectPart(GameObject neutralPart) {
+        List<GameObject> touchingPlayerParts = FindTouchingPlayerPartsAndDestroyNearbyBullets(neutralPart);
+
+        // Add the new part to the graph, and simultaneously create edges
+        // from it to all the parts near it during the collision.
+        partGraph.Add(neutralPart, touchingPlayerParts);
+        _rb.mass += NewPartMassIncrease;
+        neutralPart.transform.parent = transform;
+        // Also create edges from its neighbors to it.
+        foreach (GameObject touchingPlayerPart in touchingPlayerParts) {
+            try {
+                partGraph[touchingPlayerPart].Add(neutralPart);
+            } catch (KeyNotFoundException) {
+                Debug.LogError($"Tried to update adjacencies for part ${touchingPlayerPart} not in the Player's partGraph.");
+            }
+        }
+
+        // Remove the part's RigidBody, but not its collider.
+        // This will effectively combine the part's collider into the player's.
+        neutralPart.GetComponent<MovingBody>().enabled = false;
+        Destroy(neutralPart.GetComponent<Rigidbody2D>());
+
+        // Make the part's Team "Team.Player".
+        neutralPart.GetComponent<TeamTracker>().ChangeTeam(Team.Player);
+    }
+
+    private List<GameObject> FindTouchingPlayerPartsAndDestroyNearbyBullets(GameObject neutralPart) {
+        List<Collider2D> hits = new();
+        ContactFilter2D filter = new();
         Physics2D.OverlapCircle(
-            point: new Vector2(part.transform.position.x, part.transform.position.y),
-            radius: part.GetComponent<CircleCollider2D>().radius * 1.1f,
+            point: new Vector2(neutralPart.transform.position.x, neutralPart.transform.position.y),
+            radius: neutralPart.GetComponent<CircleCollider2D>().radius * 1.1f,
             contactFilter: filter.NoFilter(),
             results: hits
         );
-        List<Part> adjacentParts = new List<Part>();
+        List<GameObject> adjacentParts = new();
 
-        foreach (Collider2D hit in hits)
-        {
+        foreach (Collider2D hit in hits) {
+            if (hit.transform == neutralPart.transform) continue;
 
-            if (hit.transform == part.transform) continue;
-
-            var nearbyPart = hit.transform.gameObject.GetComponent<Part>();
-            if (nearbyPart != null && nearbyPart.Team == Team.Player)
-            {
+            var nearbyPart = hit.transform.gameObject;
+            var nearbyPartIsPlayerPart = partGraph.ContainsKey(nearbyPart);
+            if (nearbyPartIsPlayerPart) {
                 adjacentParts.Add(nearbyPart);
             }
 
             // Destroy nearby bullets on attach to prevent instafrag
-            var nearbyBullet = hit.transform.gameObject.GetComponent<Bullet>();
-            if (nearbyBullet != null)
-            {
+            if (hit.transform.gameObject.TryGetComponent<Bullet>(out var nearbyBullet)) {
                 Destroy(nearbyBullet.gameObject);
             }
         }
 
-        partGraph.Add(part, adjacentParts);
-        _rb.mass += ATTACHED_PART_MASS;
-        part.transform.parent = transform;
-        // Remove the part's RigidBody, but not its collider.
-        // This will effectively combine the part's collider into the player's.
-        part.GetComponent<MovingBody>().enabled = false;
-        Destroy(part.GetComponent<Rigidbody2D>());
-
-        part.GetComponent<TeamTracker>().ChangeTeam(Team.Player);
-
-        foreach (Part p in adjacentParts)
-        {
-            try
-            {
-                partGraph[p].Add(part);
-            }
-            catch (KeyNotFoundException)
-            {
-                Debug.LogError($"Tried to update adjacencies for part ${p.gameObject.name} not in the Player's partGraph.");
-            }
-        }
-
+        return adjacentParts;
     }
 
     /// <summary>
-    /// Removes a part to the player and updates the part graph
+    /// Removes a part from the player and updates the part graph
     /// Then checks the connection and removes other detached parts
     /// </summary>
     /// <param name="part">the part to detatch</param>
-    public void DetatchPart(Part part)
-    {
-        // The only time Detatch should be called is when a Part loses all its health.
-        // If this happens on the CenterPart, we should destroy the player's parts and
-        // trigger a GameOver();
-        if (part == CenterPart)
-        {
-            DestroyAllParts();
-            GameManager.Instance.GameOver();
-            return;
-        }
-        if (_rb.mass > 1)
-        {
-            _rb.mass -= ATTACHED_PART_MASS;
+    public void DisconnectAndRemovePart(GameObject part) {
+        // Decrease mass by the part's mass
+        if (_rb.mass > 1) {
+            _rb.mass -= NewPartMassIncrease;
         }
 
-        foreach (Part p in partGraph.Keys)
-        {
+        // Remove any edges containing the part, and then remove the node representing the part
+        foreach (GameObject p in partGraph.Keys) {
             partGraph[p].Remove(part);
         }
         partGraph.Remove(part);
@@ -148,70 +130,71 @@ public class Player : Part {
         DestroyUnconnectedParts();
     }
 
-    private void DestroyUnconnectedParts()
-    {
-        List<Part> connectedParts = new List<Part>();
-        connectedParts.Add(CenterPart);
-        Stack<Part> partsToSearch = new Stack<Part>();
-        partsToSearch.Push(CenterPart);
+    private void DestroyUnconnectedParts() {
+        var partsConnectedToPlayer = GetPartsConnectedToPlayer();
+        var newlyDisconnectedParts = partGraph.Keys.Where(part => !partsConnectedToPlayer.Contains(part));
 
-        while (partsToSearch.Count > 0)
-        {
-            Part currentPart = partsToSearch.Pop();
-            if (currentPart == null || !partGraph.ContainsKey(currentPart))
-            {
+        foreach (GameObject newlyDisconnectedPart in newlyDisconnectedParts) {
+            partGraph.Remove(newlyDisconnectedPart);
+            newlyDisconnectedPart.GetComponent<Part>().PlayDeathEffect();
+        }
+    }
+
+    private List<GameObject> GetPartsConnectedToPlayer() {
+        List<GameObject> connectedParts = new() { gameObject };
+        Stack<GameObject> partsToSearch = new();
+        partsToSearch.Push(gameObject);
+
+        while (partsToSearch.Count > 0) {
+            var currentPart = partsToSearch.Pop();
+            if (currentPart == null || !partGraph.ContainsKey(currentPart)) {
                 Debug.LogError($"Couldn't find {currentPart} in part graph.");
                 continue;
             }
-            List<Part> neighbors = partGraph[currentPart];
-            foreach (Part p in neighbors)
-            {
-                if (!connectedParts.Contains(p))
-                {
+            var neighbors = partGraph[currentPart];
+            foreach (GameObject p in neighbors) {
+                if (!connectedParts.Contains(p)) {
                     partsToSearch.Push(p);
                     connectedParts.Add(p);
                 }
             }
         }
 
-        List<Part> unconnectedParts = new List<Part>();
-        // Remove the disconnected parts
-        foreach (Part p in partGraph.Keys)
-        {
-            if (!connectedParts.Contains(p))
-            {
-                unconnectedParts.Add(p);
-            }
-        }
-
-        foreach (Part unconnectedPart in unconnectedParts)
-        {
-            foreach (Part p in partGraph.Keys)
-            {
-                partGraph[p].Remove(unconnectedPart);
-            }
-            partGraph.Remove(unconnectedPart);
-            unconnectedPart.PlayDeathEffect();
-        }
+        return connectedParts;
     }
 
-    public void DestroyAllParts()
-    {
-        foreach (Part part in partGraph.Keys)
-        {
-            part.PlayDeathEffect();
+    public void DestroyAllParts() {
+        foreach (GameObject part in partGraph.Keys) {
+            part.GetComponent<Part>().PlayDeathEffect();
         }
-        partGraph = new Dictionary<Part, List<Part>>();
-        CenterPart = null;
+        partGraph = new();
     }
 
-    private string GetPartGraphAsString()
-    {
+    private string GetPartGraphAsString() {
         var printString = "";
-        foreach (Part part in partGraph.Keys)
-        {
+        foreach (GameObject part in partGraph.Keys) {
             printString += $"{part.name}: {String.Join(", ", partGraph[part])}\n";
         }
         return printString;
+    }
+
+    private void Die() {
+        print("I died :(");
+    }
+
+    public void HandleBulletCollision(Collision2D other) {
+        print("A bullet hit the player :(");
+    }
+
+    void OnCollisionEnter2D(Collision2D other) {
+        int collisionLayer = other.gameObject.layer;
+        switch (collisionLayer) {
+            case Layers.NeutralPart:
+                ConnectPart(other.gameObject);
+                break;
+            case Layers.EnemyBullet:
+                HandleBulletCollision(other);
+                break;
+        }
     }
 }

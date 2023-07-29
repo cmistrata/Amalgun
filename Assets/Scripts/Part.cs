@@ -40,11 +40,6 @@ public class Part : MonoBehaviour
         {
             Die();
         }
-        else if (Player.Instance.CenterPart == this)
-        {
-            AudioManager.Instance.PlayCenterPartHitSound(1 + (4f - currentHealth) / 8f);
-            CameraEffectsManager.Instance.FlashDamageFilter();
-        }
     }
 
     /// <summary>
@@ -52,22 +47,7 @@ public class Part : MonoBehaviour
     /// </summary>
     public void Die()
     {
-        if (_teamTracker.Team == Team.Player)  {
-            Player player = transform.GetComponentInParent<Player>();
-            if (player == null) {
-                Debug.LogError("Part was Team.Player but wasn't under the player");
-            } else {
-                player.DetatchPart(this);
-                PlayDeathEffect();
-            }
-            
-            if (this == Player.Instance.CenterPart) {
-                Player.Instance.DestroyAllParts();
-                Player.Instance.gameObject.SetActive(false);
-            } else {
-                Destroy(gameObject);
-            }
-        } else if (_teamTracker.Team == Team.Enemy) {
+        if (_teamTracker.Team == Team.Enemy) {
             // An enemy has died, decrease the count
             WavesManager.Instance.EnemyCount--;
             // Convert an enemy with a given chance, or auto convert if it is the last enemy in the wave
@@ -79,23 +59,12 @@ public class Part : MonoBehaviour
                 PlayDeathEffect();
                 Destroy(gameObject);
             }
-            // If there are no enemies left, spawn the next wave
-            if (WavesManager.Instance.EnemyCount == 0) {
-                // Heal player to full
-                var centerPart = Player.Instance.CenterPart;
-                if (centerPart.currentHealth <= centerPart.MaxHealth - 1)
-                {
-                    centerPart.currentHealth += 1;
-                }
-                WavesManager.Instance.StartNextWave();
-            }
-        } else {
-            Debug.LogError("Die() was called on unattached part.");
-        }
+        } 
     }
 
     public void PlayDeathEffect()
     {
+        
         if (_teamTracker.Team == Team.Enemy)
         {
             Instantiate(PrefabsManager.Instance.EnemyDeathEffect, transform.position, Quaternion.identity);
@@ -114,21 +83,6 @@ public class Part : MonoBehaviour
     public void RestoreHealth()
     {
         currentHealth = MaxHealth;
-    }
-
-    void OnCollisionEnter2D(Collision2D other)
-    {
-        if (_teamTracker.Team != Team.Neutral) return;
-        bool otherIsThePlayer = other.gameObject.GetComponent<Player>() != null;
-        if (otherIsThePlayer)
-        {
-            Player.Instance.AddPart(this);
-            return;
-        }
-        TeamTracker otherPartTeamTracker = other.gameObject.GetComponent<TeamTracker>();
-        if (otherPartTeamTracker == null || otherPartTeamTracker.Team != Team.Neutral) return;
-
-        Player.Instance.AddPart(this);
     }
 
     public virtual void ConvertEnemyPart()

@@ -22,23 +22,24 @@ public class MovingBody : MonoBehaviour
             Debug.LogError("Moving body doesn't have a rigidbody attached!");
         }
         _forceMagnitude = (Acceleration + FrictionDynamicCoefficientWithGround) * _rb.mass;
-        //_sqrMinimumVelocity = MinimumVelocity * MinimumVelocity;
         _sqrMaximumVelocity = MaxSpeed * MaxSpeed;
     }
 
     public void FixedUpdate()
     {
+        // Set the velocity to 0 manually at low velocities to avoid weird
+        // slow persistent movement bug.
+        if (_rb.velocity.sqrMagnitude <= .1) {
+            _rb.velocity = Vector2.zero;
+        } else {
+            // Friction
+            Vector2 velocityDirection = _rb.velocity.normalized;
+            Vector2 frictionalForce = -velocityDirection * _rb.mass * FrictionDynamicCoefficientWithGround;
+            _rb.AddForce(frictionalForce);
+        }
         _forceMagnitude = (Acceleration + FrictionDynamicCoefficientWithGround) * _rb.mass;
 
-        // Friction
-        Vector2 velocityDirection = _rb.velocity.normalized;
-        Vector2 frictionalForce = -velocityDirection * _rb.mass * FrictionDynamicCoefficientWithGround;
-        _rb.AddForce(frictionalForce);
-
         if (TargetDirection == Vector2.zero) {
-            //if (_rb.velocity.sqrMagnitude < _sqrMinimumVelocity) {
-            //    _rb.velocity = Vector2.zero;
-            //}
             return;
         } else {
             // Add movement

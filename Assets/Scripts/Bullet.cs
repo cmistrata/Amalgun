@@ -33,32 +33,21 @@ public class Bullet : MonoBehaviour
     /// Damages the entity hit when applicable, destroys the bullet when hitting a part.
     /// </summary>
     /// <param name="other"></param>
-    public void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.TryGetComponent<ForceField>(out var field))
-        {
+    public void OnCollisionEnter2D(Collision2D other) {
+        Destroy(this.gameObject);
+        if (other.gameObject.TryGetComponent<ForceField>(out var field)) {
             if (!isPlayerBullet && other.gameObject.layer == LayerMask.NameToLayer("PlayerForceField") ||
-                isPlayerBullet && other.gameObject.layer == LayerMask.NameToLayer("EnemyForceField"))
-            {
+                isPlayerBullet && other.gameObject.layer == LayerMask.NameToLayer("EnemyForceField")) {
                 field.TakeDamage(Damage);
-                Destroy(this.gameObject);
             }
         }
 
-        if (!other.gameObject.TryGetComponent<Part>(out var part))
-        {
+        if (!other.gameObject.TryGetComponent<Part>(out var part)) {
             return;
         }
-        if (part.Team == Team.Neutral)
-        {
-            Destroy(this.gameObject);
-        }
-        // Destroy the bullet and cause damage if it hits an opponent (player bullet hits enemy, or enemy
-        // bullet hits player)
-        else if ((isPlayerBullet && part.Team == Team.Enemy) || (!isPlayerBullet && part.Team == Team.Player))
-        {
+        // Cause damage if it hits an opponent (player bullet hits enemy, or enemy bullet hits player)
+        else if ((isPlayerBullet && part.Team == Team.Enemy) || (!isPlayerBullet && part.Team == Team.Player)) {
             part.TakeDamage(Damage);
-            Destroy(this.gameObject);
         }
     }
 }

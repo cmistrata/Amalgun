@@ -50,7 +50,7 @@ public class AudioManager : MonoBehaviour
         audioSource.Play();
     }
 
-    public void PlayCenterPartHitSound(float pitch = 1) {
+    public void PlayPlayerDamagedSound(float pitch = 1) {
         var audioSource = GetAudioSourceWithName("center_hit");
         audioSource.pitch = pitch;
         audioSource.Play();

@@ -40,7 +40,7 @@ public class Cannon : MonoBehaviour
 
     private void Awake() {
         _teamTracker = GetComponent<TeamTracker>();
-        _teamTracker.ChangeTeamEvent += HandleChangeTeam;
+        _teamTracker.ChangeTeamEvent += this.HandleChangeTeam;
     }
 
 
@@ -53,13 +53,6 @@ public class Cannon : MonoBehaviour
 
 
         HandleChangeTeam(_teamTracker.Team);
-        //if (_part.Team == Team.Player || _part.Team == Team.Neutral) {
-        //    CannonSpriteRenderer.sprite = CannonSpritePlayer;
-        //    _currentTargetingStrategy = _part.Team == Team.Player ? PlayerTargetingStrategy : TargetingStrategy.StaticDirection;
-        //} else {
-        //    CannonSpriteRenderer.sprite = CannonSpriteEnemy;
-        //    _currentTargetingStrategy = EnemyTargetingStrategy;
-        //}
     }
 
     // Update is called once per frame
