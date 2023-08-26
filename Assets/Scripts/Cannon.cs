@@ -106,9 +106,7 @@ public class Cannon : MonoBehaviour
         SpriteRenderer sRender = bullet.gameObject.GetComponent<SpriteRenderer>();
         sRender.sprite = _teamTracker.Team == Team.Enemy ? BulletSpriteEnemy : BulletSpritePlayer;
 
-        bullet.Damage = 1;
         bullet.TimeOutSeconds = 5;
-        bullet.isPlayerBullet = _teamTracker.Team == Team.Player;
         projectile.GetComponent<Rigidbody2D>().velocity = projectile.transform.right * InitialProjectileSpeed;
         projectile.layer = _teamTracker.Team == Team.Enemy ? Layers.EnemyBullet : Layers.PlayerBullet;
         gameObject.GetComponent<AudioSource>().Play();

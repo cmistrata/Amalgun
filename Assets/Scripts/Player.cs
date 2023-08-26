@@ -12,6 +12,7 @@ public class Player : MonoBehaviour {
     private Rigidbody2D _rb;
     private MovingBody _movingBody;
     private Cannon _cannon;
+    private Collider2D _collider;
 
     [SerializeField]
     private Dictionary<GameObject, List<GameObject>> partGraph = new();
@@ -24,6 +25,7 @@ public class Player : MonoBehaviour {
         _rb = GetComponent<Rigidbody2D>();
         _movingBody = GetComponent<MovingBody>();
         _cannon = GetComponent<Cannon>();
+        _collider = GetComponent<Collider2D>();
         partGraph.Add(gameObject, new List<GameObject>());
         Instance = this;
     }
@@ -128,15 +130,16 @@ public class Player : MonoBehaviour {
         partGraph.Remove(part);
         part.transform.parent = null;
         DestroyUnconnectedParts();
+        part.GetComponent<Part>().Die();
     }
 
     private void DestroyUnconnectedParts() {
         var partsConnectedToPlayer = GetPartsConnectedToPlayer();
-        var newlyDisconnectedParts = partGraph.Keys.Where(part => !partsConnectedToPlayer.Contains(part));
+        var newlyDisconnectedParts = partGraph.Keys.Where(part => !partsConnectedToPlayer.Contains(part)).ToList();
 
         foreach (GameObject newlyDisconnectedPart in newlyDisconnectedParts) {
             partGraph.Remove(newlyDisconnectedPart);
-            newlyDisconnectedPart.GetComponent<Part>().PlayDeathEffect();
+            newlyDisconnectedPart.GetComponent<Part>().Die();
         }
     }
 
@@ -165,7 +168,7 @@ public class Player : MonoBehaviour {
 
     public void DestroyAllParts() {
         foreach (GameObject part in partGraph.Keys) {
-            part.GetComponent<Part>().PlayDeathEffect();
+            part.GetComponent<Part>().PlayDeathFX();
         }
         partGraph = new();
     }
@@ -182,8 +185,14 @@ public class Player : MonoBehaviour {
         print("I died :(");
     }
 
-    public void HandleBulletCollision(Collision2D other) {
-        print("A bullet hit the player :(");
+    public void HandleBulletCollision(Collision2D collision) {
+        var collisionIsWithCenterPart = collision.otherCollider.gameObject == gameObject;
+        if (collisionIsWithCenterPart) {
+            TakeDamage(1);
+        } else {
+            var connectedPart = collision.otherCollider.gameObject;
+            DisconnectAndRemovePart(connectedPart);
+        }
     }
 
     void OnCollisionEnter2D(Collision2D other) {

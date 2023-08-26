@@ -31,7 +31,7 @@ public class Rocket : Bullet
             if (lifetime >= startupLength)
             {
                 inStartupPhase = false;
-                gameObject.GetComponent<Animator>().SetBool("IsEnemy", !isPlayerBullet);
+                gameObject.GetComponent<Animator>().SetBool("IsEnemy", gameObject.layer == Layers.EnemyBullet);
                 gameObject.GetComponent<Animator>().enabled = true;
                 gameObject.GetComponent<AudioSource>().Play();
             }
@@ -49,7 +49,7 @@ public class Rocket : Bullet
     {
         var rotationSpeed = inStartupPhase ? startupRotationSpeed : thrustingRotationSpeed;
         var rigidbody = gameObject.GetComponent<Rigidbody2D>();
-        var target = isPlayerBullet ? Camera.main.ScreenToWorldPoint(Input.mousePosition) 
+        var target = gameObject.layer == Layers.EnemyBullet ? Camera.main.ScreenToWorldPoint(Input.mousePosition) 
             : Player.Instance != null ? Player.Instance.transform.position 
             : Vector2.zero;
         Vector3 targetDirection = (target - transform.position).normalized;

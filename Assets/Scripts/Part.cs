@@ -19,6 +19,7 @@ public class Part : MonoBehaviour
     public float MaxHealth = 1;
     public float currentHealth = 1;
     public Team Team = Team.Enemy;
+    public event Action SignalEnemyDeath;
 
     [Range(0, 1)]
     [Header("Conversion RNG")]
@@ -48,6 +49,7 @@ public class Part : MonoBehaviour
     public void Die()
     {
         if (_teamTracker.Team == Team.Enemy) {
+            SignalEnemyDeath?.Invoke();
             // An enemy has died, decrease the count
             WavesManager.Instance.EnemyCount--;
             // Convert an enemy with a given chance, or auto convert if it is the last enemy in the wave
@@ -56,13 +58,16 @@ public class Part : MonoBehaviour
                 ConvertEnemyPart();
                 AudioManager.Instance.PlayUISound(1.4f);
             } else {
-                PlayDeathEffect();
+                PlayDeathFX();
                 Destroy(gameObject);
             }
-        } 
+        } else {
+            PlayDeathFX();
+            Destroy(gameObject);
+        }
     }
 
-    public void PlayDeathEffect()
+    public void PlayDeathFX()
     {
         
         if (_teamTracker.Team == Team.Enemy)
@@ -77,12 +82,6 @@ public class Part : MonoBehaviour
             AudioManager.Instance.PlayPartDestroy();
             CameraEffectsManager.Instance.ShakeCamera(.1f, .1f);
         }
-        Destroy(gameObject);
-    }
-
-    public void RestoreHealth()
-    {
-        currentHealth = MaxHealth;
     }
 
     public virtual void ConvertEnemyPart()
@@ -97,4 +96,12 @@ public class Part : MonoBehaviour
         currentHealth = MaxHealth;
     }
 
+    public void OnCollisionEnter2D(Collision2D collision) {
+        // Only handle bullet collisions.
+        // Furthhermore, only handle bullet collisions for enemies. Player bullet collisions
+        // will be handled in the Player object.
+        if (_teamTracker.Team == Team.Enemy && collision.gameObject.layer == Layers.PlayerBullet) {
+            Die();
+        }
+    }
 }
