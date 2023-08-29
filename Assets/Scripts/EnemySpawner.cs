@@ -43,19 +43,6 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    private void Shuffle<T>(IList<T> list)
-    {
-        int n = list.Count;
-        while (n > 1)
-        {
-            n--;
-            int k = UnityEngine.Random.Range(0, n + 1);
-            T value = list[k];
-            list[k] = list[n];
-            list[n] = value;
-        }
-    }
-
     /// <summary>
     /// Samples a guassian curve
     /// </summary>
@@ -78,14 +65,10 @@ public class EnemySpawner : MonoBehaviour
     /// <param name="waveConfig">Configuration used to determine how many and what difficulty of enemies to spawn.</param>
     /// <param name="difficultyMapping">Optional param to set a custom difficulty mapping</param>
     /// <returns>A wave dictionary that can be passed to spawnWave</returns>
-
     public List<GameObject> CreateEnemiesList(WaveConfig waveConfig, List<EnemyTuple> difficultyMapping = null)
     {
         // Option to set your own difficulty mapping
-        if (difficultyMapping == null)
-        {
-            difficultyMapping = this.DifficultyMapping;
-        }
+        difficultyMapping = difficultyMapping ?? this.DifficultyMapping; ;
         int runningDifficultyTotal = 0;
         List<GameObject> enemies = new List<GameObject>();
 
@@ -93,7 +76,6 @@ public class EnemySpawner : MonoBehaviour
         mapProbabilityDistribution(waveConfig.DifficultyBias, difficultyMapping);
 
         // Generate enemies using the probabilities, as well as the difficulty min and max.
-
         while (runningDifficultyTotal < waveConfig.DifficultyTotal)
         {
             // Generate a float from 0 to 1
@@ -153,8 +135,7 @@ public class EnemySpawner : MonoBehaviour
     /// <param name="timeToSpawnAllEnemies">The total period of time over which the enemies should be spawned.</param>
     public void SpawnEnemies(List<GameObject> enemies, float timeToSpawnAllEnemies)
     {
-        // Shuffle the enemies
-        Shuffle(enemies);
+        enemies.Shuffle();
 
         // Create a list of the times that enemies should spawn
         List<float> spawnTimes = new List<float>();

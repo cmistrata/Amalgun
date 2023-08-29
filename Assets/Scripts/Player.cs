@@ -32,10 +32,9 @@ public class Player : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        // Movement
         Vector2 newTargetDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-
         _movingBody.TargetDirection = newTargetDirection.normalized;
+
         float clockwiseRotation = Input.GetAxis("Rotate Clockwise");
         transform.Rotate(new Vector3(0, 0, -clockwiseRotation * RotationSpeed * Time.deltaTime));
     }

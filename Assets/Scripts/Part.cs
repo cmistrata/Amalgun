@@ -50,10 +50,8 @@ public class Part : MonoBehaviour
     {
         if (_teamTracker.Team == Team.Enemy) {
             SignalEnemyDeath?.Invoke();
-            // An enemy has died, decrease the count
-            WavesManager.Instance.EnemyCount--;
             // Convert an enemy with a given chance, or auto convert if it is the last enemy in the wave
-            bool convertPart = UnityEngine.Random.Range(0f, 1f) < ConvertChance || WavesManager.Instance.EnemyCount == 0;
+            bool convertPart = UnityEngine.Random.Range(0f, 1f) < ConvertChance;
             if (convertPart) {
                 ConvertEnemyPart();
                 AudioManager.Instance.PlayUISound(1.4f);

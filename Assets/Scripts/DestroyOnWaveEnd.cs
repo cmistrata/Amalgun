@@ -10,14 +10,14 @@ public class DestroyOnWaveEnd : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        startWave = WavesManager.Instance.WaveIndex;
+        startWave = EnemySpawnerAndCounter.Instance.CurrentWave;
     }
 
     // Update is called once per frame
     void Update()
     {
         // TODO: Make an event instead of checking all the tie
-        if (WavesManager.Instance.WaveIndex > startWave && !destroyQueued && gameObject.layer != Layers.PlayerBullet) {
+        if (EnemySpawnerAndCounter.Instance.CurrentWave > startWave && !destroyQueued && gameObject.layer != Layers.PlayerBullet) {
             destroyQueued = true;
             Invoke("SelfDestruct", Random.Range(0f, 0.7f));
         }

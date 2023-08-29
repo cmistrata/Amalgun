@@ -99,7 +99,7 @@ public class Cannon : MonoBehaviour
             ProjectilePrefab,
             transform.position + (Vector3)(InitialProjectileOffset * _aimingDirection.normalized),
             Quaternion.AngleAxis(firingAngleAfterOffset, Vector3.forward),
-            GameObjectsContainer.Instance.bulletsContainer
+            BulletsContainer.Instance.transform
         );
         Bullet bullet = projectile.GetComponent<Bullet>();
 
