@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum GameState
 {
@@ -13,6 +14,11 @@ public class GameManager : MonoBehaviour
     public GameState State = GameState.Intro;
     public GameObject WavesCounter;
     public GameObject GameOverScreen;
+    public GameObject GameStartPrefab;
+    public GameObject ExistingGame;
+    public GameObject StartMenu;
+    public bool Paused = false;
+    public GameObject PauseOverlay;
 
     public static GameManager Instance;
 
@@ -39,6 +45,21 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown("space") && State == GameState.GameOver)
         {
             RestartGame();
+        }
+
+        if (Input.GetKeyDown("r")) {
+            StartNewGaame();
+        }
+
+        if (Input.GetKeyDown("p")) {
+            Paused = !Paused;
+            if (Paused) {
+                Time.timeScale = 0f;
+                PauseOverlay.SetActive(true);
+            } else {
+                Time.timeScale = 1f;
+                PauseOverlay.SetActive(false);
+            }
         }
     }
 
@@ -94,5 +115,18 @@ public class GameManager : MonoBehaviour
         MusicManager.Instance.StopMusic();
         // AudioManager.Instance.PlayGameOver();
         State = GameState.GameOver;
+    }
+
+    void OnKeyDown(KeyDownEvent ev) {
+        Debug.Log("KeyDown:" + ev.keyCode);
+        Debug.Log("KeyDown:" + ev.character);
+        Debug.Log("KeyDown:" + ev.modifiers);
+    }
+
+
+    public void StartNewGaame() {
+        StartMenu.SetActive(false);
+        Destroy(ExistingGame);
+        ExistingGame = Instantiate(GameStartPrefab);
     }
 }

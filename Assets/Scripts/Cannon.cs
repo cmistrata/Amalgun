@@ -58,9 +58,12 @@ public class Cannon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _aimingDirection = GetAimingDirection();
-        AimingAngle = Mathf.Atan2(_aimingDirection.y, _aimingDirection.x) * Mathf.Rad2Deg;
-        CannonSpriteRenderer.transform.rotation = Quaternion.AngleAxis(AimingAngle - 90, Vector3.forward);
+        if (!GameManager.Instance.Paused) {
+            _aimingDirection = GetAimingDirection();
+            AimingAngle = Mathf.Atan2(_aimingDirection.y, _aimingDirection.x) * Mathf.Rad2Deg;
+            CannonSpriteRenderer.transform.rotation = Quaternion.AngleAxis(AimingAngle - 90, Vector3.forward);
+        }
+        
 
         if (AutoFiring && _teamTracker.Team != Team.Neutral && !IsInvoking()) {
             Invoke("Fire", AutoFireIntervalSeconds);

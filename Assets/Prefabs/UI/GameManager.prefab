@@ -24,12 +24,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4344678151240407665}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4344678151240407630
 MonoBehaviour:
@@ -44,8 +45,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   State: 0
-  StartScreen: {fileID: 0}
   WavesCounter: {fileID: 0}
   GameOverScreen: {fileID: 0}
+  GameStartPrefab: {fileID: 7991188365807027022, guid: 6c560aeafa10c4d48acd578299649edd, type: 3}
+  ExistingGame: {fileID: 0}
+  StartMenu: {fileID: 0}
+  Paused: 0
   GameObjectsContainer: {fileID: 0}
   PlayerPrefab: {fileID: 537047874636380330, guid: c6acac4ef92f4624eaaf5a8160531e82, type: 3}
+  RestarterPartPrefab: {fileID: 4015055453694570410, guid: eac984ae7f760b74c9e20be1a3c5fb2f, type: 3}
