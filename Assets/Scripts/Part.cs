@@ -72,13 +72,13 @@ public class Part : MonoBehaviour
         {
             Instantiate(PrefabsManager.Instance.EnemyDeathEffect, transform.position, Quaternion.identity);
             AudioManager.Instance.PlayEnemyDestroy();
-            CameraEffectsManager.Instance.ShakeCamera(.3f, .3f);
+            CameraManager.Instance.ShakeCamera(.3f, .3f);
         }
         else
         {
             Instantiate(PrefabsManager.Instance.PlayerDeathEffect, transform.position, Quaternion.identity);
             AudioManager.Instance.PlayPartDestroy();
-            CameraEffectsManager.Instance.ShakeCamera(.1f, .1f);
+            CameraManager.Instance.ShakeCamera(.1f, .1f);
         }
     }
 

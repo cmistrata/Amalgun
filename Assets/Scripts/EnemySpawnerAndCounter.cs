@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -14,6 +15,8 @@ public class EnemySpawnerAndCounter : MonoBehaviour
     private int _enemiesSpawned;
     public int EnemySpawnIntervalSeconds = 1;
 
+    public event Action SignalWaveOver;
+
     void Awake() {
         Instance = this;
     }
@@ -28,7 +31,7 @@ public class EnemySpawnerAndCounter : MonoBehaviour
     }
 
     void SpawnEnemy() {
-        var enemy = Instantiate(enemyPrefab, new Vector2(Random.Range(-10, 10), Random.Range(-10, 10)), Quaternion.identity, EnemiesContainer.Instance.transform);
+        var enemy = Instantiate(enemyPrefab, new Vector2(UnityEngine.Random.Range(-10, 10), UnityEngine.Random.Range(-10, 10)), Quaternion.identity, EnemiesContainer.Instance.transform);
         enemy.GetComponent<Part>().SignalEnemyDeath += DecrementEnemies;
         _enemiesSpawned += 1;
     }
@@ -36,7 +39,7 @@ public class EnemySpawnerAndCounter : MonoBehaviour
     void DecrementEnemies() {
         EnemiesLeftToKill -= 1;
         if (EnemiesLeftToKill == 0) {
-            StartNewWave();
+            SignalWaveOver?.Invoke();
         }
     }
 

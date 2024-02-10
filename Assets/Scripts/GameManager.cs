@@ -12,26 +12,19 @@ public enum GameState
 public class GameManager : MonoBehaviour
 {
     public GameState State = GameState.Intro;
-    public GameObject WavesCounter;
-    public GameObject GameOverScreen;
-    public GameObject GameStartPrefab;
-    public GameObject ExistingGame;
-    public GameObject StartMenu;
+    public Player InitialPlayer;
+    private Player Player;
+    public Arena InitialArena;
+    private Arena Arena;
+    
     public bool Paused = false;
     public GameObject PauseOverlay;
 
+    public GameObject StartMenu;
+    public GameObject GameOverScreen;
+    public CameraManager CameraManager;
+
     public static GameManager Instance;
-
-    /// <summary>
-    /// Object to be restarted to an initial state after each game over.
-    /// </summary>
-    public Transform GameObjectsContainer;
-
-    /// <summary>
-    /// Player prefab used to put in GameState after starting a new game.
-    /// </summary>
-    public GameObject PlayerPrefab;
-    public GameObject RestarterPartPrefab;
 
 
     void Awake()
@@ -42,15 +35,18 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("space") && State == GameState.GameOver)
-        {
-            RestartGame();
-        }
-
         if (Input.GetKeyDown("r")) {
-            StartNewGaame();
+            StartNewGame();
         }
+        if (State == GameState.Playing) {
+            PlayingUpdate();
+        }
+    }
 
+    void PlayingUpdate() {
+        if (Input.GetKeyDown("space") && State == GameState.GameOver) {
+            StartNewGame();
+        }
         if (Input.GetKeyDown("p")) {
             Paused = !Paused;
             if (Paused) {
@@ -61,42 +57,6 @@ public class GameManager : MonoBehaviour
                 PauseOverlay.SetActive(false);
             }
         }
-    }
-
-    /// <summary>
-    /// Start a new game.
-    /// </summary>
-    public void StartGame()
-    {
-        WavesCounter.SetActive(true);
-        WavesManager.Instance.WaveIndex = -1;
-        WavesManager.Instance.StartNextWave();
-        MusicManager.Instance.RestartEasySong();
-        State = GameState.Playing;
-        //Player.Instance.Shooting = true;
-    }
-
-    /// <summary>
-    /// Restart a game, with some minor differences to starting a game.
-    /// </summary>
-    public void RestartGame()
-    {
-        foreach (Transform transform in GameObjectsContainer)
-        {
-            Destroy(transform.gameObject);
-        }
-        GameOverScreen.SetActive(false);
-        MusicManager.Instance.RestartEasySong();
-        // Instantiate(PlayerPrefab, Vector3.zero, Quaternion.identity).transform.parent = GameObjectsContainer;
-        Player.Instance.gameObject.SetActive(true);
-        Player.Instance.GetComponent<Part>().Start();
-        Instantiate(RestarterPartPrefab, new Vector3(5, 0, 0), Quaternion.identity).transform.parent = GameObjectsContainer;
-
-
-        WavesManager.Instance.WaveIndex = -1;
-        WavesManager.Instance.EnemyCount = 0;
-        WavesManager.Instance.StartNextWave();
-        State = GameState.Playing;
     }
 
     /// <summary>
@@ -124,9 +84,21 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void StartNewGaame() {
+    public void StartNewGame() {
         StartMenu.SetActive(false);
-        Destroy(ExistingGame);
-        ExistingGame = Instantiate(GameStartPrefab);
+        if (Arena != null) {
+            Destroy(Arena.gameObject);
+        }
+        Arena = Instantiate(InitialArena);
+        Arena.EnemySpawnerAndCounter.SignalWaveOver += HandleWaveOver;
+        if (Player != null) {
+            Destroy(Player.gameObject);
+        }
+        Player = Instantiate(InitialPlayer);
+        CameraManager.Focus = Player.transform;
+    }
+
+    public void HandleWaveOver() {
+        Debug.Log("Hello!");
     }
 }

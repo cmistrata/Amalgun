@@ -47,7 +47,7 @@ public class Player : MonoBehaviour {
         }
 
         AudioManager.Instance.PlayPlayerDamagedSound(1 + (4f - CurrentHealth) / 8f);
-        CameraEffectsManager.Instance.FlashDamageFilter();
+        CameraManager.Instance.FlashDamageFilter();
     }
 
 

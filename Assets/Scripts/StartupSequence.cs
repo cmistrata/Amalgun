@@ -16,7 +16,7 @@ public class StartupSequence : MonoBehaviour
 
     void DisplayAmalgaText() {
         AmalgaText.gameObject.SetActive(true);
-        CameraEffectsManager.Instance.ShakeCamera(1f, 1f);
+        CameraManager.Instance.ShakeCamera(1f, 1f);
         AudioManager.Instance.PlayPartDestroy();
         Invoke("DisplayInstructions", 1.5f);
     }
