@@ -9,11 +9,6 @@ public class AudioManager : MonoBehaviour
         Instance = this;
     }
 
-    public void PlayGameOver() {
-        var audioSource = GetAudioSourceWithName("Game Over");
-        audioSource.Play();
-    }
-
     public void PlayPartDestroy() {
         var audioSource = GetAudioSourceWithName("Part_destroy");
         audioSource.Play();

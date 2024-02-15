@@ -15,7 +15,7 @@ public class EnemySpawnerAndCounter : MonoBehaviour
     private int _enemiesSpawned;
     public int EnemySpawnIntervalSeconds = 1;
 
-    public event Action SignalWaveOver;
+    public static event Action SignalWaveOver;
 
     void Awake() {
         Instance = this;

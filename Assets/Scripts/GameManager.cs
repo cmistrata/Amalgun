@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject StartMenu;
     public GameObject GameOverScreen;
+    public GameObject Shop;
     public CameraManager CameraManager;
 
     public static GameManager Instance;
@@ -30,6 +32,8 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        EnemySpawnerAndCounter.SignalWaveOver += HandleWaveOver;
+        Player.SignalPlayerDeath += HandlePlayerDeath;
     }
 
     // Update is called once per frame
@@ -40,13 +44,12 @@ public class GameManager : MonoBehaviour
         }
         if (State == GameState.Playing) {
             PlayingUpdate();
+        } else if (State == GameState.GameOver) {
+            GameOverUpdate();
         }
     }
 
     void PlayingUpdate() {
-        if (Input.GetKeyDown("space") && State == GameState.GameOver) {
-            StartNewGame();
-        }
         if (Input.GetKeyDown("p")) {
             Paused = !Paused;
             if (Paused) {
@@ -58,22 +61,27 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    void GameOverUpdate() {
+        if (Input.GetKeyDown("space")) {
+            StartNewGame();
+        }
+    }
 
     /// <summary>
     /// End the game, bringing up the game over screen.
     /// </summary>
     public void GameOver()
     {
-        if (State == GameState.GameOver)
-        {
+        ClearUI();
+        GameOverScreen.SetActive(true);
+        if (State == GameState.GameOver) {
             Debug.LogWarning("Tried to call GameOver while already in GameOver state.");
             return;
         }
+        State = GameState.GameOver;
 
         Debug.Log("Game over!");
-        GameOverScreen.SetActive(true);
         MusicManager.Instance.StopMusic();
-        // AudioManager.Instance.PlayGameOver();
         State = GameState.GameOver;
     }
 
@@ -85,20 +93,42 @@ public class GameManager : MonoBehaviour
 
 
     public void StartNewGame() {
-        StartMenu.SetActive(false);
-        if (Arena != null) {
-            Destroy(Arena.gameObject);
-        }
-        Arena = Instantiate(InitialArena);
-        Arena.EnemySpawnerAndCounter.SignalWaveOver += HandleWaveOver;
+        ClearUI();
         if (Player != null) {
             Destroy(Player.gameObject);
         }
         Player = Instantiate(InitialPlayer);
+        State = GameState.Playing;
         CameraManager.Focus = Player.transform;
+        MusicManager.Instance.RestartEasySong();
+        StartNewWave();
+    }
+
+    public void StartNewWave() {
+        Player.gameObject.SetActive(true);
+        Shop.SetActive(false);
+        if (Arena != null) {
+            Destroy(Arena.gameObject);
+        }
+        Arena = Instantiate(InitialArena);
     }
 
     public void HandleWaveOver() {
-        Debug.Log("Hello!");
+        Player.gameObject.SetActive(false);
+        Arena.gameObject.SetActive(false);
+        Shop.SetActive(true);
+    }
+
+    public void HandleShopContinue() {
+        StartNewWave();
+    }
+
+    public void HandlePlayerDeath() {
+        GameOver();
+    }
+
+    public void ClearUI() {
+        StartMenu.SetActive(false);
+        GameOverScreen.SetActive(false);
     }
 }

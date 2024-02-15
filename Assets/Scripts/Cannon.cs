@@ -17,6 +17,7 @@ public class Cannon : MonoBehaviour
     [Header("Firing Parameters")]
     public GameObject ProjectilePrefab;
     public float AutoFireIntervalSeconds = 2.5f;
+    private float AutoFireTimer = 0f;
     public float FiringInaccuracyAngles = 0;
     public float InitialProjectileOffset = 0.5f;
     public float InitialProjectileSpeed = 6;
@@ -47,11 +48,6 @@ public class Cannon : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (AutoFiring && _teamTracker.Team != Team.Neutral) {
-            Invoke("Fire", AutoFireIntervalSeconds);
-        }
-
-
         HandleChangeTeam(_teamTracker.Team);
     }
 
@@ -63,17 +59,13 @@ public class Cannon : MonoBehaviour
             AimingAngle = Mathf.Atan2(_aimingDirection.y, _aimingDirection.x) * Mathf.Rad2Deg;
             CannonSpriteRenderer.transform.rotation = Quaternion.AngleAxis(AimingAngle - 90, Vector3.forward);
         }
-        
 
-        if (AutoFiring && _teamTracker.Team != Team.Neutral && !IsInvoking()) {
-            Invoke("Fire", AutoFireIntervalSeconds);
-        }
-    }
-
-    void Fire() {
         if (AutoFiring && _teamTracker.Team != Team.Neutral) {
-            FireProjectiles();
-            Invoke("Fire", AutoFireIntervalSeconds);
+            AutoFireTimer -= Time.deltaTime;
+            if (AutoFireTimer < 0) {
+                FireProjectiles();
+                AutoFireTimer += AutoFireIntervalSeconds;
+            }
         }
     }
 

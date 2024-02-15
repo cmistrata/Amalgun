@@ -49,6 +49,8 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -205,6 +207,8 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -251,6 +255,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: becb0ce8dada24048a07c8ad3af0c7dc, type: 3}
+  m_Resource: {fileID: 8300000, guid: becb0ce8dada24048a07c8ad3af0c7dc, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.054
   m_Pitch: 1.48
@@ -374,6 +379,13 @@ MonoBehaviour:
   CurrentHealth: 4
   RotationSpeed: 100
   NewPartMassIncrease: 0.1
+  CenterSpriteRenderer: {fileID: 7165446971164822772}
+  CenterSpritesByHealth:
+  - {fileID: 4256717000915870640, guid: aa4e5abd654aa6546be660a40bedb525, type: 3}
+  - {fileID: -5376886150771858780, guid: aa4e5abd654aa6546be660a40bedb525, type: 3}
+  - {fileID: 5568516982761154173, guid: aa4e5abd654aa6546be660a40bedb525, type: 3}
+  - {fileID: 1308092322737855513, guid: aa4e5abd654aa6546be660a40bedb525, type: 3}
+  - {fileID: 6447303698682095724, guid: 25de389e28bd7084badf7e4b1690ed33, type: 3}
 --- !u!114 &5525281391324352840
 MonoBehaviour:
   m_ObjectHideFlags: 0

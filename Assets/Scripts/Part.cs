@@ -70,13 +70,13 @@ public class Part : MonoBehaviour
         
         if (_teamTracker.Team == Team.Enemy)
         {
-            Instantiate(PrefabsManager.Instance.EnemyDeathEffect, transform.position, Quaternion.identity);
+            Instantiate(PrefabsManager.Instance.EnemyDeathEffect, transform.position, Quaternion.identity, transform.parent);
             AudioManager.Instance.PlayEnemyDestroy();
             CameraManager.Instance.ShakeCamera(.3f, .3f);
         }
         else
         {
-            Instantiate(PrefabsManager.Instance.PlayerDeathEffect, transform.position, Quaternion.identity);
+            Instantiate(PrefabsManager.Instance.PlayerDeathEffect, transform.position, Quaternion.identity, transform.parent);
             AudioManager.Instance.PlayPartDestroy();
             CameraManager.Instance.ShakeCamera(.1f, .1f);
         }

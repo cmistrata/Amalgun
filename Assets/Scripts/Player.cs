@@ -21,6 +21,11 @@ public class Player : MonoBehaviour {
     public float RotationSpeed = 100f;
     public float NewPartMassIncrease = .1f;
 
+    public SpriteRenderer CenterSpriteRenderer;
+    public List<Sprite> CenterSpritesByHealth = new List<Sprite>();
+
+    public static event Action SignalPlayerDeath;
+
     private void Awake() {
         _rb = GetComponent<Rigidbody2D>();
         _movingBody = GetComponent<MovingBody>();
@@ -41,6 +46,7 @@ public class Player : MonoBehaviour {
 
     public void TakeDamage(int damage) {
         CurrentHealth -= damage;
+        CenterSpriteRenderer.sprite = CenterSpritesByHealth[CurrentHealth];
         if (CurrentHealth <= 0) {
             Die();
             return;
@@ -181,7 +187,9 @@ public class Player : MonoBehaviour {
     }
 
     private void Die() {
-        print("I died :(");
+        PlayDeathFX();
+        Destroy(gameObject);
+        SignalPlayerDeath?.Invoke();
     }
 
     public void HandleBulletCollision(Collision2D collision) {
@@ -204,5 +212,11 @@ public class Player : MonoBehaviour {
                 HandleBulletCollision(other);
                 break;
         }
+    }
+
+    public void PlayDeathFX() {
+            Instantiate(PrefabsManager.Instance.PlayerDeathEffect, transform.position, Quaternion.identity, transform.parent);
+            AudioManager.Instance.PlayPartDestroy();
+            CameraManager.Instance.ShakeCamera(.3f, .6f);
     }
 }
