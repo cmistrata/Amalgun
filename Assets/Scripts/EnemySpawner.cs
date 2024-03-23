@@ -161,10 +161,10 @@ public class EnemySpawner : MonoBehaviour
     /// /// </summary>
     public void SpawnEnemy(GameObject enemyPrefab)
     {
-        if (Player.Instance == null) return;
+        if (Player2D.Instance == null) return;
         Vector3 spawnPosition = new Vector3(UnityEngine.Random.Range(-(ArenaWidth / 2 - 1), (ArenaWidth / 2 - 1)), -(ArenaHeight / 2 - 1), (ArenaHeight / 2 - 1));
         // TODO: Clamp the spawn position away from the player instead of retrying over and over
-        while (Vector3.Magnitude(spawnPosition - Player.Instance.transform.position) < 4f)
+        while (Vector3.Magnitude(spawnPosition - Player2D.Instance.transform.position) < 4f)
         {
             spawnPosition = new Vector3(UnityEngine.Random.Range(-(ArenaWidth / 2 - 1), (ArenaWidth / 2 - 1)), -(ArenaHeight / 2 - 1), (ArenaHeight / 2 - 1));
         }

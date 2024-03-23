@@ -12,7 +12,7 @@ public class TeamTracker : MonoBehaviour
     private Sprite _playerSprite;
     private SpriteRenderer _spriteRenderer;
     private EnemyController _enemyController;
-    private MovingBody _movingBody;
+    private MovingBody2D _movingBody;
 
 
     // Start is called before the first frame update
@@ -20,7 +20,7 @@ public class TeamTracker : MonoBehaviour
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _enemyController = GetComponent<EnemyController>();
-        _movingBody = GetComponent<MovingBody>();
+        _movingBody = GetComponent<MovingBody2D>();
     }
 
     private void Start() {

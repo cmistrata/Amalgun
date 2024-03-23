@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Collider2D))]
 public class Bullet : MonoBehaviour
 {
     public float TimeOutSeconds = 5f;
@@ -26,6 +25,10 @@ public class Bullet : MonoBehaviour
     }
 
     public void OnCollisionEnter2D(Collision2D other) {
+        Destroy(this.gameObject);
+    }
+
+    public void OnCollisionEnter3D(Collision other) {
         Destroy(this.gameObject);
     }
 }

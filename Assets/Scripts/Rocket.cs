@@ -50,7 +50,7 @@ public class Rocket : Bullet
         var rotationSpeed = inStartupPhase ? startupRotationSpeed : thrustingRotationSpeed;
         var rigidbody = gameObject.GetComponent<Rigidbody2D>();
         var target = gameObject.layer == Layers.EnemyBullet ? Camera.main.ScreenToWorldPoint(Input.mousePosition) 
-            : Player.Instance != null ? Player.Instance.transform.position 
+            : Player2D.Instance != null ? Player2D.Instance.transform.position 
             : Vector2.zero;
         Vector3 targetDirection = (target - transform.position).normalized;
 

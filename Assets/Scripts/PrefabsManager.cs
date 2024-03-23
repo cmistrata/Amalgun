@@ -7,6 +7,7 @@ public class PrefabsManager : MonoBehaviour
     public static PrefabsManager Instance;
     public GameObject EnemyDeathEffect;
     public GameObject PlayerDeathEffect;
+    public GameObject Coin;
     public Sprite[] Bases;
     // Start is called before the first frame update
     void Awake()

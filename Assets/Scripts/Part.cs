@@ -25,6 +25,12 @@ public class Part : MonoBehaviour
     [Header("Conversion RNG")]
     public float ConvertChance = 0.15f;
     public float destroyOnDeath = 0;
+    private float CoinDropChance = 1f;
+    public bool melded = false;
+    /// <summary>
+    /// For use by Player to know if the part needs to be removed from its part graph.
+    /// </summary>
+    public bool beingDestroyed = false;
 
     public void Awake() {
         _teamTracker = GetComponent<TeamTracker>();
@@ -37,7 +43,7 @@ public class Part : MonoBehaviour
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        if (currentHealth <= 0)
+        if (currentHealth <= 0 && !melded)
         {
             Die();
         }
@@ -48,6 +54,7 @@ public class Part : MonoBehaviour
     /// </summary>
     public void Die()
     {
+        
         if (_teamTracker.Team == Team.Enemy) {
             SignalEnemyDeath?.Invoke();
             // Convert an enemy with a given chance, or auto convert if it is the last enemy in the wave
@@ -58,10 +65,15 @@ public class Part : MonoBehaviour
             } else {
                 PlayDeathFX();
                 Destroy(gameObject);
+                if (UnityEngine.Random.Range(0f, 1f) < CoinDropChance) {
+                    Instantiate(PrefabsManager.Instance.Coin, transform.position, Quaternion.identity, transform.parent);
+                }
+                beingDestroyed = true;
             }
         } else {
             PlayDeathFX();
             Destroy(gameObject);
+            beingDestroyed = true;
         }
     }
 
@@ -92,6 +104,10 @@ public class Part : MonoBehaviour
         _teamTracker.ChangeTeam(Team.Neutral);
         
         currentHealth = MaxHealth;
+    }
+
+    public void Meld() {
+        melded = true;
     }
 
     public void OnCollisionEnter2D(Collision2D collision) {

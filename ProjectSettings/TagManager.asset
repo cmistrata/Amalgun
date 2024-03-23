@@ -18,8 +18,8 @@ TagManager:
   - PlayerBullet
   - EnemyForceField
   - PlayerForceField
-  - 
-  - 
+  - Pickup
+  - Ground
   - 
   - 
   - 

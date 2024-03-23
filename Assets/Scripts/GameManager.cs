@@ -1,20 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public enum GameState
 {
     Intro,
-    Playing,
+    Fighting,
+    Shop,
     GameOver,
 }
 public class GameManager : MonoBehaviour
 {
     public GameState State = GameState.Intro;
-    public Player InitialPlayer;
-    private Player Player;
+    public Player2D InitialPlayer;
+    private Player2D Player;
     public Arena InitialArena;
     private Arena Arena;
     
@@ -28,12 +30,25 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance;
 
+    public int Money = 0;
+    public TMP_Text moneyDisplay;
+
 
     void Awake()
     {
         Instance = this;
         EnemySpawnerAndCounter.SignalWaveOver += HandleWaveOver;
-        Player.SignalPlayerDeath += HandlePlayerDeath;
+        Player2D.SignalPlayerDeath += HandlePlayerDeath;
+    }
+
+    public void GainMoney(int amount = 1) {
+        Money += amount;
+        moneyDisplay.text = $"Money :{Money}";
+    }
+
+    public void SpendMoney(int amount = 1) {
+        Money -= amount;
+        moneyDisplay.text = $"Money :{Money}";
     }
 
     // Update is called once per frame
@@ -42,7 +57,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown("r")) {
             StartNewGame();
         }
-        if (State == GameState.Playing) {
+        if (State == GameState.Fighting) {
             PlayingUpdate();
         } else if (State == GameState.GameOver) {
             GameOverUpdate();
@@ -93,30 +108,37 @@ public class GameManager : MonoBehaviour
 
 
     public void StartNewGame() {
+        Money = 0;
+
         ClearUI();
         if (Player != null) {
             Destroy(Player.gameObject);
         }
         Player = Instantiate(InitialPlayer);
-        State = GameState.Playing;
+        Player.transform.position = Vector3.zero;
+        State = GameState.Fighting;
         CameraManager.Focus = Player.transform;
         MusicManager.Instance.RestartEasySong();
         StartNewWave();
     }
 
     public void StartNewWave() {
-        Player.gameObject.SetActive(true);
+        State = GameState.Fighting;
+
         Shop.SetActive(false);
         if (Arena != null) {
             Destroy(Arena.gameObject);
         }
         Arena = Instantiate(InitialArena);
+        Player.transform.position = Vector3.zero;
     }
 
     public void HandleWaveOver() {
-        Player.gameObject.SetActive(false);
+        State = GameState.Shop;
+
         Arena.gameObject.SetActive(false);
         Shop.SetActive(true);
+        Player.transform.position = Vector3.zero;
     }
 
     public void HandleShopContinue() {

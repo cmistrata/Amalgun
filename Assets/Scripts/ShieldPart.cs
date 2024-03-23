@@ -30,7 +30,7 @@ public class ShieldPart : Part
     {
 
         // Check if this is part of a player that is shooting
-        Player player = gameObject.GetComponentInParent<Player>();
+        Player2D player = gameObject.GetComponentInParent<Player2D>();
         if (player != null && _timeUntilShieldRecharge < 0)
         {
             EnableShield();
