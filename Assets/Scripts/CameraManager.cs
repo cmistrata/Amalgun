@@ -15,8 +15,6 @@ public class CameraManager : MonoBehaviour
     private float currentShakeMagnitude = 0f;
 
     private Coroutine currentShakeCoroutine = null;
-
-    private Vector3 cameraOffset = Vector3.zero;
     # endregion
 
     public static CameraManager Instance;
@@ -24,10 +22,9 @@ public class CameraManager : MonoBehaviour
     public SpriteRenderer DamageFilter;
 
     public Transform Focus;
-    private float maxXPos = 8f;
-    private float maxYPos = 4f;
-
-    private Vector3 zOffset = new Vector3(0, 0, -10);
+    private float _maxXPos = 8f;
+    private float _maxZPos = 4f;
+    private Vector3 _offset = new Vector3(0, 9.4f, -1.64f);
 
     public void Awake()
     {
@@ -72,9 +69,9 @@ public class CameraManager : MonoBehaviour
     {
         // Have the camera follow the player
         if (Focus != null) {
-            float xPos = Mathf.Clamp(Focus.position.x, -maxXPos, maxXPos);
-            float yPos = Mathf.Clamp(Focus.position.y, -maxYPos, maxYPos);
-            Camera.transform.position = new Vector3(xPos, yPos, -10);
+            float xPos = Mathf.Clamp(Focus.position.x, -_maxXPos, _maxXPos);
+            float zPos = Mathf.Clamp(Focus.position.z, -_maxZPos, _maxZPos);
+            Camera.transform.position = new Vector3(xPos, 0, zPos) + _offset;
         }
     }
 }

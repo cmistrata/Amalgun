@@ -31,7 +31,8 @@ public class EnemySpawnerAndCounter : MonoBehaviour
     }
 
     void SpawnEnemy() {
-        var enemy = Instantiate(enemyPrefab, new Vector2(UnityEngine.Random.Range(-10, 10), UnityEngine.Random.Range(-10, 10)), Quaternion.identity, EnemiesContainer.Instance.transform);
+        var enemy = Instantiate(enemyPrefab, new Vector3(UnityEngine.Random.Range(-10, 10), 0, UnityEngine.Random.Range(-10, 10)), Quaternion.identity, EnemiesContainer.Instance.transform);
+        enemy.GetComponent<TeamTracker>().ChangeTeam(Team.Enemy);
         enemy.GetComponent<Part>().SignalEnemyDeath += DecrementEnemies;
         _enemiesSpawned += 1;
     }

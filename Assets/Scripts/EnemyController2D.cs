@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MovingBody2D))]
-public class EnemyController : MonoBehaviour
+public class EnemyController2D : MonoBehaviour
 {
     public bool Shooting = false;
     public float MovingRecalculateIntervalSeconds = 3f;

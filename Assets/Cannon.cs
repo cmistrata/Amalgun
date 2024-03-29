@@ -1,8 +1,6 @@
 using UnityEngine;
 
-public class Cannon : MonoBehaviour {
-    private TeamTracker _teamTracker;
-
+public class Cannon : CellModule {
     [Header("State")]
     public bool AutoFiring = true;
     private float _aimingAngle = 0;
@@ -29,15 +27,9 @@ public class Cannon : MonoBehaviour {
     [Header("Sprites")]
     public GameObject CannonBase;
 
-    private void Awake() {
-        _teamTracker = GetComponent<TeamTracker>();
-        _teamTracker.ChangeTeamEvent += this.HandleChangeTeam;
-    }
-
-
     // Start is called before the first frame update
     void Start() {
-        HandleChangeTeam(_teamTracker.Team);
+        HandleTeamChange(_team);
     }
 
     // Update is called once per frame
@@ -50,7 +42,7 @@ public class Cannon : MonoBehaviour {
 
         if (AutoFiring 
             //&& GameManager.Instance.State == GameState.Fighting 
-            && _teamTracker.Team != Team.Neutral) {
+            && _team != Team.Neutral) {
             _autoFireTimer -= Time.deltaTime;
             if (_autoFireTimer < 0) {
                 FireProjectiles();
@@ -84,18 +76,19 @@ public class Cannon : MonoBehaviour {
         GameObject projectile = Instantiate(
             ProjectilePrefab,
             transform.position + bulletOffset,
-            Quaternion.AngleAxis(firingAngleAfterOffset, Vector3.up)
-            //BulletsContainer.Instance.transform
+            Quaternion.AngleAxis(firingAngleAfterOffset, Vector3.up),
+            BulletsContainer.Instance?.transform
         );
-        Bullet bullet = projectile.GetComponent<Bullet>();
-        Debug.Log("Firing bullet");
 
-        //SpriteRenderer sRender = bullet.gameObject.GetComponent<SpriteRenderer>();
-        //sRender.sprite = _teamTracker.Team == Team.Enemy ? BulletSpriteEnemy : BulletSpritePlayer;
+        Bullet bullet = projectile.GetComponent<Bullet>();
+        MeshRenderer meshRenderer = bullet.gameObject.GetComponent<MeshRenderer>();
+        if (meshRenderer != null && Globals.Instance != null) {
+            meshRenderer.material = _team == Team.Enemy ? Globals.Instance.enemyBulletMaterial : Globals.Instance.playerBulletMaterial;
+        }
 
         bullet.TimeOutSeconds = 5;
         projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * InitialProjectileSpeed;
-        projectile.layer = _teamTracker.Team == Team.Enemy ? Layers.EnemyBullet : Layers.PlayerBullet;
+        projectile.layer = _team == Team.Enemy ? Layers.EnemyBullet : Layers.PlayerBullet;
         gameObject.GetComponent<AudioSource>().Play();
     }
 
@@ -104,10 +97,8 @@ public class Cannon : MonoBehaviour {
             case TargetingStrategy.TargetPlayer:
                 return Player.Instance != null ? Player.Instance.transform.position - transform.position : _aimingDirection;
             case TargetingStrategy.TargetMouseCursor:
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 100)) {
-                    Vector3 mousePosition = new Vector3(hit.point.x, 0, hit.point.z);
+                if (Utils.MouseRaycast(out var raycastHit)) {
+                    Vector3 mousePosition = new Vector3(raycastHit.point.x, 0, raycastHit.point.z);
                     return mousePosition - transform.position;
                 } else {
                     return _aimingDirection;
@@ -118,10 +109,10 @@ public class Cannon : MonoBehaviour {
         }
     }
 
-    public void HandleChangeTeam(Team newTeam) {
-        if (_teamTracker.Team == Team.Player || _teamTracker.Team == Team.Neutral) {
+    protected override void HandleTeamChange(Team newTeam) {
+        if (_team == Team.Player || _team == Team.Neutral) {
             //CannonSpriteRenderer.sprite = CannonSpritePlayer;
-            _currentTargetingStrategy = _teamTracker.Team == Team.Player ? PlayerTargetingStrategy : TargetingStrategy.StaticDirection;
+            _currentTargetingStrategy = _team == Team.Player ? PlayerTargetingStrategy : TargetingStrategy.StaticDirection;
         } else {
             //CannonSpriteRenderer.sprite = CannonSpriteEnemy;
             _currentTargetingStrategy = EnemyTargetingStrategy;

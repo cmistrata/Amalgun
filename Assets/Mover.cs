@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(TeamTracker))]
 public class Mover : MonoBehaviour {
     private float _forceMagnitude;
     //private float _sqrMinimumVelocity;
@@ -14,9 +14,12 @@ public class Mover : MonoBehaviour {
     public float Acceleration = 20;
 
     private Rigidbody _rb;
+    private TeamTracker _teamTracker;
 
     void Awake() {
         _rb = gameObject.GetComponent<Rigidbody>();
+        _teamTracker = GetComponent<TeamTracker>();
+        _teamTracker.ChangeTeamEvent += HandleChangeTeam;
         if (_rb == null) {
             Debug.LogError("Moving body doesn't have a rigidbody attached!");
         }
@@ -28,7 +31,7 @@ public class Mover : MonoBehaviour {
         // Set the velocity to 0 manually at low velocities to avoid weird
         // slow persistent movement bug.
         if (_rb.velocity.sqrMagnitude <= .1) {
-            _rb.velocity = Vector2.zero;
+            _rb.velocity = Vector3.zero;
         } else {
             // Friction
             Vector3 velocityDirection = _rb.velocity.normalized;
@@ -53,5 +56,9 @@ public class Mover : MonoBehaviour {
 
     public void StopMoving() {
         TargetDirection = Vector3.zero;
+    }
+
+    public void HandleChangeTeam(Team newTeam) {
+        if (newTeam == Team.Neutral) StopMoving();
     }
 }

@@ -42,11 +42,8 @@ public class Player : MonoBehaviour {
     }
 
     void DetectAndHandleClick() {
-        if (Input.GetMouseButtonDown(0)) {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-
-            if (hit.collider != null && GameManager.Instance.State == GameState.Shop) {
+        if (Input.GetMouseButtonDown(0) && Utils.MouseRaycast(out var hit)) {
+            if (GameManager.Instance.State == GameState.Shop) {
                 if (GameManager.Instance.Money < 0) return;
                 if (hit.collider.gameObject == this.gameObject) {
                     GameManager.Instance.SpendMoney();
@@ -100,36 +97,29 @@ public class Player : MonoBehaviour {
 
         // Remove the part's RigidBody, but not its collider.
         // This will effectively combine the part's collider into the player's.
-        neutralPart.GetComponent<MovingBody2D>().enabled = false;
-        Destroy(neutralPart.GetComponent<Rigidbody2D>());
+        neutralPart.GetComponent<Mover>().enabled = false;
+        Destroy(neutralPart.GetComponent<Rigidbody>());
 
         // Make the part's Team "Team.Player".
         neutralPart.GetComponent<TeamTracker>().ChangeTeam(Team.Player);
     }
 
     private List<GameObject> FindTouchingPlayerPartsAndDestroyNearbyBullets(GameObject neutralPart) {
-        List<Collider2D> hits = new();
-        ContactFilter2D filter = new();
-        Physics2D.OverlapCircle(
-            point: new Vector2(neutralPart.transform.position.x, neutralPart.transform.position.y),
-            radius: neutralPart.GetComponent<CircleCollider2D>().radius * 1.1f,
-            contactFilter: filter.NoFilter(),
-            results: hits
-        );
+        Collider[] nearbyColliders = Physics.OverlapSphere(neutralPart.transform.position, 1.05f);
         List<GameObject> adjacentParts = new();
 
-        foreach (Collider2D hit in hits) {
-            if (hit.transform == neutralPart.transform) continue;
+        foreach (Collider nearbyCollider in nearbyColliders) {
+            if (nearbyCollider.transform == neutralPart.transform) continue;
 
-            var nearbyPart = hit.transform.gameObject;
-            var nearbyPartIsPlayerPart = partGraph.ContainsKey(nearbyPart);
-            if (nearbyPartIsPlayerPart) {
-                adjacentParts.Add(nearbyPart);
+            var nearbyObject = nearbyCollider.gameObject;
+            var nearbyObjectIsPlayerPart = partGraph.ContainsKey(nearbyObject);
+            if (nearbyObjectIsPlayerPart) {
+                adjacentParts.Add(nearbyObject);
             }
 
             // Destroy nearby bullets on attach to prevent instafrag
-            if (hit.transform.gameObject.TryGetComponent<Bullet>(out var nearbyBullet)) {
-                Destroy(nearbyBullet.gameObject);
+            if (nearbyObject.TryGetComponent<Bullet>(out var _nearbyBullet)) {
+                Destroy(nearbyObject);
             }
         }
 
@@ -218,17 +208,18 @@ public class Player : MonoBehaviour {
         SignalPlayerDeath?.Invoke();
     }
 
-    public void HandleBulletCollision(Collision2D collision) {
-        var collisionIsWithCenterPart = collision.otherCollider.gameObject == gameObject;
-        if (collisionIsWithCenterPart) {
+    public void HandleBulletCollision(Collision collision) {
+        var nonBulletObject = collision.GetContact(0).thisCollider.gameObject;
+        var collisionIsWithMainPart = nonBulletObject == gameObject;
+        if (collisionIsWithMainPart) {
             TakeDamage(1);
         } else {
-            var connectedPart = collision.otherCollider.gameObject;
-            DamagePart(connectedPart);
+            DamagePart(nonBulletObject);
         }
     }
 
-    void OnCollisionEnter2D(Collision2D other) {
+    void OnCollisionEnter(Collision other) {
+        Utils.LogOncePerSecond($"Collided with {other}");
         int collisionLayer = other.gameObject.layer;
         switch (collisionLayer) {
             case Layers.NeutralPart:

@@ -38,7 +38,7 @@ public class ShieldPart : Part
         }
 
         // Check if this is part of an enemy
-        EnemyController enemy = gameObject.GetComponentInParent<EnemyController>();
+        EnemyController2D enemy = gameObject.GetComponentInParent<EnemyController2D>();
         if (enemy != null && _timeUntilShieldRecharge < 0)
         {
             EnableShield();

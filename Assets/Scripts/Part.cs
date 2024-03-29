@@ -9,7 +9,6 @@ public enum Team {
     Neutral
 }
 
-[RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(AudioSource))]
 public class Part : MonoBehaviour
 {
@@ -18,13 +17,11 @@ public class Part : MonoBehaviour
     [Header("Health info")]
     public float MaxHealth = 1;
     public float currentHealth = 1;
-    public Team Team = Team.Enemy;
     public event Action SignalEnemyDeath;
 
     [Range(0, 1)]
     [Header("Conversion RNG")]
     public float ConvertChance = 0.15f;
-    public float destroyOnDeath = 0;
     private float CoinDropChance = 1f;
     public bool melded = false;
     /// <summary>
@@ -83,14 +80,14 @@ public class Part : MonoBehaviour
         if (_teamTracker.Team == Team.Enemy)
         {
             Instantiate(PrefabsManager.Instance.EnemyDeathEffect, transform.position, Quaternion.identity, transform.parent);
-            AudioManager.Instance.PlayEnemyDestroy();
-            CameraManager.Instance.ShakeCamera(.3f, .3f);
+            AudioManager.Instance?.PlayEnemyDestroy();
+            CameraManager.Instance?.ShakeCamera(.3f, .3f);
         }
         else
         {
             Instantiate(PrefabsManager.Instance.PlayerDeathEffect, transform.position, Quaternion.identity, transform.parent);
-            AudioManager.Instance.PlayPartDestroy();
-            CameraManager.Instance.ShakeCamera(.1f, .1f);
+            AudioManager.Instance?.PlayPartDestroy();
+            CameraManager.Instance?.ShakeCamera(.1f, .1f);
         }
     }
 
@@ -110,7 +107,7 @@ public class Part : MonoBehaviour
         melded = true;
     }
 
-    public void OnCollisionEnter2D(Collision2D collision) {
+    public void OnCollisionEnter(Collision collision) {
         // Only handle bullet collisions.
         // Furthhermore, only handle bullet collisions for enemies. Player bullet collisions
         // will be handled in the Player object.

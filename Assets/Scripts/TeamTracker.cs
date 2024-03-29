@@ -5,46 +5,33 @@ using UnityEngine;
 
 public class TeamTracker : MonoBehaviour
 {
-    public Team Team = Team.Enemy;
+    public Team Team = Team.Neutral;
+    private Team _previousTeam;
     public event Action<Team> ChangeTeamEvent;
-
-    private Sprite _enemySprite;
-    private Sprite _playerSprite;
-    private SpriteRenderer _spriteRenderer;
-    private EnemyController _enemyController;
-    private MovingBody2D _movingBody;
 
 
     // Start is called before the first frame update
     void Awake()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-        _enemyController = GetComponent<EnemyController>();
-        _movingBody = GetComponent<MovingBody2D>();
+        _previousTeam = Team;
     }
 
-    private void Start() {
-        (_enemySprite, _playerSprite) = PrefabsManager.Instance.GetRandomEnemyAndPlayerBase();
+    private void Update() {
+        // For when Team gets updated through the inspector or by direct attribute access.
+        // TODO: Add an editor widget to call ChangeTeam in the inspector, and remove
+        // this logic and public access to Team.
+        if (Team != _previousTeam) {
+            ChangeTeam(Team);
+        }
     }
 
     public void ChangeTeam(Team newTeam) {
+        _previousTeam = newTeam;
         Team = newTeam;
-
-        UpdateSprites();
-        if (_enemyController != null) _enemyController.enabled = Team == Team.Enemy;
-        if (_movingBody != null && Team == Team.Neutral) _movingBody.StopMoving();
         gameObject.layer = 
             Team == Team.Player ? Layers.PlayerPart
             : Team == Team.Enemy ? Layers.EnemyPart
             : Layers.NeutralPart;
-        if (ChangeTeamEvent != null) ChangeTeamEvent(newTeam);
-    }
-
-    void UpdateSprites() {
-        if (Team == Team.Enemy) {
-            _spriteRenderer.sprite = _enemySprite;
-        } else {
-            _spriteRenderer.sprite = _playerSprite;
-        }
+        ChangeTeamEvent?.Invoke(newTeam);
     }
 }

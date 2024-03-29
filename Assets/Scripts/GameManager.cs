@@ -15,8 +15,8 @@ public enum GameState
 public class GameManager : MonoBehaviour
 {
     public GameState State = GameState.Intro;
-    public Player2D InitialPlayer;
-    private Player2D Player;
+    public Player InitialPlayer;
+    private Player Player;
     public Arena InitialArena;
     private Arena Arena;
     
@@ -108,6 +108,7 @@ public class GameManager : MonoBehaviour
 
 
     public void StartNewGame() {
+        Debug.Log("Starting new game.");
         Money = 0;
 
         ClearUI();
