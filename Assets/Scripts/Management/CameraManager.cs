@@ -22,8 +22,8 @@ public class CameraManager : MonoBehaviour
     public SpriteRenderer DamageFilter;
 
     public Transform Focus;
-    private float _maxXPos = 8f;
-    private float _maxZPos = 4f;
+    private const float _maxXPos = (Globals.ArenaWidth / 2) - 9.5f;
+    private const float _maxZPos = (Globals.ArenaHeight / 2) - 6f;
     private Vector3 _offset = new Vector3(0, 9.4f, -1.64f);
 
     public void Awake()

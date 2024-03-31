@@ -8,6 +8,7 @@ public class Globals : MonoBehaviour
 
     private void Awake() {
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public CellMaterials playerCellMaterials;
@@ -16,4 +17,7 @@ public class Globals : MonoBehaviour
 
     public Material playerBulletMaterial;
     public Material enemyBulletMaterial;
+
+    public const float ArenaWidth = 28f;
+    public const float ArenaHeight = 18f;
 }

@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 7521919228279342159}
   - component: {fileID: 5633743278783049014}
   - component: {fileID: -9141131026624838820}
+  - component: {fileID: -7391820010929829338}
   m_Layer: 8
   m_Name: PeashooterCell
   m_TagString: Untagged
@@ -188,9 +189,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4184419519430477262}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Mass: 15
+  m_Drag: 5
+  m_AngularDrag: 5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -353,9 +354,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetDirection: {x: 0, y: 0, z: 0}
-  MaxSpeed: 4
-  FrictionDynamicCoefficientWithGround: 25
-  Acceleration: 20
+  MaxSpeed: 2.5
+  BaseAcceleration: 8
 --- !u!114 &3948940895273921248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,7 +373,8 @@ MonoBehaviour:
   AutoFireIntervalSeconds: 2.5
   FiringInaccuracyAngles: 0
   InitialProjectileOffset: 0.5
-  InitialProjectileSpeed: 6
+  PlayerProjectileSpeed: 10
+  EnemyProjectileSpeed: 4
   NumProjectiles: 1
   FiringSpreadAngles: 0
   PlayerTargetingStrategy: 2
@@ -420,11 +421,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 1
   currentHealth: 1
-  Team: 1
-  ConvertChance: 0.15
-  destroyOnDeath: 0
+  ConvertChance: 1
   melded: 0
   beingDestroyed: 0
+--- !u!114 &-7391820010929829338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4184419519430477262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29ca85602c22cb8408bd6b554ed0b13d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7802982028987391805
 GameObject:
   m_ObjectHideFlags: 0

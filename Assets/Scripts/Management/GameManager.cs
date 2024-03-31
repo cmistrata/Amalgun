@@ -16,9 +16,9 @@ public class GameManager : MonoBehaviour
 {
     public GameState State = GameState.Intro;
     public Player InitialPlayer;
-    private Player Player;
+    public Player Player;
     public Arena InitialArena;
-    private Arena Arena;
+    public Arena Arena;
     
     public bool Paused = false;
     public GameObject PauseOverlay;

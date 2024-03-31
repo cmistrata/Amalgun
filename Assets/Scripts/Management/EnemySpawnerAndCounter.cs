@@ -14,6 +14,8 @@ public class EnemySpawnerAndCounter : MonoBehaviour {
     private int _enemiesSpawned;
     public int EnemySpawnIntervalSeconds = 1;
 
+    private const float _minimumSpawnDistanceSqr = 100f;
+
     public static event Action SignalWaveOver;
 
     void Awake() {
@@ -29,10 +31,26 @@ public class EnemySpawnerAndCounter : MonoBehaviour {
     }
 
     void SpawnEnemy() {
-        var enemy = Instantiate(enemyPrefab, new Vector3(UnityEngine.Random.Range(-10, 10), 0, UnityEngine.Random.Range(-10, 10)), Quaternion.identity, EnemiesContainer.Instance.transform);
+        var enemy = Instantiate(enemyPrefab, GenerateSpawnPoint(), Quaternion.identity, EnemiesContainer.Instance.transform);
         enemy.GetComponent<TeamTracker>().ChangeTeam(Team.Enemy);
         enemy.GetComponent<Part>().SignalEnemyDeath += DecrementEnemies;
         _enemiesSpawned += 1;
+    }
+
+    Vector3 GenerateSpawnPoint() {
+        Vector3 spawnPoint;
+        do {
+            spawnPoint = new Vector3(
+                UnityEngine.Random.Range(-Globals.ArenaWidth/2 + 1, Globals.ArenaWidth/2 - 1),
+                0,
+                UnityEngine.Random.Range(-Globals.ArenaHeight/2 + 1, Globals.ArenaHeight/2 - 2)
+            ); }
+        while (
+            GameManager.Instance != null
+            && GameManager.Instance.Player != null
+            && (GameManager.Instance.Player.transform.position - spawnPoint).sqrMagnitude < _minimumSpawnDistanceSqr
+            );
+        return spawnPoint;
     }
 
     void DecrementEnemies() {

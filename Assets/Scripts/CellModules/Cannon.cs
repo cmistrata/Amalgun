@@ -12,7 +12,8 @@ public class Cannon : CellModule {
     private float _autoFireTimer = 0f;
     public float FiringInaccuracyAngles = 0;
     public float InitialProjectileOffset = 0.5f;
-    public float InitialProjectileSpeed = 6;
+    public float PlayerProjectileSpeed = 10;
+    public float EnemyProjectileSpeed = 4;
     public float NumProjectiles = 1;
     public float FiringSpreadAngles = 0;
     public enum TargetingStrategy {
@@ -40,13 +41,14 @@ public class Cannon : CellModule {
             CannonBase.transform.rotation = Quaternion.AngleAxis(_aimingAngle, Vector3.up);
         }
 
+        bool firingAllowedInGameState = GameManager.Instance == null || GameManager.Instance.State == GameState.Fighting;
         if (AutoFiring 
-            //&& GameManager.Instance.State == GameState.Fighting 
+            && firingAllowedInGameState
             && _team != Team.Neutral) {
             _autoFireTimer -= Time.deltaTime;
             if (_autoFireTimer < 0) {
                 FireProjectiles();
-                _autoFireTimer += AutoFireIntervalSeconds;
+                _autoFireTimer += Random.Range(.9f, 1.1f) * AutoFireIntervalSeconds;
             }
         }
     }
@@ -86,8 +88,10 @@ public class Cannon : CellModule {
             meshRenderer.material = _team == Team.Enemy ? Globals.Instance.enemyBulletMaterial : Globals.Instance.playerBulletMaterial;
         }
 
+        float projectileSpeed = _team == Team.Player ? PlayerProjectileSpeed : EnemyProjectileSpeed;
+
         bullet.TimeOutSeconds = 5;
-        projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * InitialProjectileSpeed;
+        projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * projectileSpeed;
         projectile.layer = _team == Team.Enemy ? Layers.EnemyBullet : Layers.PlayerBullet;
         gameObject.GetComponent<AudioSource>().Play();
     }

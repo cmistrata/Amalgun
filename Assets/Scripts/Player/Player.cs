@@ -18,13 +18,15 @@ public class Player : MonoBehaviour {
     private Dictionary<GameObject, List<GameObject>> partGraph = new();
     public static Player Instance;
 
-    private float _rotationSpeed = 100f;
-    private float _newPartMassIncrease = .1f;
+    private float _rotationalInertia = 100f;
+    private const float _torque = 5000f;
+    private const float _newPartMassIncrease = 15f;
 
     public static event Action SignalPlayerDeath;
 
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
+        _rb.inertiaTensor = new(0, _rotationalInertia, 0);
         _mover = GetComponent<Mover>();
         partGraph.Add(gameObject, new List<GameObject>());
         Instance = this;
@@ -32,24 +34,27 @@ public class Player : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        DetectAndHandleClick();
+    }
+
+    private void FixedUpdate() {
         Vector3 newTargetDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         _mover.TargetDirection = newTargetDirection.normalized;
 
-        float clockwiseRotation = Input.GetAxis("Rotate Clockwise");
-        transform.Rotate(new Vector3(0, clockwiseRotation * _rotationSpeed * Time.deltaTime, 0));
-
-        DetectAndHandleClick();
+        float clockwiseRotationInput = Input.GetAxis("Rotate Clockwise");
+        _rb.AddTorque(Vector3.up * _torque * clockwiseRotationInput);
     }
 
     void DetectAndHandleClick() {
         if (Input.GetMouseButtonDown(0) && Utils.MouseRaycast(out var hit)) {
             if (GameManager.Instance.State == GameState.Shop) {
-                if (GameManager.Instance.Money < 0) return;
-                if (hit.collider.gameObject == this.gameObject) {
+                //if (GameManager.Instance.Money <= 0) return;
+                var clickedGameObject = hit.collider.gameObject;
+                if (clickedGameObject == this.gameObject) {
                     GameManager.Instance.SpendMoney();
                     Heal(1);
-                } else {
-                    var clickedPart = hit.collider.gameObject.GetComponent<Part>();
+                } else if (clickedGameObject.GetComponent<Part>() != null) {
+                    var clickedPart = clickedGameObject.GetComponent<Part>();
                     GameManager.Instance.SpendMoney();
                     clickedPart.Meld();
                 }
@@ -99,13 +104,18 @@ public class Player : MonoBehaviour {
         // This will effectively combine the part's collider into the player's.
         neutralPart.GetComponent<Mover>().enabled = false;
         Destroy(neutralPart.GetComponent<Rigidbody>());
+        if (neutralPart.TryGetComponent<StayInBounds>(out var stayInBounds)) {
+            stayInBounds.enabled = false;
+        }
 
         // Make the part's Team "Team.Player".
         neutralPart.GetComponent<TeamTracker>().ChangeTeam(Team.Player);
+
+        UpdateRotationalInertia();
     }
 
     private List<GameObject> FindTouchingPlayerPartsAndDestroyNearbyBullets(GameObject neutralPart) {
-        Collider[] nearbyColliders = Physics.OverlapSphere(neutralPart.transform.position, 1.05f);
+        Collider[] nearbyColliders = Physics.OverlapSphere(neutralPart.transform.position, .525f);
         List<GameObject> adjacentParts = new();
 
         foreach (Collider nearbyCollider in nearbyColliders) {
@@ -152,6 +162,7 @@ public class Player : MonoBehaviour {
         partGraph.Remove(part);
         part.transform.parent = null;
         DestroyUnconnectedParts();
+        UpdateRotationalInertia();
     }
 
     private void DestroyUnconnectedParts() {
@@ -160,6 +171,7 @@ public class Player : MonoBehaviour {
 
         foreach (GameObject newlyDisconnectedPart in newlyDisconnectedParts) {
             partGraph.Remove(newlyDisconnectedPart);
+            _rb.mass -= _newPartMassIncrease;
             newlyDisconnectedPart.GetComponent<Part>().Die();
         }
     }
@@ -235,5 +247,14 @@ public class Player : MonoBehaviour {
         //Instantiate(PrefabsManager.Instance.PlayerDeathEffect, transform.position, Quaternion.identity, transform.parent);
         AudioManager.Instance.PlayPartDestroy();
         CameraManager.Instance.ShakeCamera(.3f, .6f);
+    }
+
+    private float UpdateRotationalInertia() {
+        var rotationalInertia = 100f;
+        foreach (var cell in partGraph.Keys) {
+            rotationalInertia += (cell.transform.position - transform.position).sqrMagnitude * 15f;
+        }
+        _rb.inertiaTensor = new(0, rotationalInertia, 0);
+        return rotationalInertia;
     }
 }
