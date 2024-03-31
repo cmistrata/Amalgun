@@ -20,6 +20,7 @@ public class MusicManager : MonoBehaviour
     {
         Instance = this;
         audioSource = GetComponent<AudioSource>();
+        DontDestroyOnLoad(this);
     }
 
     public void QueueSongStart(int difficulty)

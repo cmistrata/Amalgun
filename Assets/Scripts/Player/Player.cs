@@ -246,7 +246,7 @@ public class Player : MonoBehaviour {
     public void PlayDeathFX() {
         //Instantiate(PrefabsManager.Instance.PlayerDeathEffect, transform.position, Quaternion.identity, transform.parent);
         AudioManager.Instance.PlayPartDestroy();
-        CameraManager.Instance.ShakeCamera(.3f, .6f);
+        CinemachineCameraManager.Instance.Shake(1, .6f);
     }
 
     private float UpdateRotationalInertia() {

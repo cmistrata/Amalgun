@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public static class Utils {
@@ -8,6 +9,11 @@ public static class Utils {
     public static bool MouseRaycast(out RaycastHit hit) {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         return Physics.Raycast(ray, out hit, 100);
+    }
+
+    public static Vector3 GetMousePosition() {
+        MouseRaycast(out RaycastHit hit);
+        return hit.point;
     }
 
     public static void LogOncePerSecond(string logMessage, string key = null) {

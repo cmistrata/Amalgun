@@ -11,7 +11,8 @@ public class Cannon : CellModule {
     public float AutoFireIntervalSeconds = 2.5f;
     private float _autoFireTimer = 0f;
     public float FiringInaccuracyAngles = 0;
-    public float InitialProjectileOffset = 0.5f;
+    public float InitialProjectileOffset = 0;
+    public Transform InitialFiringPosition;
     public float PlayerProjectileSpeed = 10;
     public float EnemyProjectileSpeed = 4;
     public float NumProjectiles = 1;
@@ -35,12 +36,6 @@ public class Cannon : CellModule {
 
     // Update is called once per frame
     void Update() {
-        if (!GameManager.Instance.Paused) {
-            _aimingDirection = GetAimingDirection();
-            _aimingAngle = Mathf.Atan2(_aimingDirection.x, _aimingDirection.z) * Mathf.Rad2Deg;
-            CannonBase.transform.rotation = Quaternion.AngleAxis(_aimingAngle, Vector3.up);
-        }
-
         bool firingAllowedInGameState = GameManager.Instance == null || GameManager.Instance.State == GameState.Fighting;
         if (AutoFiring 
             && firingAllowedInGameState
@@ -50,6 +45,14 @@ public class Cannon : CellModule {
                 FireProjectiles();
                 _autoFireTimer += Random.Range(.9f, 1.1f) * AutoFireIntervalSeconds;
             }
+        }
+    }
+
+    private void FixedUpdate() {
+        if (!GameManager.Instance.Paused) {
+            _aimingDirection = GetAimingDirection();
+            _aimingAngle = Mathf.Atan2(_aimingDirection.x, _aimingDirection.z) * Mathf.Rad2Deg;
+            CannonBase.transform.rotation = Quaternion.AngleAxis(_aimingAngle, Vector3.up);
         }
     }
 
@@ -74,10 +77,10 @@ public class Cannon : CellModule {
         float inaccuracyOffset = Random.Range(-FiringInaccuracyAngles, FiringInaccuracyAngles);
         float firingAngleAfterOffset = _aimingAngle + aimingAngleOffset + inaccuracyOffset;
 
-        Vector3 bulletOffset = new Vector3(0, .6f, 0) + (InitialProjectileOffset * _aimingDirection.normalized);
+        Vector3 firingPosition = InitialFiringPosition.position + (InitialProjectileOffset * _aimingDirection.normalized);
         GameObject projectile = Instantiate(
             ProjectilePrefab,
-            transform.position + bulletOffset,
+            firingPosition,
             Quaternion.AngleAxis(firingAngleAfterOffset, Vector3.up),
             BulletsContainer.Instance?.transform
         );

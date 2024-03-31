@@ -7,14 +7,16 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: TiledColorGround
-  m_Shader: {fileID: 45, guid: 0000000000000000f000000000000000, type: 0}
+  m_Name: JetEmission
+  m_Shader: {fileID: 4800000, guid: 128c5f1edaefa4c4fb3f9f7a4615edb2, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _NORMALMAP
-  - _PARALLAXMAP
-  m_InvalidKeywords: []
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _RIMLIMIT_ON
+  - _RIMOVERLAP_ON
+  - _SEGMENTED_ON
+  - _SPCOVERLAP_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -26,7 +28,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: 4dc3f7384b4d8d947828c3ba2bad568a, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -43,11 +45,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 4, y: 4}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 4, y: 4}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -58,34 +60,63 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
-        m_Texture: {fileID: 2800000, guid: d9eb62d1c1c9df04ea11aa05e369c201, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AmbientCol: 0
     - _BumpScale: 1
+    - _Clipped: 0
+    - _ColBright: 0
+    - _ColIntense: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0.051
+    - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _Lumin: 0.48
+    - _MaxAtten: 0.342
+    - _MaxLight: 0.798
     - _Metallic: 0
+    - _MinLight: 0.491
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _Parallax: 0.0456
+    - _Offset: 0.2
+    - _OtlWidth: 2.52
+    - _Parallax: 0.02
+    - _PostAtten: 0
+    - _RimIntense: 0.552
+    - _RimLimit: 1
+    - _RimOverlap: 1
+    - _RimSmooth: 1
+    - _RimTolerc: 1
+    - _Segmented: 1
+    - _ShnIntense: 0.244
+    - _ShnOverlap: 0
+    - _ShnRange: 0.258
+    - _ShnSmooth: 1
     - _SmoothnessTextureChannel: 0
+    - _SpcIntence: 0
+    - _SpcLimit: 0
+    - _SpcOverlap: 1
+    - _SpcSmooth: 0
+    - _SpcTolerc: 0.015
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _Steps: 2.7
+    - _StpSmooth: 0
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.2867765, g: 0.37111607, b: 0.72955966, a: 1}
+    - _Color: {r: 1, g: 0.4541694, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SpecColor: {r: 0.106918216, g: 0.106918216, b: 0.106918216, a: 1}
+    - _MaxColor: {r: 0, g: 0.76902664, b: 0.8113208, a: 1}
+    - _MinColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OtlColor: {r: 1, g: 0.15876576, b: 0, a: 1}
+    - _RimColor: {r: 1, g: 0.9904847, b: 0.8160377, a: 1}
+    - _ShnColor: {r: 0.9406834, g: 1, b: 0.7294118, a: 1}
+    - _SpcColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
