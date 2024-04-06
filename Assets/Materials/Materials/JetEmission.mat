@@ -110,11 +110,11 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 0.4541694, b: 0, a: 1}
+    - _Color: {r: 0.6509433, g: 1, b: 0.6797153, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MaxColor: {r: 0, g: 0.76902664, b: 0.8113208, a: 1}
     - _MinColor: {r: 0, g: 0, b: 0, a: 1}
-    - _OtlColor: {r: 1, g: 0.15876576, b: 0, a: 1}
+    - _OtlColor: {r: 0, g: 1, b: 0.07429361, a: 1}
     - _RimColor: {r: 1, g: 0.9904847, b: 0.8160377, a: 1}
     - _ShnColor: {r: 0.9406834, g: 1, b: 0.7294118, a: 1}
     - _SpcColor: {r: 1, g: 1, b: 1, a: 1}

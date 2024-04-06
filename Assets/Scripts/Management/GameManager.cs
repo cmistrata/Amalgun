@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour
     public int Money = 0;
     public TMP_Text moneyDisplay;
 
+    public int Wave = 1;
+    public TMP_Text WaveText;
+
 
     void Awake()
     {
@@ -120,11 +123,15 @@ public class GameManager : MonoBehaviour
         State = GameState.Fighting;
         CameraManager.Focus = Player.transform;
         MusicManager.Instance.RestartEasySong();
+        Wave = 0;
         StartNewWave();
     }
 
     public void StartNewWave() {
         State = GameState.Fighting;
+        Wave += 1;
+        WaveText.text = $"Wave {Wave}";
+        WaveText.gameObject.SetActive(true);
 
         Shop.SetActive(false);
         if (Arena != null) {
@@ -138,6 +145,7 @@ public class GameManager : MonoBehaviour
         State = GameState.Shop;
 
         Arena.gameObject.SetActive(false);
+        WaveText.gameObject.SetActive(false);
         Shop.SetActive(true);
         Player.transform.position = Vector3.zero;
     }

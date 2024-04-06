@@ -7,8 +7,6 @@ using UnityEngine;
 public class EnemySpawnerAndCounter : MonoBehaviour {
     public static EnemySpawnerAndCounter Instance;
     public GameObject enemyPrefab;
-    public TMP_Text _waveText;
-    public int CurrentWave = 1;
     public int EnemiesPerWave = 5;
     public int EnemiesLeftToKill;
     private int _enemiesSpawned;
@@ -24,7 +22,6 @@ public class EnemySpawnerAndCounter : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        _waveText.text = $"Wave {CurrentWave}";
         EnemiesLeftToKill = EnemiesPerWave;
         _enemiesSpawned = 0;
         SpawnEnemyOnInterval();
@@ -61,8 +58,6 @@ public class EnemySpawnerAndCounter : MonoBehaviour {
     }
 
     void StartNewWave() {
-        CurrentWave += 1;
-        _waveText.text = $"Wave {CurrentWave}";
         EnemiesLeftToKill = EnemiesPerWave;
         _enemiesSpawned = 0;
         SpawnEnemyOnInterval();

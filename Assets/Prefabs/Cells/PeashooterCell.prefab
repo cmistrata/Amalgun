@@ -408,7 +408,7 @@ MonoBehaviour:
   InitialFiringPosition: {fileID: 7649398022570508413}
   PlayerProjectileSpeed: 10
   EnemyProjectileSpeed: 4
-  NumProjectiles: 1
+  NumProjectiles: 0
   FiringSpreadAngles: 0
   PlayerTargetingStrategy: 2
   EnemyTargetingStrategy: 1
@@ -454,7 +454,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 1
   currentHealth: 1
-  ConvertChance: 1
+  ConvertChance: 0.5
   melded: 0
   beingDestroyed: 0
 --- !u!114 &-7391820010929829338
