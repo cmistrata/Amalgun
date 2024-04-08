@@ -14,11 +14,12 @@ public enum GameState
 }
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+
     public GameState State = GameState.Intro;
     public Player InitialPlayer;
     public Player Player;
-    public Arena InitialArena;
-    public Arena Arena;
+    public GameObject Arena;
     
     public bool Paused = false;
     public GameObject PauseOverlay;
@@ -26,49 +27,57 @@ public class GameManager : MonoBehaviour
     public GameObject StartMenu;
     public GameObject GameOverScreen;
     public GameObject Shop;
-    public CameraManager CameraManager;
 
-    public static GameManager Instance;
+    
 
     public int Money = 0;
-    public TMP_Text moneyDisplay;
+    public TMP_Text MoneyDisplay;
 
     public int Wave = 1;
+    public int EnemiesPerWave = 5;
     public TMP_Text WaveText;
+
+    private int _enemiesRemaining = 0;
 
 
     void Awake()
     {
         Instance = this;
-        EnemySpawnerAndCounter.SignalWaveOver += HandleWaveOver;
         Player.SignalPlayerDeath += HandlePlayerDeath;
+        CellHealthManager.SignalEnemyDeath += HandleEnemyDeath;
+    }
+
+    private void Start() {
+        if (State == GameState.Fighting) {
+            StartNewGame();
+        }
     }
 
     public void GainMoney(int amount = 1) {
         Money += amount;
-        moneyDisplay.text = $"Money :{Money}";
+        MoneyDisplay.text = $"Money :{Money}";
     }
 
     public void SpendMoney(int amount = 1) {
         Money -= amount;
-        moneyDisplay.text = $"Money :{Money}";
+        MoneyDisplay.text = $"Money :{Money}";
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("r")) {
+        if (Input.GetKeyDown(KeyCode.R)) {
             StartNewGame();
         }
         if (State == GameState.Fighting) {
-            PlayingUpdate();
+            FightingUpdate();
         } else if (State == GameState.GameOver) {
             GameOverUpdate();
         }
     }
 
-    void PlayingUpdate() {
-        if (Input.GetKeyDown("p")) {
+    void FightingUpdate() {
+        if (Input.GetKeyDown(KeyCode.P)) {
             Paused = !Paused;
             if (Paused) {
                 Time.timeScale = 0f;
@@ -78,9 +87,12 @@ public class GameManager : MonoBehaviour
                 PauseOverlay.SetActive(false);
             }
         }
+
+        if (Paused) return;
+
     }
     void GameOverUpdate() {
-        if (Input.GetKeyDown("space")) {
+        if (Input.GetKeyDown(KeyCode.Space)) {
             StartNewGame();
         }
     }
@@ -103,12 +115,6 @@ public class GameManager : MonoBehaviour
         State = GameState.GameOver;
     }
 
-    void OnKeyDown(KeyDownEvent ev) {
-        Debug.Log("KeyDown:" + ev.keyCode);
-        Debug.Log("KeyDown:" + ev.character);
-        Debug.Log("KeyDown:" + ev.modifiers);
-    }
-
 
     public void StartNewGame() {
         Debug.Log("Starting new game.");
@@ -121,7 +127,6 @@ public class GameManager : MonoBehaviour
         Player = Instantiate(InitialPlayer);
         Player.transform.position = Vector3.zero;
         State = GameState.Fighting;
-        CameraManager.Focus = Player.transform;
         MusicManager.Instance.RestartEasySong();
         Wave = 0;
         StartNewWave();
@@ -129,22 +134,28 @@ public class GameManager : MonoBehaviour
 
     public void StartNewWave() {
         State = GameState.Fighting;
+
         Wave += 1;
         WaveText.text = $"Wave {Wave}";
         WaveText.gameObject.SetActive(true);
-
-        Shop.SetActive(false);
-        if (Arena != null) {
-            Destroy(Arena.gameObject);
-        }
-        Arena = Instantiate(InitialArena);
+        _enemiesRemaining = EnemiesPerWave;
+        EnemySpawner.Instance.SpawnMoreEnemies(_enemiesRemaining);
+        
+        
         Player.transform.position = Vector3.zero;
+        Shop.SetActive(false);
+        Arena.SetActive(true);
     }
 
-    public void HandleWaveOver() {
+    public void ClearUI() {
+        StartMenu.SetActive(false);
+        GameOverScreen.SetActive(false);
+    }
+
+    public void EndWave() {
         State = GameState.Shop;
 
-        Arena.gameObject.SetActive(false);
+        Arena.SetActive(false);
         WaveText.gameObject.SetActive(false);
         Shop.SetActive(true);
         Player.transform.position = Vector3.zero;
@@ -158,8 +169,10 @@ public class GameManager : MonoBehaviour
         GameOver();
     }
 
-    public void ClearUI() {
-        StartMenu.SetActive(false);
-        GameOverScreen.SetActive(false);
+    public void HandleEnemyDeath() {
+        _enemiesRemaining -= 1;
+        if (_enemiesRemaining <= 0 ) {
+            EndWave();
+        }
     }
 }

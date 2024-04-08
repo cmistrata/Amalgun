@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BetweenPlayerAndMouse : MonoBehaviour
 {
-    public float factor = .2f;
+    public float Factor = .2f;
 
     // Update is called once per frame
     void FixedUpdate()
@@ -13,7 +13,7 @@ public class BetweenPlayerAndMouse : MonoBehaviour
             var playerPosition = GameManager.Instance.Player.transform.position;
             var mousePosition = Utils.GetMousePosition();
             var fromPlayerToMouse = mousePosition - playerPosition;
-            transform.position = playerPosition + factor * fromPlayerToMouse;
+            transform.position = playerPosition + Factor * fromPlayerToMouse;
         }
     }
 }

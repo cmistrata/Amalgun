@@ -11,52 +11,50 @@ public class MusicManager : MonoBehaviour
 
     [HideInInspector]
     public static MusicManager Instance;
-    private AudioSource audioSource;
-    private int Difficulty = 0;
-    private int NextBar = 0;
+    private AudioSource _audioSource;
+    private int _difficulty = 0;
+    private int _nextBar = 0;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    private void Awake() {
         Instance = this;
-        audioSource = GetComponent<AudioSource>();
+        _audioSource = GetComponent<AudioSource>();
         DontDestroyOnLoad(this);
     }
 
     public void QueueSongStart(int difficulty)
     {
-        if (audioSource.clip == null)
+        if (_audioSource.clip == null)
         {
-            audioSource.clip = EasyMusic;
+            _audioSource.clip = EasyMusic;
         }
         var bars = 8;
-        var barLength = (audioSource.clip.length / bars);
+        var barLength = (_audioSource.clip.length / bars);
         // The songs are divided into 8 bars, start a new song after that bar.
-        var bar = (int)(audioSource.time / barLength);
-        var timeRemaining = barLength - (audioSource.time % (barLength));
+        var bar = (int)(_audioSource.time / barLength);
+        var timeRemaining = barLength - (_audioSource.time % (barLength));
 
-        NextBar = (bar + 1) % bars;
-        Difficulty = difficulty;
-        Invoke("StartSong", timeRemaining);
+        _nextBar = (bar + 1) % bars;
+        _difficulty = difficulty;
+        Invoke(nameof(StartSong), timeRemaining);
     }
 
     private void StartSong()
     {
-        var clip = Difficulty == 0 ? EasyMusic : Difficulty == 1 ? MediumMusic : HardMusic;
-        audioSource.clip = clip;
-        audioSource.time = (audioSource.clip.length / 8) * NextBar;
-        audioSource.Play();
+        var clip = _difficulty == 0 ? EasyMusic : _difficulty == 1 ? MediumMusic : HardMusic;
+        _audioSource.clip = clip;
+        _audioSource.time = (_audioSource.clip.length / 8) * _nextBar;
+        _audioSource.Play();
     }
 
     public void RestartEasySong()
     {
-        audioSource.clip = EasyMusic;
-        audioSource.time = 0;
-        audioSource.Play();
+        _audioSource.clip = EasyMusic;
+        _audioSource.time = 0;
+        _audioSource.Play();
     }
 
     public void StopMusic()
     {
-        audioSource.Stop();
+        _audioSource.Stop();
     }
 }

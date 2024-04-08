@@ -9,12 +9,12 @@ public class CameraManager : MonoBehaviour
     public GameObject Camera;
 
     # region Shaking logic
-    private float currentShakeTimeLeft = 0f;
+    private float _currentShakeTimeLeft = 0f;
 
     // A measure of magnitude for the shake. Tweak based on your preference
-    private float currentShakeMagnitude = 0f;
+    private float _currentShakeMagnitude = 0f;
 
-    private Coroutine currentShakeCoroutine = null;
+    private Coroutine _currentShakeCoroutine = null;
     # endregion
 
     public static CameraManager Instance;
@@ -33,31 +33,31 @@ public class CameraManager : MonoBehaviour
 
     public void ShakeCamera(float shakeMagnitude, float shakeDuration)
     {
-        if (currentShakeCoroutine != null) StopCoroutine(currentShakeCoroutine);
+        if (_currentShakeCoroutine != null) StopCoroutine(_currentShakeCoroutine);
 
-        currentShakeMagnitude = Math.Max(shakeMagnitude, currentShakeMagnitude);
-        currentShakeTimeLeft = Math.Max(currentShakeTimeLeft, shakeDuration);
-        currentShakeCoroutine = StartCoroutine(ShakeCameraCoroutine());
+        _currentShakeMagnitude = Math.Max(shakeMagnitude, _currentShakeMagnitude);
+        _currentShakeTimeLeft = Math.Max(_currentShakeTimeLeft, shakeDuration);
+        _currentShakeCoroutine = StartCoroutine(ShakeCameraCoroutine());
     }
 
     private IEnumerator ShakeCameraCoroutine()
     {
-        while (currentShakeTimeLeft > 0)
+        while (_currentShakeTimeLeft > 0)
         {  
             if (!GameManager.Instance.Paused) {
-                Camera.transform.position += UnityEngine.Random.insideUnitSphere * currentShakeMagnitude;
-                currentShakeTimeLeft -= Time.deltaTime;
+                Camera.transform.position += UnityEngine.Random.insideUnitSphere * _currentShakeMagnitude;
+                _currentShakeTimeLeft -= Time.deltaTime;
                 yield return null;
             }
             
         }
-        currentShakeMagnitude = 0;
+        _currentShakeMagnitude = 0;
     }
 
     public void FlashDamageFilter()
     {
         DamageFilter.gameObject.SetActive(true);
-        Invoke("DeactivateDamageFilter", .1f);
+        Invoke(nameof(DeactivateDamageFilter), .1f);
     }
 
     private void DeactivateDamageFilter()

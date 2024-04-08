@@ -5,7 +5,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float TimeOutSeconds = 5f;
-    protected float lifetime = 0;
+    protected float _lifetime = 0;
     private Rigidbody _rb;
 
     private void Awake() {
@@ -13,7 +13,7 @@ public class Bullet : MonoBehaviour
     }
     void Update()
     {
-        lifetime += Time.deltaTime;
+        _lifetime += Time.deltaTime;
 
         float x = transform.position.x;
         float y = transform.position.y;
@@ -26,7 +26,7 @@ public class Bullet : MonoBehaviour
     }
 
     private void FixedUpdate() {
-        if (lifetime >= TimeOutSeconds && !_rb.useGravity) {
+        if (_lifetime >= TimeOutSeconds && !_rb.useGravity) {
             _rb.useGravity = true;
         }
     }

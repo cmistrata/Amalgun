@@ -15,12 +15,15 @@ public class Player : MonoBehaviour {
     private Mover _mover;
 
     [SerializeField]
-    private Dictionary<GameObject, List<GameObject>> partGraph = new();
+    private Dictionary<GameObject, List<GameObject>> _cellGraph = new();
+    // Wait a bit to connect new cells to allow sliding them into place.
+    private const float _timeToConnect = .03f;
+    private Dictionary<GameObject, float> _connectionTimeByCell = new();
     public static Player Instance;
 
     private float _rotationalInertia = 100f;
     private const float _torque = 5000f;
-    private const float _newPartMassIncrease = 15f;
+    private const float _newCellMassIncrease = 15f;
 
     public static event Action SignalPlayerDeath;
 
@@ -28,7 +31,7 @@ public class Player : MonoBehaviour {
         _rb = GetComponent<Rigidbody>();
         _rb.inertiaTensor = new(0, _rotationalInertia, 0);
         _mover = GetComponent<Mover>();
-        partGraph.Add(gameObject, new List<GameObject>());
+        _cellGraph.Add(gameObject, new List<GameObject>());
         Instance = this;
     }
 
@@ -53,10 +56,10 @@ public class Player : MonoBehaviour {
                 if (clickedGameObject == this.gameObject) {
                     GameManager.Instance.SpendMoney();
                     Heal(1);
-                } else if (clickedGameObject.GetComponent<Part>() != null) {
-                    var clickedPart = clickedGameObject.GetComponent<Part>();
+                } else if (clickedGameObject.GetComponent<CellHealthManager>() != null) {
+                    var clickedCell = clickedGameObject.GetComponent<CellHealthManager>();
                     GameManager.Instance.SpendMoney();
-                    clickedPart.Meld();
+                    clickedCell.Meld();
                 }
             }
         }
@@ -79,52 +82,50 @@ public class Player : MonoBehaviour {
 
 
     /// <summary>
-    /// Adds a part to the player and updates the part graph
+    /// Adds a cell to the player and updates the cell graph
     /// </summary>
-    /// <param name="neutralPart">the new part</param>
-    /// <param name="adjacentParts">existing parts adjacent to new part</param>
-    public void ConnectPart(GameObject neutralPart) {
-        List<GameObject> touchingPlayerParts = FindTouchingPlayerPartsAndDestroyNearbyBullets(neutralPart);
+    public void ConnectCell(GameObject neutralCell) {
+        List<GameObject> cellsTouchingPlayer = FindCellsTouchingPlayerAndDestroyNearbyBullets(neutralCell);
 
-        // Add the new part to the graph, and simultaneously create edges
-        // from it to all the parts near it during the collision.
-        partGraph.Add(neutralPart, touchingPlayerParts);
-        _rb.mass += _newPartMassIncrease;
-        neutralPart.transform.parent = transform;
+        // Add the new cell to the graph, and simultaneously create edges
+        // from it to all the cells near it during the collision.
+        _cellGraph.Add(neutralCell, cellsTouchingPlayer);
+        _rb.mass += _newCellMassIncrease;
+        neutralCell.transform.parent = transform;
         // Also create edges from its neighbors to it.
-        foreach (GameObject touchingPlayerPart in touchingPlayerParts) {
+        foreach (GameObject cellTouchingPlayer in cellsTouchingPlayer) {
             try {
-                partGraph[touchingPlayerPart].Add(neutralPart);
+                _cellGraph[cellTouchingPlayer].Add(neutralCell);
             } catch (KeyNotFoundException) {
-                Debug.LogError($"Tried to update adjacencies for part ${touchingPlayerPart} not in the Player's partGraph.");
+                Debug.LogError($"Tried to update adjacencies for cell ${cellTouchingPlayer} not in the Player's cellGraph.");
             }
         }
 
-        // Remove the part's RigidBody, but not its collider.
-        // This will effectively combine the part's collider into the player's.
-        neutralPart.GetComponent<Mover>().enabled = false;
-        Destroy(neutralPart.GetComponent<Rigidbody>());
-        if (neutralPart.TryGetComponent<StayInBounds>(out var stayInBounds)) {
+        // Remove the cell's RigidBody, but not its collider.
+        // This will effectively combine the cell's collider into the player's.
+        neutralCell.GetComponent<Mover>().enabled = false;
+        Destroy(neutralCell.GetComponent<Rigidbody>());
+        if (neutralCell.TryGetComponent<StayInBounds>(out var stayInBounds)) {
             stayInBounds.enabled = false;
         }
 
-        // Make the part's Team "Team.Player".
-        neutralPart.GetComponent<TeamTracker>().ChangeTeam(Team.Player);
+        // Make the cell's Team "Team.Player".
+        neutralCell.GetComponent<TeamTracker>().ChangeTeam(Team.Player);
 
         UpdateRotationalInertia();
     }
 
-    private List<GameObject> FindTouchingPlayerPartsAndDestroyNearbyBullets(GameObject neutralPart) {
-        Collider[] nearbyColliders = Physics.OverlapSphere(neutralPart.transform.position, .525f);
-        List<GameObject> adjacentParts = new();
+    private List<GameObject> FindCellsTouchingPlayerAndDestroyNearbyBullets(GameObject neutralCell) {
+        Collider[] nearbyColliders = Physics.OverlapSphere(neutralCell.transform.position, .525f);
+        List<GameObject> adjacentCells = new();
 
         foreach (Collider nearbyCollider in nearbyColliders) {
-            if (nearbyCollider.transform == neutralPart.transform) continue;
+            if (nearbyCollider.transform == neutralCell.transform) continue;
 
             var nearbyObject = nearbyCollider.gameObject;
-            var nearbyObjectIsPlayerPart = partGraph.ContainsKey(nearbyObject);
-            if (nearbyObjectIsPlayerPart) {
-                adjacentParts.Add(nearbyObject);
+            var nearbyObjectIsPlayerCell = _cellGraph.ContainsKey(nearbyObject);
+            if (nearbyObjectIsPlayerCell) {
+                adjacentCells.Add(nearbyObject);
             }
 
             // Destroy nearby bullets on attach to prevent instafrag
@@ -133,83 +134,82 @@ public class Player : MonoBehaviour {
             }
         }
 
-        return adjacentParts;
+        return adjacentCells;
     }
 
     /// <summary>
-    /// Removes a part from the player and updates the part graph
-    /// Then checks the connection and removes other detached parts
+    /// Removes a cell from the player and updates the cell graph
+    /// Then checks the connection and removes other detached cells
     /// </summary>
-    /// <param name="part">the part to detatch</param>
-    public void DamagePart(GameObject part) {
-        var partComponent = part.GetComponent<Part>();
-        partComponent.TakeDamage(1);
-        if (partComponent.beingDestroyed) {
-            DisconnectPart(part);
+    public void DamageCell(GameObject cell) {
+        var cellComponent = cell.GetComponent<CellHealthManager>();
+        cellComponent.TakeDamage(1);
+        if (cellComponent.BeingDestroyed) {
+            DisconnectCell(cell);
         }
     }
 
-    public void DisconnectPart(GameObject part) {
-        // Decrease mass by the part's mass
+    public void DisconnectCell(GameObject cell) {
+        // Decrease mass by the cell's mass
         if (_rb.mass > 1) {
-            _rb.mass -= _newPartMassIncrease;
+            _rb.mass -= _newCellMassIncrease;
         }
 
-        // Remove any edges containing the part, and then remove the node representing the part
-        foreach (GameObject p in partGraph.Keys) {
-            partGraph[p].Remove(part);
+        // Remove any edges containing the cell, and then remove the node representing the cell
+        foreach (GameObject p in _cellGraph.Keys) {
+            _cellGraph[p].Remove(cell);
         }
-        partGraph.Remove(part);
-        part.transform.parent = null;
-        DestroyUnconnectedParts();
+        _cellGraph.Remove(cell);
+        cell.transform.parent = null;
+        DestroyUnconnectedCells();
         UpdateRotationalInertia();
     }
 
-    private void DestroyUnconnectedParts() {
-        var partsConnectedToPlayer = GetPartsConnectedToPlayer();
-        var newlyDisconnectedParts = partGraph.Keys.Where(part => !partsConnectedToPlayer.Contains(part)).ToList();
+    private void DestroyUnconnectedCells() {
+        var cellsConnectedToPlayer = GetCellsConnectedToPlayer();
+        var newlyDisconnectedCells = _cellGraph.Keys.Where(cell => !cellsConnectedToPlayer.Contains(cell)).ToList();
 
-        foreach (GameObject newlyDisconnectedPart in newlyDisconnectedParts) {
-            partGraph.Remove(newlyDisconnectedPart);
-            _rb.mass -= _newPartMassIncrease;
-            newlyDisconnectedPart.GetComponent<Part>().Die();
+        foreach (GameObject newlyDisconnectedCell in newlyDisconnectedCells) {
+            _cellGraph.Remove(newlyDisconnectedCell);
+            _rb.mass -= _newCellMassIncrease;
+            newlyDisconnectedCell.GetComponent<CellHealthManager>().Die();
         }
     }
 
-    private List<GameObject> GetPartsConnectedToPlayer() {
-        List<GameObject> connectedParts = new() { gameObject };
-        Stack<GameObject> partsToSearch = new();
-        partsToSearch.Push(gameObject);
+    private List<GameObject> GetCellsConnectedToPlayer() {
+        List<GameObject> connectedCells = new() { gameObject };
+        Stack<GameObject> cellsToSearch = new();
+        cellsToSearch.Push(gameObject);
 
-        while (partsToSearch.Count > 0) {
-            var currentPart = partsToSearch.Pop();
-            if (currentPart == null || !partGraph.ContainsKey(currentPart)) {
-                Debug.LogError($"Couldn't find {currentPart} in part graph.");
+        while (cellsToSearch.Count > 0) {
+            var currentCell = cellsToSearch.Pop();
+            if (currentCell == null || !_cellGraph.ContainsKey(currentCell)) {
+                Debug.LogError($"Couldn't find {currentCell} in cell graph.");
                 continue;
             }
-            var neighbors = partGraph[currentPart];
+            var neighbors = _cellGraph[currentCell];
             foreach (GameObject p in neighbors) {
-                if (!connectedParts.Contains(p)) {
-                    partsToSearch.Push(p);
-                    connectedParts.Add(p);
+                if (!connectedCells.Contains(p)) {
+                    cellsToSearch.Push(p);
+                    connectedCells.Add(p);
                 }
             }
         }
 
-        return connectedParts;
+        return connectedCells;
     }
 
-    public void DestroyAllParts() {
-        foreach (GameObject part in partGraph.Keys) {
-            part.GetComponent<Part>().PlayDeathFX();
+    public void DestroyAllPlayerCells() {
+        foreach (GameObject cell in _cellGraph.Keys) {
+            cell.GetComponent<CellHealthManager>().PlayDeathFX();
         }
-        partGraph = new();
+        _cellGraph = new();
     }
 
-    private string GetPartGraphAsString() {
+    private string GetCellGraphAsString() {
         var printString = "";
-        foreach (GameObject part in partGraph.Keys) {
-            printString += $"{part.name}: {String.Join(", ", partGraph[part])}\n";
+        foreach (GameObject cell in _cellGraph.Keys) {
+            printString += $"{cell.name}: {String.Join(", ", _cellGraph[cell])}\n";
         }
         return printString;
     }
@@ -222,20 +222,19 @@ public class Player : MonoBehaviour {
 
     public void HandleBulletCollision(Collision collision) {
         var nonBulletObject = collision.GetContact(0).thisCollider.gameObject;
-        var collisionIsWithMainPart = nonBulletObject == gameObject;
-        if (collisionIsWithMainPart) {
+        var collisionIsWithPlayerShip = nonBulletObject == gameObject;
+        if (collisionIsWithPlayerShip) {
             TakeDamage(1);
         } else {
-            DamagePart(nonBulletObject);
+            DamageCell(nonBulletObject);
         }
     }
 
     void OnCollisionEnter(Collision other) {
-        Utils.LogOncePerSecond($"Collided with {other}");
         int collisionLayer = other.gameObject.layer;
         switch (collisionLayer) {
-            case Layers.NeutralPart:
-                ConnectPart(other.gameObject);
+            case Layers.NeutralCell:
+                _connectionTimeByCell[other.gameObject] = Time.time + _timeToConnect;
                 break;
             case Layers.EnemyBullet:
                 HandleBulletCollision(other);
@@ -243,15 +242,25 @@ public class Player : MonoBehaviour {
         }
     }
 
+    private void OnCollisionStay(Collision other) {
+        int collisionLayer = other.gameObject.layer;
+        if (collisionLayer == Layers.NeutralCell) {
+            if (Time.time >= _connectionTimeByCell[other.gameObject]) {
+                ConnectCell(other.gameObject);
+                _connectionTimeByCell.Remove(other.gameObject);
+            }
+        }
+    }
+
     public void PlayDeathFX() {
         //Instantiate(PrefabsManager.Instance.PlayerDeathEffect, transform.position, Quaternion.identity, transform.parent);
-        AudioManager.Instance.PlayPartDestroy();
+        AudioManager.Instance.PlayCellDestroy();
         CinemachineCameraManager.Instance.Shake(1, .6f);
     }
 
     private float UpdateRotationalInertia() {
         var rotationalInertia = 100f;
-        foreach (var cell in partGraph.Keys) {
+        foreach (var cell in _cellGraph.Keys) {
             rotationalInertia += (cell.transform.position - transform.position).sqrMagnitude * 15f;
         }
         _rb.inertiaTensor = new(0, rotationalInertia, 0);

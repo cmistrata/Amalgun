@@ -13,8 +13,8 @@ public class CellMaterialChanger : CellModule
     }
 
     private void UpdateMaterials(CellMaterials cellMaterials) {
-        Foundation.material = cellMaterials.foundationMaterial;
-        Turret.material = cellMaterials.turretMaterial;
+        Foundation.material = cellMaterials.FoundationMaterial;
+        Turret.material = cellMaterials.TurretMaterial;
     }
 
     override protected void HandleTeamChange(Team newTeam) {

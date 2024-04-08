@@ -40,6 +40,10 @@ public class MovementAI : CellModule {
     }
 
     protected override void HandleTeamChange(Team newTeam) {
+        if (newTeam != Team.Enemy)
+        {
+            _mover.StopMoving();
+        }
         enabled = newTeam == Team.Enemy;
     }
 }

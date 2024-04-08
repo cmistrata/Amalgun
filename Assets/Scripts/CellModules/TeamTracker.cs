@@ -29,9 +29,9 @@ public class TeamTracker : MonoBehaviour
         _previousTeam = newTeam;
         Team = newTeam;
         gameObject.layer = 
-            Team == Team.Player ? Layers.PlayerPart
-            : Team == Team.Enemy ? Layers.EnemyPart
-            : Layers.NeutralPart;
+            Team == Team.Player ? Layers.PlayerCell
+            : Team == Team.Enemy ? Layers.EnemyCell
+            : Layers.NeutralCell;
         ChangeTeamEvent?.Invoke(newTeam);
     }
 }

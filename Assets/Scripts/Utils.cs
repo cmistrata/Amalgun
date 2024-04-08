@@ -4,7 +4,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 
 public static class Utils {
-    static Dictionary<String, int> _lastLogsecondByMessage = new Dictionary<String, int>();
+    static Dictionary<string, int> _lastLogsecondByMessage = new();
 
     public static bool MouseRaycast(out RaycastHit hit) {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

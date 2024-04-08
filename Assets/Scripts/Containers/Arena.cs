@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class Arena : MonoBehaviour
 {
-    public EnemySpawnerAndCounter EnemySpawnerAndCounter;
+    public EnemySpawner EnemySpawnerAndCounter;
 }

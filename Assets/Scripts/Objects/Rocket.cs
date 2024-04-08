@@ -7,12 +7,12 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class Rocket : Bullet
 {
-    public float startupLength = .5f;
-    private bool inStartupPhase = true;
-    public float thrustStrength = 1000f;
+    public float StartupLength = .5f;
+    private bool _inStartupPhase = true;
+    public float ThrustStrength = 1000f;
 
-    public float startupRotationSpeed = 20f;
-    public float thrustingRotationSpeed = 5f;
+    public float StartupRotationSpeed = 20f;
+    public float ThrustingRotationSpeed = 5f;
 
     public float MaxSpeed = 8f;
 
@@ -20,17 +20,17 @@ public class Rocket : Bullet
 
     void Update()
     {
-        lifetime += Time.deltaTime;
-        if (lifetime >= TimeOutSeconds)
+        _lifetime += Time.deltaTime;
+        if (_lifetime >= TimeOutSeconds)
         {
             Destroy(this.gameObject);
         }
 
-        if (inStartupPhase)
+        if (_inStartupPhase)
         {
-            if (lifetime >= startupLength)
+            if (_lifetime >= StartupLength)
             {
-                inStartupPhase = false;
+                _inStartupPhase = false;
                 gameObject.GetComponent<Animator>().SetBool("IsEnemy", gameObject.layer == Layers.EnemyBullet);
                 gameObject.GetComponent<Animator>().enabled = true;
                 gameObject.GetComponent<AudioSource>().Play();

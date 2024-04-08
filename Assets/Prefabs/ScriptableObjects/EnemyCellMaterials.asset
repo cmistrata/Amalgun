@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 633a095bbe352fc4fbb8e8f07b5a4fb2, type: 3}
   m_Name: EnemyCellMaterials
   m_EditorClassIdentifier: 
-  foundationMaterial: {fileID: 2100000, guid: 75611f4b0537d9a4793892784232ed8f, type: 2}
-  turretMaterial: {fileID: 2100000, guid: 56429f3de956d1c4a8706164aed45ae8, type: 2}
+  FoundationMaterial: {fileID: 2100000, guid: 75611f4b0537d9a4793892784232ed8f, type: 2}
+  TurretMaterial: {fileID: 2100000, guid: 56429f3de956d1c4a8706164aed45ae8, type: 2}

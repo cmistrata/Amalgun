@@ -10,7 +10,7 @@ public class AudioManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void PlayPartDestroy() {
+    public void PlayCellDestroy() {
         var audioSource = GetAudioSourceWithName("Part_destroy");
         audioSource.Play();
     }

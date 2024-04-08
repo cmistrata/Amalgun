@@ -36,14 +36,18 @@ public class JetController : MonoBehaviour
         _rightSideJetEmission = RightSideJet.emission;
         _rightFrontJetEmission = RightFrontJet.emission;
 
-        //_particleSystems = new List<ParticleSystem> { LeftBackJet, LeftSideJet, LeftFrontJet, RightBackJet, RightSideJet, RightFrontJet };
-        //foreach (var particleSystem in _particleSystems) {
-        //    var particleSystemMain = particleSystem.main;
-        //    particleSystemMain.startSize = Scale;
+        _particleSystems = new List<ParticleSystem> { LeftBackJet, LeftSideJet, LeftFrontJet, RightBackJet, RightSideJet, RightFrontJet };
+        
+    }
 
-        //    var particleSystemShape = particleSystem.shape;
-        //    particleSystemShape.scale = new(Scale, Scale, Scale);
-        //}
+    public void UpdateScale() {
+        foreach (var particleSystem in _particleSystems) {
+            var particleSystemMain = particleSystem.main;
+            particleSystemMain.startSize = Scale;
+
+            var particleSystemShape = particleSystem.shape;
+            particleSystemShape.scale = new(Scale, Scale, Scale);
+        }
     }
 
     // Update is called once per frame

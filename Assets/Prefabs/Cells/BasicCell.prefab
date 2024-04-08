@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: -9141131026624838820}
   - component: {fileID: -7391820010929829338}
   m_Layer: 8
-  m_Name: PeashooterCell
+  m_Name: BasicCell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -408,7 +408,7 @@ MonoBehaviour:
   InitialFiringPosition: {fileID: 7649398022570508413}
   PlayerProjectileSpeed: 10
   EnemyProjectileSpeed: 4
-  NumProjectiles: 0
+  NumProjectiles: 1
   FiringSpreadAngles: 0
   PlayerTargetingStrategy: 2
   EnemyTargetingStrategy: 1
