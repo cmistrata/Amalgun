@@ -5,6 +5,8 @@ using TMPro;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour {
+    private static int _cellId = 0;
+
     public static EnemySpawner Instance;
     public GameObject EnemyPrefab;
     public int _numEnemiesToSpawn = 0;
@@ -19,6 +21,7 @@ public class EnemySpawner : MonoBehaviour {
 
     void SpawnEnemy() {
         var enemy = Instantiate(EnemyPrefab, GenerateSpawnPoint(), Quaternion.identity, EnemiesContainer.Instance.transform);
+        enemy.name = "Cell_" + _cellId++;
         enemy.GetComponent<TeamTracker>().ChangeTeam(Team.Enemy);
         _numEnemiesToSpawn -= 1;
     }
