@@ -24,10 +24,6 @@ public class CellHealthManager : MonoBehaviour
     public float ConvertChance = 0.15f;
     private float CoinDropChance = 1f;
     public bool Melded = false;
-    /// <summary>
-    /// For use by Player to know if the cell needs to be removed from its cell graph.
-    /// </summary>
-    public bool BeingDestroyed = false;
 
     public void Awake() {
         _teamTracker = GetComponent<TeamTracker>();
@@ -37,40 +33,48 @@ public class CellHealthManager : MonoBehaviour
         CurrentHealth = MaxHealth;
     }
 
-    public void TakeDamage(float damage)
+    //returns true if this damage destroys the cell
+    public bool TakeDamage(float damage)
     {
         CurrentHealth -= damage;
         if (CurrentHealth <= 0 && !Melded)
         {
-            Die();
+            return Die();
         }
+        return false;
     }
 
     /// <summary>
-    /// Destroy the cell.
+    /// Kills the cell. Returns true if the cell is being destroyed
     /// </summary>
-    public void Die()
-    {
-        
-        if (_teamTracker.Team == Team.Enemy) {
-            SignalEnemyDeath?.Invoke();
-            // Convert an enemy with a given chance, or auto convert if it is the last enemy in the wave
-            bool convertCell = UnityEngine.Random.Range(0f, 1f) < ConvertChance;
-            if (convertCell) {
-                NeutralizeCell();
-                AudioManager.Instance.PlayUISound(1.4f);
-            } else {
+    public bool Die()
+    {   
+        switch(_teamTracker.Team)
+        {
+            case Team.Player:
                 PlayDeathFX();
                 Destroy(gameObject);
-                if (UnityEngine.Random.Range(0f, 1f) < CoinDropChance) {
+                return true;
+            case Team.Enemy:
+                SignalEnemyDeath?.Invoke();
+                // Convert an enemy with a given chance, or auto convert if it is the last enemy in the wave
+                bool convertCell = UnityEngine.Random.Range(0f, 1f) < ConvertChance;
+                if (convertCell)
+                {
+                    NeutralizeCell();
+                    AudioManager.Instance.PlayUISound(1.4f);
+                    return false;
+                }
+
+                PlayDeathFX();
+                Destroy(gameObject);
+                if (UnityEngine.Random.Range(0f, 1f) < CoinDropChance)
+                {
                     //Instantiate(PrefabsManager.Instance.Coin, transform.position, Quaternion.identity, transform.parent);
                 }
-                BeingDestroyed = true;
-            }
-        } else {
-            PlayDeathFX();
-            Destroy(gameObject);
-            BeingDestroyed = true;
+                return true;
+            default:
+                return false;
         }
     }
 
