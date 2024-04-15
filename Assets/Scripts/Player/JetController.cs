@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Mover))]
+[RequireComponent(typeof(CellMover))]
 public class JetController : MonoBehaviour
 {
     public float Scale = .03f;
@@ -22,13 +22,10 @@ public class JetController : MonoBehaviour
 
     private List<ParticleSystem> _particleSystems;
 
-    private Mover _mover;
-
     private const float _rotationPower = 15f;
     private const float _translationPower = 15f;
 
     private void Awake() {
-        _mover = GetComponent<Mover>();
         _leftBackJetEmission = LeftBackJet.emission;
         _leftSideJetEmission = LeftSideJet.emission;
         _leftFrontJetEmission = LeftFrontJet.emission;
@@ -53,7 +50,7 @@ public class JetController : MonoBehaviour
     // Update is called once per frame
     void Update() 
     {
-        Vector3 globalTargetDirection = _mover.TargetDirection;
+        Vector3 globalTargetDirection = Vector3.zero;
         Vector3 localTargetDirection = transform.InverseTransformVector(globalTargetDirection).normalized;
         float lateralMovement = localTargetDirection.x;
         float forwardMovement = localTargetDirection.z;
