@@ -7,7 +7,6 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(CellMover))]
 public class Player : MonoBehaviour {
     public int MaxHealth = 4;
     public int CurrentHealth = 4;

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class DirectionForceMovementBase : BaseMovement
+public abstract class DirectionForceMovementBase : MovementBase
 {
     [SerializeField]
     protected float Acceleration = 4f;
@@ -16,6 +16,6 @@ public abstract class DirectionForceMovementBase : BaseMovement
 
         Vector3 force = (rb.mass * Acceleration) * TargetDirection;
         rb.AddForce(force);
-        IMovement.ClampSpeed(rb, MaxSpeed);
+        MovementBase.ClampSpeed(rb, MaxSpeed);
     }
 }

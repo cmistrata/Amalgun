@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CellMover : CellModule {
 
-    public BaseMovement Movement;
+    public MovementBase Movement;
     private Rigidbody _rb;
 
     protected override void ExtraAwake() 
