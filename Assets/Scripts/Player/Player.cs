@@ -7,12 +7,10 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(Mover))]
 public class Player : MonoBehaviour {
     public int MaxHealth = 4;
     public int CurrentHealth = 4;
     private Rigidbody _rb;
-    private Mover _mover;
     private PlayerShip _playerShip;
 
     // Wait a bit to connect new cells to allow sliding them into place.
@@ -33,22 +31,11 @@ public class Player : MonoBehaviour {
 
         _rb = GetComponent<Rigidbody>();
         UpdateRotationalInertia();
-
-        _mover = GetComponent<Mover>();
-
     }
 
     // Update is called once per frame
     void Update() {
         DetectAndHandleClick();
-    }
-
-    private void FixedUpdate() {
-        Vector3 newTargetDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        _mover.TargetDirection = newTargetDirection.normalized;
-
-        float clockwiseRotationInput = Input.GetAxis("Rotate Clockwise");
-        _rb.AddTorque(Vector3.up * _torque * clockwiseRotationInput);
     }
 
     void DetectAndHandleClick() {
@@ -95,7 +82,6 @@ public class Player : MonoBehaviour {
 
         // Remove the cell's RigidBody, but not its collider.
         // This will effectively combine the cell's collider into the player's.
-        neutralCell.GetComponent<Mover>().enabled = false;
         Destroy(neutralCell.GetComponent<Rigidbody>());
         if (neutralCell.TryGetComponent<StayInBounds>(out var stayInBounds)) {
             stayInBounds.enabled = false;
