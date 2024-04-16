@@ -100,12 +100,12 @@ GameObject:
   - component: {fileID: 8328559633100802191}
   - component: {fileID: 2126079638599323316}
   - component: {fileID: 7116028985619595151}
-  - component: {fileID: 7816695104284138269}
   - component: {fileID: 863307734943564408}
   - component: {fileID: 2790832846150261910}
   - component: {fileID: 3837481382979245934}
   - component: {fileID: 1612257514297011739}
   - component: {fileID: 3162965643300093425}
+  - component: {fileID: 5883297938331804724}
   m_Layer: 7
   m_Name: PlayerShip
   m_TagString: Untagged
@@ -267,19 +267,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Team: 0
---- !u!114 &7816695104284138269
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1054040942645836184}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a3f28f666f56d84884328155a737acb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Movement: {fileID: 11400000, guid: 6c6bba06f8ed9fc4dab7a9d76e9f338d, type: 2}
 --- !u!114 &863307734943564408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,6 +360,20 @@ MonoBehaviour:
   RightBackJet: {fileID: 4023849369629768082}
   RightSideJet: {fileID: 8877501781972729125}
   RightFrontJet: {fileID: 2837873008760290504}
+--- !u!114 &5883297938331804724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054040942645836184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54ba6ab2f00f0be4390bf36f77170a14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Acceleration: 80
+  MaxSpeed: 7
 --- !u!1 &1059292871094811287
 GameObject:
   m_ObjectHideFlags: 0

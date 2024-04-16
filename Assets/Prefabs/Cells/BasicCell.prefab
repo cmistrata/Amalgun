@@ -132,13 +132,11 @@ GameObject:
   - component: {fileID: 5124538525197617714}
   - component: {fileID: 357396659847497823}
   - component: {fileID: 7182332185653640829}
-  - component: {fileID: 1275368059549039591}
   - component: {fileID: 3948940895273921248}
   - component: {fileID: 7521919228279342159}
-  - component: {fileID: 5633743278783049014}
   - component: {fileID: -9141131026624838820}
   - component: {fileID: -7391820010929829338}
-  - component: {fileID: 233747099269943045}
+  - component: {fileID: 6921129252178706568}
   m_Layer: 8
   m_Name: BasicCell
   m_TagString: Untagged
@@ -374,19 +372,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Team: 2
---- !u!114 &1275368059549039591
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4184419519430477262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a3f28f666f56d84884328155a737acb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Movement: {fileID: 11400000, guid: a0120156ca0bfdd47b642c897632bb7e, type: 2}
 --- !u!114 &3948940895273921248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -426,18 +411,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Foundation: {fileID: 5493465602523306226}
   Turret: {fileID: 2161255163787538813}
---- !u!114 &5633743278783049014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4184419519430477262}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0976bd61b376ab041a9c2361e9ef1e10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &-9141131026624838820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -466,7 +439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ca85602c22cb8408bd6b554ed0b13d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &233747099269943045
+--- !u!114 &6921129252178706568
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -475,10 +448,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4184419519430477262}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ea33263d181ab047a50408aedc77046, type: 3}
+  m_Script: {fileID: 11500000, guid: fab350ad32de8e94c8d6b5b370345bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 0
+  Acceleration: 10
+  MaxSpeed: 2
+  _movingRecalculateTimeSeconds: 2.3
 --- !u!1 &7802982028987391805
 GameObject:
   m_ObjectHideFlags: 0

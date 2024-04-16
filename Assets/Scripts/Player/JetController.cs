@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CellMover))]
+[RequireComponent(typeof(PlayerMovement))]
 public class JetController : MonoBehaviour
 {
     public float Scale = .03f;

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PlayerMovement", menuName = "Player Movement")]
 public class PlayerMovement : DirectionForceMovementBase
 {
     private const float TORQUE = 5000f;

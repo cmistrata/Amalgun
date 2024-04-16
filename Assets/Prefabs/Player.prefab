@@ -279,10 +279,10 @@ GameObject:
   - component: {fileID: 172896962161111621}
   - component: {fileID: 4629315103935883318}
   - component: {fileID: 7179355966784978269}
-  - component: {fileID: 8199733869851454421}
   - component: {fileID: 5187457131707266865}
   - component: {fileID: 8688270237522051530}
   - component: {fileID: 1390749844314943521}
+  - component: {fileID: 8616120130518658464}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -510,21 +510,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 4
   CurrentHealth: 4
---- !u!114 &8199733869851454421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8593853767561603751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a3f28f666f56d84884328155a737acb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TargetDirection: {x: 0, y: 0, z: 0}
-  MaxSpeed: 7
-  BaseAcceleration: 80
 --- !u!114 &5187457131707266865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -542,6 +527,7 @@ MonoBehaviour:
   AutoFireIntervalSeconds: 2.5
   FiringInaccuracyAngles: 0
   InitialProjectileOffset: 0.5
+  InitialFiringPosition: {fileID: 0}
   PlayerProjectileSpeed: 10
   EnemyProjectileSpeed: 4
   NumProjectiles: 1
@@ -584,3 +570,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ca85602c22cb8408bd6b554ed0b13d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8616120130518658464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8593853767561603751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54ba6ab2f00f0be4390bf36f77170a14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Acceleration: 80
+  MaxSpeed: 7
