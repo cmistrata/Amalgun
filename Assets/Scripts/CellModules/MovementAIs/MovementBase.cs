@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class MovementBase : ScriptableObject
+public abstract class MovementBase : CellModule
 {
-    public abstract void ApplyMovement(Rigidbody rb, float timePassed);
+    private Rigidbody _rb;
     static protected void ClampSpeed(Rigidbody rb, float maxSpeed)
     {
         //use squared as an optimization to avoid expensive sqrt operations
@@ -12,6 +12,22 @@ public abstract class MovementBase : ScriptableObject
         {
             rb.velocity = rb.velocity.normalized * maxSpeed;
         }
-
     }
+    protected override void ExtraAwake()
+    {
+        _rb = gameObject.GetComponent<Rigidbody>();
+    }
+    public void FixedUpdate()
+    {
+        if (_rb != null)
+        {
+            ApplyMovement(_rb, Time.deltaTime);
+        }
+    }
+
+    protected override void HandleTeamChange(Team newTeam)
+    {
+        enabled = newTeam == Team.Enemy;
+    }
+    public abstract void ApplyMovement(Rigidbody rb, float timePassed);
 }

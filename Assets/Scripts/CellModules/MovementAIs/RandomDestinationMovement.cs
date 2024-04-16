@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "RandomDestinationMovement", menuName = "Random Destination Movement")]
 public class RandomDestinationMovement : DirectionForceMovementBase
 {
-    private const float MOVING_RECALCULATE_INTERVAL_SECONDS = 3f;
+    [SerializeField]
+    private float _movingRecalculateTimeSeconds = 3f;
     private float _movingRecalculateTimer;
     public override void ApplyMovement(Rigidbody rb, float timePassed)
     {
@@ -18,8 +18,8 @@ public class RandomDestinationMovement : DirectionForceMovementBase
         ApplyForce(rb);
     }
 
-    private bool ShouldRecalculate(float timePassed) => (_movingRecalculateTimer - timePassed) <= 0;
-    private void ResetRecalculateTimer() => _movingRecalculateTimer = MOVING_RECALCULATE_INTERVAL_SECONDS;
+    private bool ShouldRecalculate(float timePassed) => (_movingRecalculateTimer -= timePassed) <= 0;
+    private void ResetRecalculateTimer() => _movingRecalculateTimer = _movingRecalculateTimeSeconds;
 
     private Vector3 PickDirection(Vector3 startingPosition)
     {
