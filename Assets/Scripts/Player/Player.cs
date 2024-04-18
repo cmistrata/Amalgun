@@ -105,7 +105,7 @@ public class Player : MonoBehaviour {
             foreach (var diconnectedCell in disconnectedCells)
             {
                 var disonnectedCellComponent = diconnectedCell.GetComponent<CellHealthManager>();
-                disonnectedCellComponent.Die();
+                if (cellComponent != disonnectedCellComponent) disonnectedCellComponent.Die();
 
                 // Decrease mass by the disconnected cell's mass
                 if (_rb.mass > 1)
