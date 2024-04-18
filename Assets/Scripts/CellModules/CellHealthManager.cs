@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Team {
+public enum Team
+{
     Player,
     Enemy,
     Neutral
@@ -25,11 +26,13 @@ public class CellHealthManager : MonoBehaviour
     private float CoinDropChance = 1f;
     public bool Melded = false;
 
-    public void Awake() {
+    public void Awake()
+    {
         _teamTracker = GetComponent<TeamTracker>();
     }
 
-    virtual public void Start() {
+    virtual public void Start()
+    {
         CurrentHealth = MaxHealth;
     }
 
@@ -48,12 +51,12 @@ public class CellHealthManager : MonoBehaviour
     /// Kills the cell. Returns true if the cell is being destroyed
     /// </summary>
     public bool Die()
-    {   
-        switch(_teamTracker.Team)
+    {
+        switch (_teamTracker.Team)
         {
             case Team.Player:
                 PlayDeathFX();
-                Destroy(gameObject);
+                RemoveFromScene();
                 return true;
             case Team.Enemy:
                 SignalEnemyDeath?.Invoke();
@@ -66,8 +69,8 @@ public class CellHealthManager : MonoBehaviour
                     return false;
                 }
 
+                RemoveFromScene();
                 PlayDeathFX();
-                Destroy(gameObject);
                 if (UnityEngine.Random.Range(0f, 1f) < CoinDropChance)
                 {
                     //Instantiate(PrefabsManager.Instance.Coin, transform.position, Quaternion.identity, transform.parent);
@@ -76,6 +79,11 @@ public class CellHealthManager : MonoBehaviour
             default:
                 return false;
         }
+    }
+
+    private void RemoveFromScene()
+    {
+        CellPool.ReturnCell(gameObject);
     }
 
     public void PlayDeathFX()
@@ -92,19 +100,22 @@ public class CellHealthManager : MonoBehaviour
         }
         gameObject.layer = Layers.NeutralCell;
         _teamTracker.ChangeTeam(Team.Neutral);
-        
+
         CurrentHealth = MaxHealth;
     }
 
-    public void Meld() {
+    public void Meld()
+    {
         Melded = true;
     }
 
-    public void OnCollisionEnter(Collision collision) {
+    public void OnCollisionEnter(Collision collision)
+    {
         // Only handle bullet collisions.
         // Furthhermore, only handle bullet collisions for enemies. Player bullet collisions
         // will be handled in the Player object.
-        if (_teamTracker.Team == Team.Enemy && collision.gameObject.layer == Layers.PlayerBullet) {
+        if (_teamTracker.Team == Team.Enemy && collision.gameObject.layer == Layers.PlayerBullet)
+        {
             Die();
         }
     }
