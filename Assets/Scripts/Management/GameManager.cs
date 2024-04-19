@@ -20,8 +20,8 @@ public class GameManager : MonoBehaviour
     public static Action SignalGameStart;
 
     public GameState State = GameState.Intro;
-    public Player InitialPlayer;
-    public Player Player;
+    public GameObject PlayerPrefab;
+    public GameObject CurrentPlayer;
     public GameObject Arena;
 
     public bool Paused = false;
@@ -141,12 +141,12 @@ public class GameManager : MonoBehaviour
         Money = 0;
 
         ClearUI();
-        if (Player != null)
+        if (CurrentPlayer != null)
         {
-            Destroy(Player.gameObject);
+            Destroy(CurrentPlayer);
         }
-        Player = Instantiate(InitialPlayer);
-        Player.transform.position = Vector3.zero;
+        CurrentPlayer = Instantiate(PlayerPrefab);
+        CurrentPlayer.transform.position = Vector3.zero;
         State = GameState.Fighting;
         MusicManager.Instance.RestartEasySong();
         Wave = 0;
@@ -163,7 +163,7 @@ public class GameManager : MonoBehaviour
         WaveText.gameObject.SetActive(true);
 
 
-        Player.transform.position = Vector3.zero;
+        CurrentPlayer.transform.position = Vector3.zero;
         Shop.SetActive(false);
         Arena.SetActive(true);
     }
@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour
         Arena.SetActive(false);
         WaveText.gameObject.SetActive(false);
         Shop.SetActive(true);
-        Player.transform.position = Vector3.zero;
+        CurrentPlayer.transform.position = Vector3.zero;
     }
 
     public void HandleShopContinue()

@@ -36,8 +36,8 @@ public class EnemySpawner : MonoBehaviour {
             ); }
         while (
             GameManager.Instance != null
-            && GameManager.Instance.Player != null
-            && (GameManager.Instance.Player.transform.position - spawnPoint).sqrMagnitude < _minimumSpawnDistanceFromPlayerSqrd
+            && GameManager.Instance.CurrentPlayer != null
+            && (GameManager.Instance.CurrentPlayer.transform.position - spawnPoint).sqrMagnitude < _minimumSpawnDistanceFromPlayerSqrd
             );
         return spawnPoint;
     }
