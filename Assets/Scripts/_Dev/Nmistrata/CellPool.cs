@@ -10,6 +10,7 @@ public static class CellPool
     [SerializeField] //just to verify theyre correctly loaded
     private static Dictionary<CellType, GameObject> _cellPrefabs;
     private static Dictionary<CellType, IObjectPool<GameObject>> _cellPools;
+    private static int id = 0;
 
     static CellPool()
     {
@@ -66,7 +67,10 @@ public static class CellPool
 
     public static GameObject GetCell(CellType type)
     {
-        return _cellPools[type].Get();
+        GameObject cell = _cellPools[type].Get();
+        cell.name = "Cell" + id++;
+
+        return cell;
     }
 
     public static void ReturnCell(GameObject cell, CellType type)
