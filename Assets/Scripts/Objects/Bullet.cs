@@ -38,11 +38,6 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    public void OnCollisionEnter2D(Collision2D other)
-    {
-        Destroy(this.gameObject);
-    }
-
     public void OnCollisionEnter(Collision other)
     {
         Destroy(this.gameObject);
