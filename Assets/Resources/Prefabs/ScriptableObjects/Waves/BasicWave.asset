@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f784681c54b5224c9e8472a06cd30c7, type: 3}
   m_Name: BasicWave
   m_EditorClassIdentifier: 
-  _enemySpawnDelaySeconds: 1
+  _enemySpawnDelaySeconds: 0.5
   _randomizeOrder: 0
-  _enemies: 02000000020000000200000002000000020000000200000002000000020000000200000002000000
+  _enemies: 0200000002000000020000000200000002000000

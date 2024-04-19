@@ -19,6 +19,10 @@ public class GameManager : MonoBehaviour
 
     public static Action SignalGameStart;
 
+    private LevelController _levelController;
+    public List<Level> Levels;
+    private int _curLevel = 0;
+
     public GameState State = GameState.Intro;
     public GameObject PlayerPrefab;
     public GameObject CurrentPlayer;
@@ -42,11 +46,21 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        if (Instance != null) Debug.LogError("Multiple game managers instantiated");
+        _levelController = new LevelController();
         Instance = this;
         Player.SignalPlayerDeath += HandlePlayerDeath;
-        Level.SignalLevelComplete += OnLevelComplete;
-        WaveSpawner.SignalWaveComplete += OnNewWave;
-        SignalGameStart += OnNewWave;
+        WaveSpawner.SignalWaveComplete += OnWaveComplete;
+        LevelController.SignalLevelComplete += OnLevelComplete;
+        SignalGameStart += OnWaveComplete;
+    }
+
+    private void OnDestroy()
+    {
+        Player.SignalPlayerDeath -= HandlePlayerDeath;
+        WaveSpawner.SignalWaveComplete -= OnWaveComplete;
+        LevelController.SignalLevelComplete -= OnLevelComplete;
+        SignalGameStart -= OnWaveComplete;
     }
 
     private void Start()
@@ -55,19 +69,6 @@ public class GameManager : MonoBehaviour
         {
             StartNewGame();
         }
-
-    }
-
-    public void GainMoney(int amount = 1)
-    {
-        Money += amount;
-        MoneyDisplay.text = $"Money :{Money}";
-    }
-
-    public void SpendMoney(int amount = 1)
-    {
-        Money -= amount;
-        MoneyDisplay.text = $"Money :{Money}";
     }
 
     // Update is called once per frame
@@ -89,6 +90,7 @@ public class GameManager : MonoBehaviour
 
     void FightingUpdate()
     {
+        _levelController.Update(Time.deltaTime);
         if (Input.GetKeyDown(KeyCode.P))
         {
             Paused = !Paused;
@@ -103,9 +105,6 @@ public class GameManager : MonoBehaviour
                 PauseOverlay.SetActive(false);
             }
         }
-
-        if (Paused) return;
-
     }
     void GameOverUpdate()
     {
@@ -140,6 +139,10 @@ public class GameManager : MonoBehaviour
         Debug.Log("Starting new game.");
         Money = 0;
 
+        _curLevel = 0;
+        _levelController.LoadLevel(Levels[_curLevel++]);
+        _levelController.StartLevel();
+
         ClearUI();
         if (CurrentPlayer != null)
         {
@@ -154,18 +157,23 @@ public class GameManager : MonoBehaviour
         SignalGameStart.Invoke();
     }
 
-    public void OnNewWave()
+    public void OnWaveComplete()
     {
-        State = GameState.Fighting;
-
         Wave += 1;
+        WaveText.text = $"Wave {Wave}";
+        WaveText.gameObject.SetActive(true);
+    }
+
+    public void OnLevelComplete()
+    {
+        _levelController.LoadLevel(Levels[_curLevel++]);
+        _levelController.StartLevel();
+        Wave = 1;
         WaveText.text = $"Wave {Wave}";
         WaveText.gameObject.SetActive(true);
 
 
         CurrentPlayer.transform.position = Vector3.zero;
-        Shop.SetActive(false);
-        Arena.SetActive(true);
     }
 
     public void ClearUI()
@@ -174,7 +182,7 @@ public class GameManager : MonoBehaviour
         GameOverScreen.SetActive(false);
     }
 
-    public void OnLevelComplete()
+/*    public void OnLevelComplete()
     {
         State = GameState.Shop;
 
@@ -182,11 +190,11 @@ public class GameManager : MonoBehaviour
         WaveText.gameObject.SetActive(false);
         Shop.SetActive(true);
         CurrentPlayer.transform.position = Vector3.zero;
-    }
+    }*/
 
     public void HandleShopContinue()
     {
-        OnNewWave();
+        OnWaveComplete();
     }
 
     public void HandlePlayerDeath()

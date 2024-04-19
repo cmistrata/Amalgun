@@ -59,14 +59,11 @@ public class Player : MonoBehaviour {
     void DetectAndHandleClick() {
         if (Input.GetMouseButtonDown(0) && Utils.MouseRaycast(out var hit)) {
             if (GameManager.Instance.State == GameState.Shop) {
-                //if (GameManager.Instance.Money <= 0) return;
                 var clickedGameObject = hit.collider.gameObject;
                 if (clickedGameObject == this.gameObject) {
-                    GameManager.Instance.SpendMoney();
                     Heal(1);
                 } else if (clickedGameObject.GetComponent<CellHealthManager>() != null) {
                     var clickedCell = clickedGameObject.GetComponent<CellHealthManager>();
-                    GameManager.Instance.SpendMoney();
                     clickedCell.Meld();
                 }
             }

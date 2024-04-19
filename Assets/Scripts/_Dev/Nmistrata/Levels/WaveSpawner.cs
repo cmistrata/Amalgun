@@ -14,15 +14,21 @@ public class WaveSpawner
 
     public WaveSpawner()
     {
-        CellHealthManager.SignalEnemyCellDeath += OnEnemyDeath;
+        _isWaveInProgress = false;
+        _activeEnemies = 0;
     }
 
     public void LoadWave(Wave wave)
     {
+        Debug.Log($"Loading wave {wave}");
         _wave = ScriptableObject.Instantiate(wave);
     }
 
-    public bool StartWave() => _isWaveInProgress = true;
+    public void StartWave()
+    {
+        CellHealthManager.SignalEnemyCellDeath += OnEnemyDeath;
+        _isWaveInProgress = true;
+    }
 
     public void Update(float timePassed)
     {
@@ -62,6 +68,8 @@ public class WaveSpawner
 
         if (!_isWaveInProgress)
         {
+            Debug.Log($"Wave Complete");
+            CellHealthManager.SignalEnemyCellDeath -= OnEnemyDeath;
             SignalWaveComplete.Invoke();
         }
     }
