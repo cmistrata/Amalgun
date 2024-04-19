@@ -4,9 +4,14 @@ using UnityEngine;
 public enum CellType
 {
     None = 0,
-    Basic = 1
+    PlayerNucleus = 1,
+    Basic = 2
 }
 
+[RequireComponent(typeof(PlayerShipPiece))]
+[RequireComponent(typeof(MovementBase))]
+[RequireComponent(typeof(CellHealthManager))]
+[RequireComponent(typeof(TeamTracker))]
 public class CellProperties : MonoBehaviour
 {
     [SerializeField]

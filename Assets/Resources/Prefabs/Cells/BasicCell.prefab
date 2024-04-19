@@ -138,6 +138,7 @@ GameObject:
   - component: {fileID: -7391820010929829338}
   - component: {fileID: 6921129252178706568}
   - component: {fileID: 6982455318619017930}
+  - component: {fileID: 6120801840721140567}
   m_Layer: 8
   m_Name: BasicCell
   m_TagString: Untagged
@@ -426,7 +427,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 1
   CurrentHealth: 1
-  ConvertChance: 0.5
+  ConvertChance: 1
   Melded: 0
 --- !u!114 &-7391820010929829338
 MonoBehaviour:
@@ -467,7 +468,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edbc8ef897ec00541a3e98dba6a50874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 1
+  Type: 2
+--- !u!114 &6120801840721140567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4184419519430477262}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40afc8e5bac728243ab811b45be71d8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7802982028987391805
 GameObject:
   m_ObjectHideFlags: 0
