@@ -43,14 +43,12 @@ public class Level : MonoBehaviour
             Reset();
             return;
         }
-        Debug.Log("Spawning Wave in 3 seconds");
         StartCoroutine(SpawnWaveRoutine());
     }
 
     private IEnumerator SpawnWaveRoutine()
     {
         yield return new WaitForSeconds(_waveSecondsDelay);
-        Debug.Log("Spawning Wave");
         _spawner.LoadWave(_waves[_currentWave++]);
         _spawner.StartWave();
     }

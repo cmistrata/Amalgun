@@ -14,12 +14,11 @@ public class WaveSpawner
 
     public WaveSpawner()
     {
-        CellHealthManager.SignalEnemyDeath += OnEnemyDeath;
+        CellHealthManager.SignalEnemyCellDeath += OnEnemyDeath;
     }
 
     public void LoadWave(Wave wave)
     {
-        Debug.Log("Loading Wave");
         _wave = ScriptableObject.Instantiate(wave);
     }
 
@@ -31,7 +30,6 @@ public class WaveSpawner
 
         if (_wave.ShouldSpawn(timePassed))
         {
-            Debug.Log("Spawning Enemy");
             GameObject cell = CellPool.GetCell(_wave.GetNextEnemy());
             cell.transform.position = GenerateSpawnPoint();
             CellUtils.ConvertToTeam(cell, Team.Enemy);
@@ -52,8 +50,8 @@ public class WaveSpawner
         }
         while (
             GameManager.Instance != null
-            && GameManager.Instance.Player != null
-            && (GameManager.Instance.Player.transform.position - spawnPoint).sqrMagnitude < _minimumSpawnDistanceFromPlayerSquared
+            && GameManager.Instance.CurrentPlayer != null
+            && (GameManager.Instance.CurrentPlayer.transform.position - spawnPoint).sqrMagnitude < _minimumSpawnDistanceFromPlayerSquared
             );
         return spawnPoint;
     }
