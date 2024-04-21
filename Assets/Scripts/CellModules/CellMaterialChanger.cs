@@ -8,7 +8,7 @@ public class CellMaterialChanger : CellModule
     public Renderer Foundation;
     public Renderer Turret;
 
-    private void Start() {
+    protected override void ExtraAwake() {
         HandleTeamChange(_team);
     }
 

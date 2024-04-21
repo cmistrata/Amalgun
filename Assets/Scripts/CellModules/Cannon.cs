@@ -35,11 +35,6 @@ public class Cannon : CellModule {
 
     protected override void ExtraAwake() {
         _animator = GetComponent<Animator>();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
         HandleTeamChange(_team);
     }
 
