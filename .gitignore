@@ -73,3 +73,5 @@ crashlytics-build.properties
 
 #VS settings
 /.vscode
+/Assets/Sisus
+/Assets/Sisus.meta

@@ -7,8 +7,9 @@ using UnityEngine;
 
 public class PlayerShip
 {
+    
 
-    private const float ATTACH_TOLERANCE = .1f;
+    private const float ATTACH_TOLERANCE = .2f;
     private const float DESTROY_BULLET_ON_CONNECT_DISTANCE = .5f;
     private const float BASE_ROTATIONAL_INERTIA = 100f;
 
@@ -59,29 +60,24 @@ public class PlayerShip
         cell.transform.position = GetAttachPosition(cell.transform, nearbyCells);
     }
 
-    //returns the list of all the resulting disconnected cells
-    public List<GameObject> DisconnectCell(GameObject cell)
+    //remove the cell, and all the connections involving this cell
+    public void RemoveCell(GameObject cell)
     {
-        //remove all the connections involving this cell
-        _cellGraph[cell].Clear();
+        _cellGraph.Remove(cell);
         foreach (List<GameObject> connectedCells in _cellGraph.Values)
         {
             connectedCells.Remove(cell);
         }
-
-        //determine which cells are now disconnected and remove them from the graph
-        List<GameObject> disconnectedCells = GetDisonnectedCells();
-        foreach (GameObject disconnectedCell in disconnectedCells)
-        {
-            _cellGraph.Remove(disconnectedCell);
-        }
-
-        return disconnectedCells;
     }
 
-    private List<GameObject> GetDisonnectedCells()
+    public List<GameObject> GetAndRemoveDisonnectedCells()
     {
-        return _cellGraph.Keys.Except(GetConnectedCells()).ToList();
+        var disconnectedCells = _cellGraph.Keys.Except(GetConnectedCells()).ToList();
+        foreach (var cell in disconnectedCells)
+        {
+            RemoveCell(cell);
+        }
+        return disconnectedCells;
     }
 
     private List<GameObject> GetConnectedCells()
@@ -105,7 +101,7 @@ public class PlayerShip
     }
     private void DestroyNearbyBullets(Vector3 position, float distance)
     {
-        Collider[] nearbyColliders = Physics.OverlapSphere(position, distance);
+        Collider[] nearbyColliders = Physics.OverlapSphere(position, distance, Physics.AllLayers, QueryTriggerInteraction.Collide);
         foreach (Collider nearbyCollider in nearbyColliders)
         {
             GameObject nearbyObject = nearbyCollider.gameObject;
@@ -121,7 +117,9 @@ public class PlayerShip
         foreach (Collider nearbyCollider in nearbyColliders)
         {
             GameObject nearbyObject = nearbyCollider.gameObject;
-            if (transform != nearbyObject.transform && _cellGraph.ContainsKey(nearbyObject))
+            if (transform != nearbyObject.transform
+                    && nearbyCollider.isTrigger == false
+                    && _cellGraph.ContainsKey(nearbyObject))
             {
                 adjacentCells.Add(nearbyObject);
             }
@@ -144,8 +142,45 @@ public class PlayerShip
     //TODO: use this to 'snap' cells into position when they attach to multiple other cells
     private Vector3 GetAttachPosition(Transform cell, List<GameObject> attachmentCells)
     {
+        while(attachmentCells.Count > 2)
+        {
+            attachmentCells.RemoveAt(0); //TODO: handle >2 connections more gracefully? Its probably pretty rare and this will be good enough
+        }
+        if (attachmentCells.Count == 1)
+        {
+            Transform otherCell = attachmentCells[0].transform;
+            Vector3 direction = (cell.position - otherCell.position).normalized;
+            float distance = otherCell.GetComponent<CapsuleCollider>().radius + cell.GetComponent<CapsuleCollider>().radius;
+            return otherCell.position + (direction * distance);
+        }
+        if (attachmentCells.Count == 2)
+        {
+            float myRadius = cell.GetComponent<CapsuleCollider>().radius;
+            float distance1 = attachmentCells[0].GetComponent<CapsuleCollider>().radius + myRadius;
+            float distance2 = attachmentCells[1].GetComponent<CapsuleCollider>().radius + myRadius;
+            Vector2 center1 = new(attachmentCells[0].transform.position.x, attachmentCells[0].transform.position.z);
+            Vector2 center2 = new(attachmentCells[1].transform.position.x, attachmentCells[1].transform.position.z);
+
+            float distanceBetweenConnections = Vector2.Distance(center1, center2);
+
+            float a = (distance1 * distance1 - distance2 * distance2 + distanceBetweenConnections * distanceBetweenConnections) / (2 * distanceBetweenConnections);
+            float h = Mathf.Sqrt(distance1 * distance2 - a * a);
+
+            Vector2 direction = (center2 - center1).normalized;
+
+            Vector2 intersection1 = center1 + a * direction + h * new Vector2(-direction.y, direction.x);
+            Vector2 intersection2 = center1 + a * direction - h * new Vector2(-direction.y, direction.x);
+
+            Vector3 position1 = new Vector3(intersection1.x, cell.transform.position.y, intersection1.y);
+            Vector3 position2 = new Vector3(intersection2.x, cell.transform.position.y, intersection2.y);
+
+            return Vector3.Distance(position1, cell.position) < Vector3.Distance(position2, cell.position)
+                ? position1
+                : position2;
+        }
         return cell.position;
     }
+
 
     public override string ToString()
     {

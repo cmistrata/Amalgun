@@ -6,20 +6,23 @@ using UnityEngine;
 public class RandomDestinationMovement : DirectionForceMovementBase
 {
     [SerializeField]
-    private float _movingRecalculateTimeSeconds = 3f;
-    private float _movingRecalculateTimer;
+    private float _timerPeriod = 4f;
+
+    private FixedDelayTimer _timer;
+
+    RandomDestinationMovement() : base()
+    {
+        _timer = new(_timerPeriod);
+    }
+
     public override void ApplyMovement(Rigidbody rb, float timePassed)
     {
-        if (ShouldRecalculate(timePassed))
+        if (_timer.HasTimerTripped(timePassed) || TargetDirection == Vector3.zero)
         {
             TargetDirection = PickDirection(rb.transform.position);
-            ResetRecalculateTimer();
         }
         ApplyForce(rb);
     }
-
-    private bool ShouldRecalculate(float timePassed) => (_movingRecalculateTimer -= timePassed) <= 0;
-    private void ResetRecalculateTimer() => _movingRecalculateTimer = _movingRecalculateTimeSeconds;
 
     private Vector3 PickDirection(Vector3 startingPosition)
     {
