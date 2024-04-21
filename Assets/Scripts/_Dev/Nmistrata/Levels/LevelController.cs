@@ -1,16 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using TMPro.Examples;
 using UnityEngine;
 
 public class LevelController
 {
-    private Level _level;
-
     public static event Action SignalLevelComplete;
 
     private WaveSpawner _spawner;
+    private ReadOnlyCollection<Wave> _waves;
     private int _currentWave;
 
     private int _waveSecondsDelay = 3;
@@ -18,16 +18,12 @@ public class LevelController
     public LevelController()
     {
         _spawner = new WaveSpawner();
-        Reset();
-    }
-
-    ~LevelController()
-    {
+        _waves = null;
     }
     
     public void LoadLevel(Level level)
     {
-        _level = ScriptableObject.Instantiate(level);
+        _waves = level.Waves;
         _currentWave = 0;
     }
 
@@ -36,24 +32,23 @@ public class LevelController
         WaveSpawner.SignalWaveComplete += OnWaveEnd;
         SpawnNextWave();
     }
+    public void EndLevel()
+    {
+        SignalLevelComplete.Invoke();
+        WaveSpawner.SignalWaveComplete -= OnWaveEnd;
+        _waves = null;
+    }
 
     public void Update(float timePassed)
     {
         _spawner.Update(Time.deltaTime);
     }
 
-    private void Reset()
-    {
-        _level = null;
-    }
-
     private void OnWaveEnd()
     {
-        if (_currentWave >= _level.Waves.Count)
+        if (_currentWave >= _waves.Count)
         {
-            SignalLevelComplete.Invoke();
-            WaveSpawner.SignalWaveComplete -= OnWaveEnd;
-            Reset();
+            EndLevel();
             return;
         }
         GameManager.Instance.StartCoroutine(SpawnWaveRoutine(_waveSecondsDelay));
@@ -62,12 +57,12 @@ public class LevelController
     private IEnumerator SpawnWaveRoutine(int secondsDelay)
     {
         yield return new WaitForSeconds(secondsDelay);
-        _spawner.LoadWave(_level.Waves[_currentWave++]);
+        _spawner.LoadWave(_waves[_currentWave++]);
         _spawner.StartWave();
     }
     private void SpawnNextWave()
     {
-        _spawner.LoadWave(_level.Waves[_currentWave++]);
+        _spawner.LoadWave(_waves[_currentWave++]);
         _spawner.StartWave();
     }
 }
