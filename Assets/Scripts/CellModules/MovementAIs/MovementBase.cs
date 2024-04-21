@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class MovementBase : CellModule
 {
-    private Rigidbody _rb;
+    protected Rigidbody _rb;
     static protected void ClampSpeed(Rigidbody rb, float maxSpeed)
     {
         //use squared as an optimization to avoid expensive sqrt operations
