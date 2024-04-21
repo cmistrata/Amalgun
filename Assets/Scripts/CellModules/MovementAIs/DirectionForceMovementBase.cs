@@ -10,11 +10,15 @@ public abstract class DirectionForceMovementBase : MovementBase
     protected float MaxSpeed = 4f;
     public Vector3 TargetDirection = Vector3.zero;
 
-    protected void ApplyForce(Rigidbody rb)
+    protected virtual float DetermineForceMagnitude() {
+        return (_rb.mass * Acceleration);
+    }
+
+    protected virtual void ApplyForce(Rigidbody rb)
     {
         if (TargetDirection == Vector3.zero) return;
 
-        Vector3 force = (rb.mass * Acceleration) * TargetDirection;
+        Vector3 force = DetermineForceMagnitude() * TargetDirection;
         rb.AddForce(force);
         MovementBase.ClampSpeed(rb, MaxSpeed);
     }
