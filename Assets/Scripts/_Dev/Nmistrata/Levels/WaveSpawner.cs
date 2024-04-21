@@ -3,25 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class WaveSpawner
 {
     public static event Action SignalWaveComplete;
 
-    private Wave _wave;
+    private WaveWrapper _wave;
+
     private bool _isWaveInProgress;
     private int _activeEnemies;
     private const float _minimumSpawnDistanceFromPlayerSquared = (10f * 10f);
 
     public WaveSpawner()
     {
+        _wave = new WaveWrapper();
         _isWaveInProgress = false;
         _activeEnemies = 0;
     }
 
     public void LoadWave(Wave wave)
     {
-        Debug.Log($"Loading wave {wave}");
-        _wave = ScriptableObject.Instantiate(wave);
+        Debug.Log($"Loading _wave {wave}");
+        _wave.LoadWave(wave);
     }
 
     public void StartWave()
