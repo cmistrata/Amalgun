@@ -16,6 +16,7 @@ public abstract class MovementBase : CellModule
     protected override void ExtraAwake()
     {
         _rb = gameObject.GetComponent<Rigidbody>();
+        HandleTeamChange(_team);
     }
     public void FixedUpdate()
     {
@@ -23,11 +24,6 @@ public abstract class MovementBase : CellModule
         {
             ApplyMovement(_rb, Time.deltaTime);
         }
-    }
-
-    protected override void HandleTeamChange(Team newTeam)
-    {
-        enabled = newTeam == Team.Enemy;
     }
     public abstract void ApplyMovement(Rigidbody rb, float timePassed);
 }

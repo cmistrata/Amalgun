@@ -8,7 +8,7 @@ public abstract class DirectionForceMovementBase : MovementBase
     protected float Acceleration = 4f;
     [SerializeField]
     protected float MaxSpeed = 4f;
-    protected Vector3 TargetDirection = Vector3.zero;
+    public Vector3 TargetDirection = Vector3.zero;
 
     protected void ApplyForce(Rigidbody rb)
     {
