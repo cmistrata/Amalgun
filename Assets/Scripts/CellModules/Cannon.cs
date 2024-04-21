@@ -70,7 +70,6 @@ public class Cannon : CellModule {
         {
             _aimingDirection = GetAimingDirection();
             _aimingAngle = Mathf.Atan2(_aimingDirection.x, _aimingDirection.z) * Mathf.Rad2Deg;
-            Debug.Log($"Cannon on {gameObject} rotating cannon base {CannonBase} on {CannonBase.gameObject.transform.parent.gameObject}.");
             CannonBase.transform.rotation = Quaternion.AngleAxis(_aimingAngle, Vector3.up);
         }
     }

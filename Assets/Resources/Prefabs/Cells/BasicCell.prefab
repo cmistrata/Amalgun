@@ -770,7 +770,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: becb0ce8dada24048a07c8ad3af0c7dc, type: 3}
   m_Resource: {fileID: 8300000, guid: becb0ce8dada24048a07c8ad3af0c7dc, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.228
+  m_Volume: 0.094
   m_Pitch: 1.48
   Loop: 0
   Mute: 0
@@ -881,7 +881,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AutoFiring: 1
   ProjectilePrefab: {fileID: 8664886127951825883, guid: 09ccd55f67491cc40858b69f087d8cce, type: 3}
-  AutoFireIntervalSeconds: 1.5
+  AutoFireIntervalSeconds: 2.5
   FiringInaccuracyAngles: 0
   InitialProjectileOffset: 0
   InitialFiringPosition: {fileID: 2936912828888888688}
