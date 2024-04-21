@@ -396,6 +396,7 @@ MonoBehaviour:
   EnemyProjectileSpeed: 4
   NumProjectiles: 1
   FiringSpreadAngles: 0
+  FireAnimationOffsetTime: 0
   PlayerTargetingStrategy: 2
   EnemyTargetingStrategy: 1
   CannonBase: {fileID: 7802982028987391805}
@@ -468,7 +469,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edbc8ef897ec00541a3e98dba6a50874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 2
+  Type: 0
 --- !u!114 &6120801840721140567
 MonoBehaviour:
   m_ObjectHideFlags: 0

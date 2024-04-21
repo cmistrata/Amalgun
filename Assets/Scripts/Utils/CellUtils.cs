@@ -14,7 +14,7 @@ public static class CellUtils
         cell.GetComponent<TeamTracker>().ChangeTeam(team);
     }
 
-    public static void EnableMovenet(GameObject cell)
+    public static void EnableMovement(GameObject cell)
     {
         cell.GetComponent<MovementBase>().enabled = true;
     }

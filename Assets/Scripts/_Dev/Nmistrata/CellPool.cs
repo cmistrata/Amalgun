@@ -54,7 +54,7 @@ public static class CellPool
     private static void InitializeCell(GameObject cell)
     {
         cell.SetActive(true);
-        CellUtils.EnableMovenet(cell);
+        CellUtils.EnableMovement(cell);
     }
     private static void ReleaseCell(GameObject cell)
     {
