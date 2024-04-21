@@ -7,6 +7,8 @@ public class JetController : MonoBehaviour
 {
     public float Scale = .03f;
 
+    public DirectionForceMovementBase Movement;
+
     public ParticleSystem LeftBackJet;
     private ParticleSystem.EmissionModule _leftBackJetEmission;
     public ParticleSystem LeftSideJet;
@@ -34,7 +36,6 @@ public class JetController : MonoBehaviour
         _rightFrontJetEmission = RightFrontJet.emission;
 
         _particleSystems = new List<ParticleSystem> { LeftBackJet, LeftSideJet, LeftFrontJet, RightBackJet, RightSideJet, RightFrontJet };
-        
     }
 
     public void UpdateScale() {
@@ -50,7 +51,7 @@ public class JetController : MonoBehaviour
     // Update is called once per frame
     void Update() 
     {
-        Vector3 globalTargetDirection = Vector3.zero;
+        Vector3 globalTargetDirection = Movement.TargetDirection;
         Vector3 localTargetDirection = transform.InverseTransformVector(globalTargetDirection).normalized;
         float lateralMovement = localTargetDirection.x;
         float forwardMovement = localTargetDirection.z;

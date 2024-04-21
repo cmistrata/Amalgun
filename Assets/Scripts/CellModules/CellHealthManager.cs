@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Team
-{
+public enum Team {
     Player,
     Enemy,
     Neutral
@@ -18,6 +17,7 @@ public class CellHealthManager : MonoBehaviour
 
 
     private TeamTracker _teamTracker;
+    private Animator _animator;
 
     [Header("Health info")]
     public int MaxHealth = 1;
@@ -31,6 +31,7 @@ public class CellHealthManager : MonoBehaviour
     public void Awake()
     {
         _teamTracker = GetComponent<TeamTracker>();
+        _animator = GetComponent<Animator>();
     }
 
     virtual public void Start()
@@ -40,6 +41,9 @@ public class CellHealthManager : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (_animator != null) {
+            _animator.SetTrigger("Hit");
+        }
         //TODO: figure out a better way to detect player damage and react to it
         if (gameObject.GetComponent<Player>() != null)
         {

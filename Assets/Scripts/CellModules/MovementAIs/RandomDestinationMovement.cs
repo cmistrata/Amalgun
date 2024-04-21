@@ -33,4 +33,9 @@ public class RandomDestinationMovement : DirectionForceMovementBase
 
         return (targetLocation - startingPosition).normalized;
     }
+
+
+    protected override void HandleTeamChange(Team newTeam) {
+        enabled = newTeam == Team.Enemy;
+    }
 }

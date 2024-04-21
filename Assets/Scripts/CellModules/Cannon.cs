@@ -1,7 +1,8 @@
+using UnityEditor.Animations;
 using UnityEngine;
 
-public class Cannon : CellModule
-{
+public class Cannon : CellModule {
+    private Animator _animator;
     [Header("State")]
     public bool AutoFiring = true;
     private float _aimingAngle = 0;
@@ -18,8 +19,9 @@ public class Cannon : CellModule
     public float EnemyProjectileSpeed = 4;
     public float NumProjectiles = 1;
     public float FiringSpreadAngles = 0;
-    public enum TargetingStrategy
-    {
+    public float FireAnimationOffsetTime = 0;
+    private bool _triggeredAnimationYet = false;
+    public enum TargetingStrategy {
         StaticDirection,
         TargetPlayer,
         TargetMouseCursor
@@ -31,9 +33,8 @@ public class Cannon : CellModule
     [Header("Sprites")]
     public GameObject CannonBase;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    protected override void ExtraAwake() {
+        _animator = GetComponent<Animator>();
         HandleTeamChange(_team);
     }
 
@@ -46,10 +47,14 @@ public class Cannon : CellModule
             && _team != Team.Neutral)
         {
             _autoFireTimer -= Time.deltaTime;
-            if (_autoFireTimer < 0)
-            {
+            if (!_triggeredAnimationYet && _autoFireTimer <= FireAnimationOffsetTime && _animator != null) {
+                _animator.SetTrigger("Fire");
+                _triggeredAnimationYet = true;
+            }
+            if (_autoFireTimer < 0) {
                 FireProjectiles();
                 _autoFireTimer += Random.Range(.9f, 1.1f) * AutoFireIntervalSeconds;
+                _triggeredAnimationYet = false;
             }
         }
     }
@@ -86,7 +91,6 @@ public class Cannon : CellModule
 
     void FireProjectile(float aimingAngleOffset = 0)
     {
-
         float inaccuracyOffset = Random.Range(-FiringInaccuracyAngles, FiringInaccuracyAngles);
         float firingAngleAfterOffset = _aimingAngle + aimingAngleOffset + inaccuracyOffset;
 
@@ -128,14 +132,10 @@ public class Cannon : CellModule
 
     protected override void HandleTeamChange(Team newTeam)
     {
-        if (_team == Team.Player || _team == Team.Neutral)
-        {
-            //CannonSpriteRenderer.sprite = CannonSpritePlayer;
+        if (_team == Team.Player || _team == Team.Neutral) {
             _currentTargetingStrategy = _team == Team.Player ? PlayerTargetingStrategy : TargetingStrategy.StaticDirection;
         }
-        else
-        {
-            //CannonSpriteRenderer.sprite = CannonSpriteEnemy;
+        else { 
             _currentTargetingStrategy = EnemyTargetingStrategy;
         }
     }

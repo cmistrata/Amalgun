@@ -19,6 +19,10 @@ public abstract class CellModule : MonoBehaviour {
         ExtraAwake();
     }
 
+    public void OnEnable() {
+        ExtraAwake();
+    }
+
     virtual protected void ExtraAwake() {
         return;
     }

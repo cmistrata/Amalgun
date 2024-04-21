@@ -10,7 +10,7 @@ public class StayInBounds : MonoBehaviour
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
     }
-    // Update is called once per frame
+
     void FixedUpdate()
     {
         if (transform.position.x < -Globals.ArenaWidth/2 + .4) {
