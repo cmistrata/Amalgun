@@ -5,8 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(TeamTracker))]
 public class CellMaterialChanger : CellModule
 {
-    public MeshRenderer Foundation;
-    public MeshRenderer Turret;
+    public Renderer Foundation;
+    public Renderer Turret;
 
     private void Start() {
         HandleTeamChange(_team);

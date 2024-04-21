@@ -13,6 +13,7 @@ public enum Team {
 public class CellHealthManager : MonoBehaviour
 {
     private TeamTracker _teamTracker;
+    private Animator _animator;
 
     [Header("Health info")]
     public float MaxHealth = 1;
@@ -27,6 +28,7 @@ public class CellHealthManager : MonoBehaviour
 
     public void Awake() {
         _teamTracker = GetComponent<TeamTracker>();
+        _animator = GetComponent<Animator>();
     }
 
     virtual public void Start() {
@@ -36,6 +38,9 @@ public class CellHealthManager : MonoBehaviour
     //returns true if this damage destroys the cell
     public bool TakeDamage(float damage)
     {
+        if (_animator != null) {
+            _animator.SetTrigger("Hit");
+        }
         CurrentHealth -= damage;
         if (CurrentHealth <= 0 && !Melded)
         {

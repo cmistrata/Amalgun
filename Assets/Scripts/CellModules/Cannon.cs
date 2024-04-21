@@ -1,6 +1,8 @@
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class Cannon : CellModule {
+    private Animator _animator;
     [Header("State")]
     public bool AutoFiring = true;
     private float _aimingAngle = 0;
@@ -17,6 +19,8 @@ public class Cannon : CellModule {
     public float EnemyProjectileSpeed = 4;
     public float NumProjectiles = 1;
     public float FiringSpreadAngles = 0;
+    public float FireAnimationOffsetTime = 0;
+    private bool _triggeredAnimationYet = false;
     public enum TargetingStrategy {
         StaticDirection,
         TargetPlayer,
@@ -28,6 +32,10 @@ public class Cannon : CellModule {
 
     [Header("Sprites")]
     public GameObject CannonBase;
+
+    protected override void ExtraAwake() {
+        _animator = GetComponent<Animator>();
+    }
 
     // Start is called before the first frame update
     void Start() {
@@ -41,9 +49,14 @@ public class Cannon : CellModule {
             && firingAllowedInGameState
             && _team != Team.Neutral) {
             _autoFireTimer -= Time.deltaTime;
+            if (!_triggeredAnimationYet && _autoFireTimer <= FireAnimationOffsetTime && _animator != null) {
+                _animator.SetTrigger("Fire");
+                _triggeredAnimationYet = true;
+            }
             if (_autoFireTimer < 0) {
                 FireProjectiles();
                 _autoFireTimer += Random.Range(.9f, 1.1f) * AutoFireIntervalSeconds;
+                _triggeredAnimationYet = false;
             }
         }
     }
