@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -16,11 +17,17 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public static Action SignalGameStart;
+
+    private LevelController _levelController;
+    public List<Level> Levels;
+    private int _curLevel = 0;
+
     public GameState State = GameState.Intro;
-    public Player InitialPlayer;
-    public Player Player;
+    public GameObject PlayerPrefab;
+    public GameObject CurrentPlayer;
     public GameObject Arena;
-    
+
     public bool Paused = false;
     public GameObject PauseOverlay;
 
@@ -28,71 +35,81 @@ public class GameManager : MonoBehaviour
     public GameObject GameOverScreen;
     public GameObject Shop;
 
-    
+
 
     public int Money = 0;
     public TMP_Text MoneyDisplay;
 
     public int Wave = 1;
-    public int EnemiesPerWave = 5;
     public TMP_Text WaveText;
-
-    private int _enemiesRemaining = 0;
 
 
     void Awake()
     {
+        if (Instance != null) Debug.LogError("Multiple game managers instantiated");
+        _levelController = new LevelController();
         Instance = this;
         Player.SignalPlayerDeath += HandlePlayerDeath;
-        CellHealthManager.SignalEnemyDeath += HandleEnemyDeath;
+        WaveSpawner.SignalWaveComplete += OnWaveComplete;
+        LevelController.SignalLevelComplete += OnLevelComplete;
+        SignalGameStart += OnWaveComplete;
     }
 
-    private void Start() {
-        if (State == GameState.Fighting) {
+    private void OnDestroy()
+    {
+        Player.SignalPlayerDeath -= HandlePlayerDeath;
+        WaveSpawner.SignalWaveComplete -= OnWaveComplete;
+        LevelController.SignalLevelComplete -= OnLevelComplete;
+        SignalGameStart -= OnWaveComplete;
+    }
+
+    private void Start()
+    {
+        if (State == GameState.Fighting)
+        {
             StartNewGame();
         }
-    }
-
-    public void GainMoney(int amount = 1) {
-        Money += amount;
-        MoneyDisplay.text = $"Money :{Money}";
-    }
-
-    public void SpendMoney(int amount = 1) {
-        Money -= amount;
-        MoneyDisplay.text = $"Money :{Money}";
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R)) {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
             StartNewGame();
         }
-        if (State == GameState.Fighting) {
+        if (State == GameState.Fighting)
+        {
             FightingUpdate();
-        } else if (State == GameState.GameOver) {
+        }
+        else if (State == GameState.GameOver)
+        {
             GameOverUpdate();
         }
     }
 
-    void FightingUpdate() {
-        if (Input.GetKeyDown(KeyCode.P)) {
+    void FightingUpdate()
+    {
+        _levelController.Update(Time.deltaTime);
+        if (Input.GetKeyDown(KeyCode.P))
+        {
             Paused = !Paused;
-            if (Paused) {
+            if (Paused)
+            {
                 Time.timeScale = 0f;
                 PauseOverlay.SetActive(true);
-            } else {
+            }
+            else
+            {
                 Time.timeScale = 1f;
                 PauseOverlay.SetActive(false);
             }
         }
-
-        if (Paused) return;
-
     }
-    void GameOverUpdate() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
+    void GameOverUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
             StartNewGame();
         }
     }
@@ -104,7 +121,8 @@ public class GameManager : MonoBehaviour
     {
         ClearUI();
         GameOverScreen.SetActive(true);
-        if (State == GameState.GameOver) {
+        if (State == GameState.GameOver)
+        {
             Debug.LogWarning("Tried to call GameOver while already in GameOver state.");
             return;
         }
@@ -115,64 +133,72 @@ public class GameManager : MonoBehaviour
         State = GameState.GameOver;
     }
 
-
-    public void StartNewGame() {
+    //TODO refactor the rest of this into game start signal handling
+    public void StartNewGame()
+    {
         Debug.Log("Starting new game.");
         Money = 0;
 
+        _curLevel = 0;
+        _levelController.LoadLevel(Levels[_curLevel++]);
+        _levelController.StartLevel();
+
         ClearUI();
-        if (Player != null) {
-            Destroy(Player.gameObject);
+        if (CurrentPlayer != null)
+        {
+            Destroy(CurrentPlayer);
         }
-        Player = Instantiate(InitialPlayer);
-        Player.transform.position = Vector3.zero;
+        CurrentPlayer = Instantiate(PlayerPrefab);
+        CurrentPlayer.transform.position = Vector3.zero;
         State = GameState.Fighting;
         MusicManager.Instance.RestartEasySong();
         Wave = 0;
-        StartNewWave();
+
+        SignalGameStart.Invoke();
     }
 
-    public void StartNewWave() {
-        State = GameState.Fighting;
-
+    public void OnWaveComplete()
+    {
         Wave += 1;
         WaveText.text = $"Wave {Wave}";
         WaveText.gameObject.SetActive(true);
-        _enemiesRemaining = EnemiesPerWave;
-        EnemySpawner.Instance.SpawnMoreEnemies(_enemiesRemaining);
-        
-        
-        Player.transform.position = Vector3.zero;
-        Shop.SetActive(false);
-        Arena.SetActive(true);
     }
 
-    public void ClearUI() {
+    public void OnLevelComplete()
+    {
+        _levelController.LoadLevel(Levels[_curLevel++]);
+        _levelController.StartLevel();
+        Wave = 1;
+        WaveText.text = $"Wave {Wave}";
+        WaveText.gameObject.SetActive(true);
+
+
+        CurrentPlayer.transform.position = Vector3.zero;
+    }
+
+    public void ClearUI()
+    {
         StartMenu.SetActive(false);
         GameOverScreen.SetActive(false);
     }
 
-    public void EndWave() {
+/*    public void OnLevelComplete()
+    {
         State = GameState.Shop;
 
         Arena.SetActive(false);
         WaveText.gameObject.SetActive(false);
         Shop.SetActive(true);
-        Player.transform.position = Vector3.zero;
+        CurrentPlayer.transform.position = Vector3.zero;
+    }*/
+
+    public void HandleShopContinue()
+    {
+        OnWaveComplete();
     }
 
-    public void HandleShopContinue() {
-        StartNewWave();
-    }
-
-    public void HandlePlayerDeath() {
+    public void HandlePlayerDeath()
+    {
         GameOver();
-    }
-
-    public void HandleEnemyDeath() {
-        _enemiesRemaining -= 1;
-        if (_enemiesRemaining <= 0 ) {
-            EndWave();
-        }
     }
 }

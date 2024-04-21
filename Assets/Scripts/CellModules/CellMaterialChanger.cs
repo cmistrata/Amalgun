@@ -17,6 +17,7 @@ public class CellMaterialChanger : CellModule
         Turret.material = cellMaterials.TurretMaterial;
     }
 
+    //TODO: change this into a signal
     override protected void HandleTeamChange(Team newTeam) {
         if (Globals.Instance == null) return;
         switch (newTeam) {
