@@ -34,9 +34,9 @@ public class LevelController
     }
     public void EndLevel()
     {
-        SignalLevelComplete.Invoke();
-        WaveSpawner.SignalWaveComplete -= OnWaveEnd;
         _waves = null;
+        WaveSpawner.SignalWaveComplete -= OnWaveEnd;
+        SignalLevelComplete.Invoke();
     }
 
     public void Update(float timePassed)
@@ -57,8 +57,7 @@ public class LevelController
     private IEnumerator SpawnWaveRoutine(int secondsDelay)
     {
         yield return new WaitForSeconds(secondsDelay);
-        _spawner.LoadWave(_waves[_currentWave++]);
-        _spawner.StartWave();
+        SpawnNextWave();
     }
     private void SpawnNextWave()
     {
