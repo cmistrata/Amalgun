@@ -115,7 +115,7 @@ public class Cannon : CellModule {
             case TargetingStrategy.TargetPlayer:
                 return Player.Instance != null ? Player.Instance.transform.position - transform.position : _aimingDirection;
             case TargetingStrategy.TargetMouseCursor:
-                if (Utils.MouseRaycast(out var raycastHit))
+                if (Utils.MouseRaycast(out var raycastHit, Layers.MouseAimCollider))
                 {
                     Vector3 mousePosition = new Vector3(raycastHit.point.x, 0, raycastHit.point.z);
                     return mousePosition - transform.position;

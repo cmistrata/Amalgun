@@ -13,8 +13,8 @@ public class CellMaterialChanger : CellModule
     }
 
     private void UpdateMaterials(CellMaterials cellMaterials) {
-        Foundation.material = cellMaterials.FoundationMaterial;
-        Turret.material = cellMaterials.TurretMaterial;
+        Foundation.sharedMaterial = cellMaterials.FoundationMaterial;
+        Turret.sharedMaterial = cellMaterials.TurretMaterial;
     }
 
     //TODO: change this into a signal

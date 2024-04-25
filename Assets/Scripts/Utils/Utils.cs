@@ -6,9 +6,17 @@ using UnityEngine;
 public static class Utils {
     static Dictionary<string, int> _lastLogsecondByMessage = new();
 
-    public static bool MouseRaycast(out RaycastHit hit) {
+    public static bool MouseRaycast(out RaycastHit hit, int layer = -1) {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        return Physics.Raycast(ray, out hit, 100);
+        if (layer == -1) {
+            return Physics.Raycast(ray, out hit, 30);
+        } else {
+            return Physics.Raycast(ray, out hit, 30, GetLayerMask(layer));
+        }
+    }
+
+    public static int GetLayerMask(int layer) {
+        return 1 << layer;
     }
 
     public static Vector3 GetMousePosition() {
