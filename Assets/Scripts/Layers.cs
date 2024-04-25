@@ -10,4 +10,6 @@ public class Layers {
 
     public const int EnemyForceField = 11;
     public const int PlayerForceField = 12;
+
+    public const int MouseAimCollider = 15;
 }
