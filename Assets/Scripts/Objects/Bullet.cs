@@ -1,20 +1,17 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshRenderer))]
 public class Bullet : MonoBehaviour
 {
     public Team Team;
     public float TimeOutSeconds = 5f;
     protected float _lifetime = 0;
     private Rigidbody _rb;
-    private MeshRenderer _meshRenderer;
+    public List<MeshRenderer> MeshRenderers;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
-        _meshRenderer = GetComponent<MeshRenderer>();
     }
     void Update()
     {
@@ -48,15 +45,17 @@ public class Bullet : MonoBehaviour
     public void ChangeTeam(Team team)
     {
         Team = team;
-        UpdateMesh();
+        UpdateMeshs();
         UpdateLayer();
     }
 
-    private void UpdateMesh()
+    private void UpdateMeshs()
     {
-        _meshRenderer.sharedMaterial = Team == Team.Enemy
-            ? Globals.Instance.enemyBulletMaterial
-            : Globals.Instance.playerBulletMaterial;
+        foreach (var meshRenderer in MeshRenderers) {
+            meshRenderer.sharedMaterial = Team == Team.Enemy
+                ? Globals.Instance.enemyBulletMaterial
+                : Globals.Instance.playerBulletMaterial;
+        }
     }
 
     private void UpdateLayer()

@@ -1,77 +1,61 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
+public class Rocket : MonoBehaviour {
+    private Rigidbody _rb;
+    private AudioSource _audioSource;
+    public ParticleSystem ParticleSystem;
 
-[RequireComponent(typeof(SpriteRenderer))]
-public class Rocket : Bullet
-{
-    public float StartupLength = .5f;
+    private const float _startupLength = .5f;
     private bool _inStartupPhase = true;
-    public float ThrustStrength = 1000f;
+    private readonly float _creationTime;
 
-    public float StartupRotationSpeed = 20f;
-    public float ThrustingRotationSpeed = 5f;
+    private const float _thrustStrength = 30f;
+    private const float _startupRotationSpeed = 20f;
+    private const float _thrustingRotationSpeed = 1.3f;
 
-    public float MaxSpeed = 8f;
-
-
-
-    void Update()
-    {
-        _lifetime += Time.deltaTime;
-        if (_lifetime >= TimeOutSeconds)
-        {
-            Destroy(this.gameObject);
-        }
-
-        if (_inStartupPhase)
-        {
-            if (_lifetime >= StartupLength)
-            {
-                _inStartupPhase = false;
-                gameObject.GetComponent<Animator>().SetBool("IsEnemy", gameObject.layer == Layers.EnemyBullet);
-                gameObject.GetComponent<Animator>().enabled = true;
-                gameObject.GetComponent<AudioSource>().Play();
-            }
-            else
-            {
-                return;
-            }
-        }
-
-
-
+    private void Awake() {
+        _rb = GetComponent<Rigidbody>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
-    //void FixedUpdate()
-    //{
-    //    var rotationSpeed = inStartupPhase ? startupRotationSpeed : thrustingRotationSpeed;
-    //    var rigidbody = gameObject.GetComponent<Rigidbody2D>();
-    //    var target = gameObject.layer == Layers.EnemyBullet ? Camera.main.ScreenToWorldPoint(Input.mousePosition) 
-    //        : Player2D.Instance != null ? Player2D.Instance.transform.position 
-    //        : Vector2.zero;
-    //    Vector3 targetDirection = (target - transform.position).normalized;
+    private void Start() {
+        Invoke(nameof(ExitStartupPhase), _startupLength);
+    }
 
-    //    // Rotate the rocket towards the target
-    //    var angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
-    //    var targetRotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
-    //    var angleBetweenTarget = Quaternion.Angle(transform.rotation, targetRotation);
-    //    if (angleBetweenTarget < rotationSpeed)
-    //    {
-    //        transform.rotation = targetRotation;
-    //    }
-    //    else
-    //    {
-    //        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed);
-    //    }
+    void ExitStartupPhase() {
+        _inStartupPhase = false;
+        _audioSource.Play();
+        ParticleSystem.gameObject.SetActive(true);
+    }
 
-    //    if (!inStartupPhase)
-    //    {
-    //        // Apply force in the direction the rocket is facing
-    //        rigidbody.AddForce(transform.up * thrustStrength);
-    //        rigidbody.velocity = transform.up * Mathf.Min(rigidbody.velocity.magnitude, MaxSpeed);
-    //    }
-    //}
+    void FixedUpdate() {
+        Utils.LogOncePerSecond($"R{gameObject} position: {transform.position}");
+        Vector3 targetDirection = GetTargetPosition() - transform.position;
+
+        // Rotate the rocket towards the target
+        var angle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
+        var targetRotation = Quaternion.AngleAxis(angle, Vector3.up);
+        var angleBetweenTarget = Quaternion.Angle(transform.rotation, targetRotation);
+        var rotationSpeed = _inStartupPhase ? _startupRotationSpeed : _thrustingRotationSpeed;
+        if (angleBetweenTarget < rotationSpeed) {
+            transform.rotation = targetRotation;
+        } else {
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed);
+        }
+
+        if (!_inStartupPhase) {
+            // Apply force in the direction the rocket is facing
+            _rb.AddForce(transform.forward * _thrustStrength);
+        }
+    }
+
+    Vector3 GetTargetPosition() {
+        if (gameObject.layer == Layers.EnemyBullet && GameManager.Instance.CurrentPlayer != null) {
+            return GameManager.Instance.CurrentPlayer.transform.position;
+        } else if (gameObject.layer == Layers.PlayerBullet) {
+            return Utils.GetPlayerAimPosition();
+        }
+        return Vector3.zero;
+    }
 }
