@@ -889,7 +889,7 @@ MonoBehaviour:
   EnemyProjectileSpeed: 4
   NumProjectiles: 1
   FiringSpreadAngles: 0
-  FireAnimationOffsetTime: 0.4
+  FireAnimationOffsetTime: 0.37
   FiringRecoilForce: 30
   PlayerTargetingStrategy: 2
   EnemyTargetingStrategy: 1

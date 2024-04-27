@@ -54,7 +54,7 @@ public class Bullet : MonoBehaviour
 
     private void UpdateMesh()
     {
-        _meshRenderer.material = Team == Team.Enemy
+        _meshRenderer.sharedMaterial = Team == Team.Enemy
             ? Globals.Instance.enemyBulletMaterial
             : Globals.Instance.playerBulletMaterial;
     }
