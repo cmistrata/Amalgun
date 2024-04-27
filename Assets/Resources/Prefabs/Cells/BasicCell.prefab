@@ -716,7 +716,7 @@ Rigidbody:
   m_GameObject: {fileID: 3243104636506775748}
   serializedVersion: 4
   m_Mass: 15
-  m_Drag: 5
+  m_Drag: 2
   m_AngularDrag: 5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -890,6 +890,7 @@ MonoBehaviour:
   NumProjectiles: 1
   FiringSpreadAngles: 0
   FireAnimationOffsetTime: 0.4
+  FiringRecoilForce: 30
   PlayerTargetingStrategy: 2
   EnemyTargetingStrategy: 1
   CannonBase: {fileID: 5528041944128294063}
@@ -935,6 +936,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ca85602c22cb8408bd6b554ed0b13d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ForceMagnitude: 100
 --- !u!114 &244536029975207358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -947,8 +949,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab350ad32de8e94c8d6b5b370345bc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Acceleration: 10
-  MaxSpeed: 2
+  Acceleration: 4
+  MaxSpeed: -1
   TargetDirection: {x: 0, y: 0, z: 0}
   _timerPeriod: 4
 --- !u!114 &8288147963090237135

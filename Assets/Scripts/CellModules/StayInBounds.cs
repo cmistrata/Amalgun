@@ -6,7 +6,7 @@ using UnityEngine;
 public class StayInBounds : MonoBehaviour
 {
     private Rigidbody _rb;
-    private float _forceMagnitude = 8000f;
+    public float ForceMagnitude = 8000f;
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
     }
@@ -14,15 +14,15 @@ public class StayInBounds : MonoBehaviour
     void FixedUpdate()
     {
         if (transform.position.x < -Globals.ArenaWidth/2 + .4) {
-            _rb.AddForce(Vector3.right * _forceMagnitude);
+            _rb.AddForce(Vector3.right * ForceMagnitude);
         } else if (transform.position.x > Globals.ArenaWidth / 2 - .4) {
-            _rb.AddForce(Vector3.left * _forceMagnitude);
+            _rb.AddForce(Vector3.left * ForceMagnitude);
         }
 
         if (transform.position.z < -Globals.ArenaHeight / 2 + 1) {
-            _rb.AddForce(Vector3.forward * _forceMagnitude);
+            _rb.AddForce(Vector3.forward * ForceMagnitude);
         } else if (transform.position.z > Globals.ArenaHeight / 2) {
-            _rb.AddForce(Vector3.back * _forceMagnitude);
+            _rb.AddForce(Vector3.back * ForceMagnitude);
         }
     }
 }
