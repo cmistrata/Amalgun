@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Game2D.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/QuickStart.unity
+    guid: b119e5590729268498f29322a37c553e
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
