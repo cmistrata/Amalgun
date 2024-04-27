@@ -3,6 +3,7 @@ using UnityEngine;
 public class Cannon : CellModule {
     private Animator _animator;
     private Rigidbody _rb;
+    private AudioSource _audioSource;
 
 
     [Header("State")]
@@ -39,6 +40,7 @@ public class Cannon : CellModule {
     protected override void ExtraAwake() {
         _animator = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody>();
+        _audioSource = GetComponent<AudioSource>();
         HandleTeamChange(_team);
     }
 
@@ -113,7 +115,7 @@ public class Cannon : CellModule {
         }
 
         //TODO: replace with some kind of event and an audio manager
-        gameObject.GetComponent<AudioSource>().Play();
+        _audioSource.Play();
     }
 
     Vector3 GetAimingDirection()
@@ -123,13 +125,10 @@ public class Cannon : CellModule {
             case TargetingStrategy.TargetPlayer:
                 return Player.Instance != null ? Player.Instance.transform.position - transform.position : _aimingDirection;
             case TargetingStrategy.TargetMouseCursor:
-                if (Utils.MouseRaycast(out var raycastHit, Layers.MouseAimCollider))
-                {
-                    Vector3 mousePosition = new Vector3(raycastHit.point.x, 0, raycastHit.point.z);
-                    return mousePosition - transform.position;
-                }
-                else
-                {
+                var mouseAimPosition = Utils.GetPlayerAimPosition();
+                if (mouseAimPosition != null) {
+                    return mouseAimPosition - transform.position;
+                } else {
                     return _aimingDirection;
                 }
             case TargetingStrategy.StaticDirection:

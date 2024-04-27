@@ -15,6 +15,12 @@ public static class Utils {
         }
     }
 
+    public static Vector3 GetPlayerAimPosition() {
+        MouseRaycast(out var raycastHit, Layers.MouseAimCollider);
+        var mousePosition = new Vector3(raycastHit.point.x, 0, raycastHit.point.z);
+        return mousePosition;
+    }
+
     public static int GetLayerMask(int layer) {
         return 1 << layer;
     }
