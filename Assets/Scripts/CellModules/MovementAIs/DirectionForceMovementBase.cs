@@ -7,7 +7,7 @@ public abstract class DirectionForceMovementBase : MovementBase
     [SerializeField]
     protected float Acceleration = 4f;
     [SerializeField]
-    protected float MaxSpeed = 4f;
+    protected float MaxSpeed = -1f;
     public Vector3 TargetDirection = Vector3.zero;
 
     protected virtual float DetermineForceMagnitude() {
@@ -20,6 +20,8 @@ public abstract class DirectionForceMovementBase : MovementBase
 
         Vector3 force = DetermineForceMagnitude() * TargetDirection;
         rb.AddForce(force);
-        MovementBase.ClampSpeed(rb, MaxSpeed);
+        if (MaxSpeed > 0) {
+            MovementBase.ClampSpeed(rb, MaxSpeed);
+        }
     }
 }

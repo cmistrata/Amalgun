@@ -19,15 +19,6 @@ public class Bullet : MonoBehaviour
     void Update()
     {
         _lifetime += Time.deltaTime;
-
-        float x = transform.position.x;
-        float y = transform.position.y;
-
-        //if (x > 32 || x < -32 || y > 20 || y < -20)
-        //{
-        //    Destroy(gameObject);
-        //}
-
     }
 
     private void FixedUpdate()
@@ -50,8 +41,7 @@ public class Bullet : MonoBehaviour
 
     public void StartStraightMotion(Vector3 position, float motionAngle, float speed)
     {
-        transform.position = position;
-        transform.rotation = Quaternion.AngleAxis(motionAngle, Vector3.up);
+        transform.SetPositionAndRotation(position, Quaternion.AngleAxis(motionAngle, Vector3.up));
         _rb.velocity = transform.forward * speed;
     }
 
@@ -64,7 +54,7 @@ public class Bullet : MonoBehaviour
 
     private void UpdateMesh()
     {
-        _meshRenderer.material = Team == Team.Enemy
+        _meshRenderer.sharedMaterial = Team == Team.Enemy
             ? Globals.Instance.enemyBulletMaterial
             : Globals.Instance.playerBulletMaterial;
     }

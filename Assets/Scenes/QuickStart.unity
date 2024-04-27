@@ -461,14 +461,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1929256308}
     m_Modifications:
-    - target: {fileID: 3679133067879548340, guid: 5a151240edce07e4e9cbc2e4f5316c15, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3679133067879548340, guid: 5a151240edce07e4e9cbc2e4f5316c15, type: 3}
-      propertyPath: m_AssetsPPU
-      value: 35
-      objectReference: {fileID: 0}
     - target: {fileID: 4941493950733050986, guid: 5a151240edce07e4e9cbc2e4f5316c15, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1272,18 +1264,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5472794432079341056, guid: 6c560aeafa10c4d48acd578299649edd, type: 3}
+      propertyPath: m_Name
+      value: Enemies
+      objectReference: {fileID: 0}
     - target: {fileID: 7991188365807027022, guid: 6c560aeafa10c4d48acd578299649edd, type: 3}
       propertyPath: m_Name
       value: Arena
       objectReference: {fileID: 0}
-    - target: {fileID: 8099339084009427384, guid: 6c560aeafa10c4d48acd578299649edd, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 2576229877409377217, guid: 6c560aeafa10c4d48acd578299649edd, type: 3}
-    m_RemovedGameObjects:
-    - {fileID: 7870566647165926152, guid: 6c560aeafa10c4d48acd578299649edd, type: 3}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c560aeafa10c4d48acd578299649edd, type: 3}

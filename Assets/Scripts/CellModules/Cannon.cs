@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class Cannon : CellModule {
     private Animator _animator;
+    private Rigidbody _rb;
+
+
     [Header("State")]
     public bool AutoFiring = true;
     private float _aimingAngle = 0;
@@ -19,6 +22,7 @@ public class Cannon : CellModule {
     public float NumProjectiles = 1;
     public float FiringSpreadAngles = 0;
     public float FireAnimationOffsetTime = 0;
+    public float FiringRecoilForce = 0f;
     private bool _triggeredAnimationYet = false;
     public enum TargetingStrategy {
         StaticDirection,
@@ -34,6 +38,7 @@ public class Cannon : CellModule {
 
     protected override void ExtraAwake() {
         _animator = GetComponent<Animator>();
+        _rb = GetComponent<Rigidbody>();
         HandleTeamChange(_team);
     }
 
@@ -102,6 +107,10 @@ public class Cannon : CellModule {
         bullet.ChangeTeam(_team);
         bullet.StartStraightMotion(firingPosition, firingAngleAfterOffset, projectileSpeed);
         bullet.SetTimeout(5);
+        if (_team == Team.Enemy && FiringRecoilForce > 0 && _rb != null) {
+            var forceDirection = Quaternion.AngleAxis(firingAngleAfterOffset, Vector3.up) * -Vector3.forward;
+            _rb.AddForce(forceDirection * FiringRecoilForce, ForceMode.Impulse);
+        }
 
         //TODO: replace with some kind of event and an audio manager
         gameObject.GetComponent<AudioSource>().Play();
