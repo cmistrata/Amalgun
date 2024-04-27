@@ -7,8 +7,6 @@ using UnityEngine;
 
 public class PlayerShip
 {
-    
-
     private const float ATTACH_TOLERANCE = .2f;
     private const float DESTROY_BULLET_ON_CONNECT_DISTANCE = .5f;
     private const float BASE_ROTATIONAL_INERTIA = 100f;
