@@ -1288,10 +1288,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5472794432079341056, guid: 6c560aeafa10c4d48acd578299649edd, type: 3}
-      propertyPath: m_Name
-      value: Enemies
-      objectReference: {fileID: 0}
     - target: {fileID: 7991188365807027022, guid: 6c560aeafa10c4d48acd578299649edd, type: 3}
       propertyPath: m_Name
       value: Arena
