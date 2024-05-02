@@ -12,7 +12,7 @@ public class Rocket : MonoBehaviour {
 
     private const float _thrustStrength = 30f;
     private const float _startupRotationSpeed = 20f;
-    private const float _thrustingRotationSpeed = 1.3f;
+    private const float _thrustingRotationSpeed = 1.4f;
 
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
