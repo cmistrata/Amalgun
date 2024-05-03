@@ -117,6 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29ca85602c22cb8408bd6b554ed0b13d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ForceMagnitude: 8000
 --- !u!114 &5451880040738014982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,7 +153,7 @@ PrefabInstance:
     - target: {fileID: 133729591535598089, guid: c736c20ba5392c248824b65ecac5a9d6, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -4974468161004867859, guid: 20208de32028a0b488223039a81f7ba3, type: 3}
+      objectReference: {fileID: -4974468161004867859, guid: 5bb461660d48be1469a918478df89661, type: 3}
     - target: {fileID: 137321758911675680, guid: c736c20ba5392c248824b65ecac5a9d6, type: 3}
       propertyPath: m_Layer
       value: 7

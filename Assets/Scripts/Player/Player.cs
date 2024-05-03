@@ -15,7 +15,7 @@ public class Player : MonoBehaviour {
     public static Player Instance;
 
     private const float _torque = 5000f;
-    private const float _newCellMassIncrease = 15f;
+    private const float _newCellMassIncrease = 30f;
 
     public static event Action SignalPlayerDeath;
 
