@@ -1,14 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class BetweenPlayerAndMouse : MonoBehaviour
-{
+public class BetweenPlayerAndMouse : MonoBehaviour {
     public float Factor = .2f;
 
     // Update is called once per frame
-    void FixedUpdate()
-    {
+    void FixedUpdate() {
         if (GameManager.Instance != null && GameManager.Instance.CurrentPlayer != null) {
             var playerPosition = GameManager.Instance.CurrentPlayer.transform.position;
             var mousePosition = Utils.GetMousePosition();

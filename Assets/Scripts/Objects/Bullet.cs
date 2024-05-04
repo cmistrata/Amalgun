@@ -1,56 +1,46 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
-{
+public class Bullet : MonoBehaviour {
     public Team Team;
     public float TimeOutSeconds = 5f;
     protected float _lifetime = 0;
     private Rigidbody _rb;
     public List<MeshRenderer> MeshRenderers;
 
-    private void Awake()
-    {
+    private void Awake() {
         _rb = GetComponent<Rigidbody>();
     }
-    void Update()
-    {
+    void Update() {
         _lifetime += Time.deltaTime;
     }
 
-    private void FixedUpdate()
-    {
-        if (_lifetime >= TimeOutSeconds && !_rb.useGravity)
-        {
+    private void FixedUpdate() {
+        if (_lifetime >= TimeOutSeconds && !_rb.useGravity) {
             _rb.useGravity = true;
         }
     }
 
-    public void OnCollisionEnter(Collision other)
-    {
+    public void OnCollisionEnter(Collision other) {
         Destroy(this.gameObject);
     }
 
-    public void SetTimeout(float seconds)
-    {
+    public void SetTimeout(float seconds) {
         TimeOutSeconds = seconds;
     }
 
-    public void StartStraightMotion(Vector3 position, float motionAngle, float speed)
-    {
+    public void StartStraightMotion(Vector3 position, float motionAngle, float speed) {
         transform.SetPositionAndRotation(position, Quaternion.AngleAxis(motionAngle, Vector3.up));
         _rb.velocity = transform.forward * speed;
     }
 
-    public void ChangeTeam(Team team)
-    {
+    public void ChangeTeam(Team team) {
         Team = team;
         UpdateMeshs();
         UpdateLayer();
     }
 
-    private void UpdateMeshs()
-    {
+    private void UpdateMeshs() {
         foreach (var meshRenderer in MeshRenderers) {
             meshRenderer.sharedMaterial = Team == Team.Enemy
                 ? Globals.Instance.enemyBulletMaterial
@@ -58,8 +48,7 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    private void UpdateLayer()
-    {
+    private void UpdateLayer() {
         gameObject.layer = Team == Team.Enemy
             ? Layers.EnemyBullet
             : Layers.PlayerBullet;

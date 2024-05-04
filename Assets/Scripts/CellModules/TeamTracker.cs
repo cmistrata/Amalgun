@@ -1,18 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class TeamTracker : MonoBehaviour
-{
+public class TeamTracker : MonoBehaviour {
     public Team Team = Team.Neutral;
     private Team _previousTeam;
     public event Action<Team> ChangeTeamEvent;
 
-
     // Start is called before the first frame update
-    void Awake()
-    {
+    void Awake() {
         _previousTeam = Team;
     }
 
@@ -28,7 +23,7 @@ public class TeamTracker : MonoBehaviour
     public void ChangeTeam(Team newTeam) {
         _previousTeam = newTeam;
         Team = newTeam;
-        gameObject.layer = 
+        gameObject.layer =
             Team == Team.Player ? Layers.PlayerCell
             : Team == Team.Enemy ? Layers.EnemyCell
             : Layers.NeutralCell;

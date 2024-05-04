@@ -1,33 +1,26 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using UnityEngine;
 
 using UnityEngine.Pool;
 
-public static class CellPool
-{
+public static class CellPool {
     [SerializeField] //just to verify theyre correctly loaded
     private static Dictionary<CellType, GameObject> _cellPrefabs;
     private static Dictionary<CellType, IObjectPool<GameObject>> _cellPools;
     private static int id = 0;
 
-    static CellPool()
-    {
+    static CellPool() {
         _cellPrefabs = new();
         _cellPools = new();
 
         var prefabs = Resources.LoadAll<GameObject>("Prefabs/Cells");
-        foreach (GameObject prefab in prefabs)
-        {
-            if (!prefab.TryGetComponent<CellProperties>(out CellProperties cellType))
-            {
+        foreach (GameObject prefab in prefabs) {
+            if (!prefab.TryGetComponent<CellProperties>(out CellProperties cellType)) {
                 Debug.LogError($"Failed to find cell properties component on cell prefab {prefab.name}");
                 continue;
             }
 
-            if (_cellPrefabs.ContainsKey(cellType.Type))
-            {
+            if (_cellPrefabs.ContainsKey(cellType.Type)) {
                 Debug.LogError($"Loaded duplicate cell prafab for {DebugString.EnumToString(cellType.Type)}");
                 continue;
             }
@@ -46,35 +39,29 @@ public static class CellPool
         }
     }
 
-    private static GameObject CreateCell(CellType type)
-    {
+    private static GameObject CreateCell(CellType type) {
         return Object.Instantiate(_cellPrefabs[type]);
     }
 
-    private static void InitializeCell(GameObject cell)
-    {
+    private static void InitializeCell(GameObject cell) {
         cell.SetActive(true);
         CellUtils.EnableMovement(cell);
     }
-    private static void ReleaseCell(GameObject cell)
-    {
+    private static void ReleaseCell(GameObject cell) {
         cell.SetActive(false);
     }
-    private static void DestroyCell(GameObject cell)
-    {
+    private static void DestroyCell(GameObject cell) {
         Object.Destroy(cell);
     }
 
-    public static GameObject GetCell(CellType type)
-    {
+    public static GameObject GetCell(CellType type) {
         GameObject cell = _cellPools[type].Get();
         cell.name = "Cell" + id++;
 
         return cell;
     }
 
-    public static void ReturnCell(GameObject cell, CellType type)
-    {
+    public static void ReturnCell(GameObject cell, CellType type) {
         _cellPools[type].Release(cell);
     }
 

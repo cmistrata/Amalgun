@@ -1,12 +1,8 @@
-using NUnit.Framework;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PlayerShip
-{
+public class PlayerShip {
     private const float ATTACH_TOLERANCE = .2f;
     private const float DESTROY_BULLET_ON_CONNECT_DISTANCE = .5f;
     private const float BASE_ROTATIONAL_INERTIA = 100f;
@@ -15,26 +11,21 @@ public class PlayerShip
     private Dictionary<GameObject, List<GameObject>> _cellGraph = new();
     private GameObject _baseCell;
 
-    public PlayerShip(GameObject initialCell)
-    {
+    public PlayerShip(GameObject initialCell) {
         _cellGraph.Add(initialCell, new());
         _baseCell = initialCell;
     }
 
-    public float GetRotationalInertia()
-    {
+    public float GetRotationalInertia() {
         float rotationalInertia = BASE_ROTATIONAL_INERTIA;
-        foreach (GameObject cell in _cellGraph.Keys)
-        {
+        foreach (GameObject cell in _cellGraph.Keys) {
             rotationalInertia += (cell.transform.position - _baseCell.transform.position).sqrMagnitude * 15f;
         }
         return rotationalInertia;
     }
 
-    public void ConnectCell(GameObject cell)
-    {
-        if (!cell.TryGetComponent<CapsuleCollider>(out var collider))
-        {
+    public void ConnectCell(GameObject cell) {
+        if (!cell.TryGetComponent<CapsuleCollider>(out var collider)) {
             Debug.LogError("Failed to attach cell due to missing capsule collider");
             return;
         }
@@ -43,15 +34,13 @@ public class PlayerShip
         DestroyNearbyBullets(cell.transform.position, collider.radius + DESTROY_BULLET_ON_CONNECT_DISTANCE);
         List<GameObject> nearbyCells = FindNearbyCells(cell.transform, collider.radius + ATTACH_TOLERANCE);
 
-        if (!nearbyCells.Any())
-        {
+        if (!nearbyCells.Any()) {
             Debug.LogError("Failed to find any nearby cells to attach to");
             return;
         }
 
         _cellGraph.Add(cell, nearbyCells);
-        foreach (GameObject nearbyCell in nearbyCells)
-        {
+        foreach (GameObject nearbyCell in nearbyCells) {
             _cellGraph[nearbyCell].Add(cell);
         }
 
@@ -59,37 +48,29 @@ public class PlayerShip
     }
 
     //remove the cell, and all the connections involving this cell
-    public void RemoveCell(GameObject cell)
-    {
+    public void RemoveCell(GameObject cell) {
         _cellGraph.Remove(cell);
-        foreach (List<GameObject> connectedCells in _cellGraph.Values)
-        {
+        foreach (List<GameObject> connectedCells in _cellGraph.Values) {
             connectedCells.Remove(cell);
         }
     }
 
-    public List<GameObject> GetAndRemoveDisonnectedCells()
-    {
+    public List<GameObject> GetAndRemoveDisonnectedCells() {
         var disconnectedCells = _cellGraph.Keys.Except(GetConnectedCells()).ToList();
-        foreach (var cell in disconnectedCells)
-        {
+        foreach (var cell in disconnectedCells) {
             RemoveCell(cell);
         }
         return disconnectedCells;
     }
 
-    private List<GameObject> GetConnectedCells()
-    {
-        List<GameObject> connectedCells = new(){ _baseCell };
+    private List<GameObject> GetConnectedCells() {
+        List<GameObject> connectedCells = new() { _baseCell };
         Stack<GameObject> cellsToCheck = new();
         cellsToCheck.Push(_baseCell);
 
-        while(cellsToCheck.TryPop(out GameObject cellToCheck))
-        {
-            foreach (GameObject connectedCell in _cellGraph[cellToCheck])
-            {
-                if (!connectedCells.Contains(connectedCell))
-                {
+        while (cellsToCheck.TryPop(out GameObject cellToCheck)) {
+            foreach (GameObject connectedCell in _cellGraph[cellToCheck]) {
+                if (!connectedCells.Contains(connectedCell)) {
                     connectedCells.Add(connectedCell);
                     cellsToCheck.Push(connectedCell);
                 }
@@ -97,28 +78,23 @@ public class PlayerShip
         }
         return connectedCells;
     }
-    private void DestroyNearbyBullets(Vector3 position, float distance)
-    {
+    private void DestroyNearbyBullets(Vector3 position, float distance) {
         Collider[] nearbyColliders = Physics.OverlapSphere(position, distance, Physics.AllLayers, QueryTriggerInteraction.Collide);
-        foreach (Collider nearbyCollider in nearbyColliders)
-        {
+        foreach (Collider nearbyCollider in nearbyColliders) {
             GameObject nearbyObject = nearbyCollider.gameObject;
             if (nearbyObject.GetComponent<Bullet>() != null) UnityEngine.Object.Destroy(nearbyObject);
         }
     }
 
-    private List<GameObject> FindNearbyCells(Transform transform, float distance)
-    {
+    private List<GameObject> FindNearbyCells(Transform transform, float distance) {
         List<GameObject> adjacentCells = new();
 
         Collider[] nearbyColliders = Physics.OverlapSphere(transform.position, distance);
-        foreach (Collider nearbyCollider in nearbyColliders)
-        {
+        foreach (Collider nearbyCollider in nearbyColliders) {
             GameObject nearbyObject = nearbyCollider.gameObject;
             if (transform != nearbyObject.transform
                     && nearbyCollider.isTrigger == false
-                    && _cellGraph.ContainsKey(nearbyObject))
-            {
+                    && _cellGraph.ContainsKey(nearbyObject)) {
                 adjacentCells.Add(nearbyObject);
             }
         }
@@ -126,10 +102,8 @@ public class PlayerShip
         return adjacentCells;
     }
 
-    public Vector3 GetAttachPosition(GameObject cell)
-    {
-        if (!cell.TryGetComponent<CapsuleCollider>(out var collider))
-        {
+    public Vector3 GetAttachPosition(GameObject cell) {
+        if (!cell.TryGetComponent<CapsuleCollider>(out var collider)) {
             Debug.LogError("Failed to calculate attach position due to missing capsule collider");
             return cell.transform.position;
         }
@@ -138,21 +112,17 @@ public class PlayerShip
     }
 
     //TODO: use this to 'snap' cells into position when they attach to multiple other cells
-    private Vector3 GetAttachPosition(Transform cell, List<GameObject> attachmentCells)
-    {
-        while(attachmentCells.Count > 2)
-        {
+    private Vector3 GetAttachPosition(Transform cell, List<GameObject> attachmentCells) {
+        while (attachmentCells.Count > 2) {
             attachmentCells.RemoveAt(0); //TODO: handle >2 connections more gracefully? Its probably pretty rare and this will be good enough
         }
-        if (attachmentCells.Count == 1)
-        {
+        if (attachmentCells.Count == 1) {
             Transform otherCell = attachmentCells[0].transform;
             Vector3 direction = (cell.position - otherCell.position).normalized;
             float distance = otherCell.GetComponent<CapsuleCollider>().radius + cell.GetComponent<CapsuleCollider>().radius;
             return otherCell.position + (direction * distance);
         }
-        if (attachmentCells.Count == 2)
-        {
+        if (attachmentCells.Count == 2) {
             float myRadius = cell.GetComponent<CapsuleCollider>().radius;
             float distance1 = attachmentCells[0].GetComponent<CapsuleCollider>().radius + myRadius;
             float distance2 = attachmentCells[1].GetComponent<CapsuleCollider>().radius + myRadius;
@@ -180,23 +150,19 @@ public class PlayerShip
     }
 
 
-    public override string ToString()
-    {
+    public override string ToString() {
         string printString = "";
-        foreach (GameObject cell in _cellGraph.Keys)
-        {
+        foreach (GameObject cell in _cellGraph.Keys) {
             printString += $"\n{cell.name}: {GameObjectListToString(_cellGraph[cell])}";
         }
         return printString;
     }
 
     //TODO move somewhere that makes more sense
-    private string GameObjectListToString(List<GameObject> objects)
-    {
+    private string GameObjectListToString(List<GameObject> objects) {
         string printString = "[";
         string sep = "";
-        foreach (GameObject obj in objects)
-        {
+        foreach (GameObject obj in objects) {
             printString += sep + obj.name;
             sep = ", ";
         }

@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour {
@@ -30,10 +26,11 @@ public class EnemySpawner : MonoBehaviour {
         Vector3 spawnPoint;
         do {
             spawnPoint = new Vector3(
-                UnityEngine.Random.Range(-Globals.ArenaWidth/2 + 1, Globals.ArenaWidth/2 - 1),
+                UnityEngine.Random.Range(-Globals.ArenaWidth / 2 + 1, Globals.ArenaWidth / 2 - 1),
                 0,
-                UnityEngine.Random.Range(-Globals.ArenaHeight/2 + 1, Globals.ArenaHeight/2 - 2)
-            ); }
+                UnityEngine.Random.Range(-Globals.ArenaHeight / 2 + 1, Globals.ArenaHeight / 2 - 2)
+            );
+        }
         while (
             GameManager.Instance != null
             && GameManager.Instance.CurrentPlayer != null

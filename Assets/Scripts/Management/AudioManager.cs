@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class AudioManager : MonoBehaviour
-{
+public class AudioManager : MonoBehaviour {
     public static AudioManager Instance;
     public void Awake() {
         Instance = this;
@@ -54,7 +51,7 @@ public class AudioManager : MonoBehaviour
 
     private AudioSource GetAudioSourceWithName(string name) {
         var audioSources = GetComponents<AudioSource>();
-        foreach(var audioSource in audioSources) {
+        foreach (var audioSource in audioSources) {
             if (audioSource.clip.name == name) {
                 return audioSource;
             }
