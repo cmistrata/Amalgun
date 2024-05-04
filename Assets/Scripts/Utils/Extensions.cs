@@ -12,4 +12,17 @@ public static class Extensions {
 
         }
     }
+
+    public static Vector3 UpdateCoords(this Vector3 vector3, float? x = null, float? y = null, float? z = null) {
+        if (x != null) {
+            vector3.x = (float)x;
+        }
+        if (y != null) {
+            vector3.y = (float)y;
+        }
+        if (z != null) {
+            vector3.z = (float)z;
+        }
+        return vector3;
+    }
 }

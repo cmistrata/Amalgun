@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour {
 
     private LevelController _levelController;
     public List<Level> Levels;
+    public bool SpawnEnemies = true;
     private int _curLevel = 0;
 
     public GameState State = GameState.Intro;
@@ -117,9 +118,12 @@ public class GameManager : MonoBehaviour {
         Debug.Log("Starting new game.");
         Money = 0;
 
-        _curLevel = 0;
-        _levelController.LoadLevel(Levels[_curLevel++]);
-        _levelController.StartLevel();
+        if (SpawnEnemies) {
+            _curLevel = 0;
+            _levelController.LoadLevel(Levels[_curLevel++]);
+            _levelController.StartLevel();
+        }
+
 
         ClearUI();
         if (CurrentPlayer != null) {
