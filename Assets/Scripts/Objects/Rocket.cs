@@ -56,7 +56,7 @@ public class Rocket : MonoBehaviour {
             return GameManager.Instance.CurrentPlayer.transform.position;
         }
         else if (gameObject.layer == Layers.PlayerBullet) {
-            return Utils.GetPlayerAimPosition();
+            return Utils.GetMousePosition();
         }
         return Vector3.zero;
     }

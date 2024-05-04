@@ -17,6 +17,7 @@ public class Cannon : CellModule {
     private float _autoFireTimer = 0f;
     public float FiringInaccuracyAngles = 0;
     public float InitialProjectileOffset = 0;
+    public Transform AimFrom;
     public Transform InitialFiringPosition;
     public float PlayerProjectileSpeed = 10;
     public float EnemyProjectileSpeed = 4;
@@ -34,13 +35,15 @@ public class Cannon : CellModule {
     public TargetingStrategy EnemyTargetingStrategy = TargetingStrategy.TargetPlayer;
     private TargetingStrategy _currentTargetingStrategy = TargetingStrategy.StaticDirection;
 
-    [Header("Sprites")]
     public GameObject CannonBase;
 
     protected override void ExtraAwake() {
         _animator = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
+        if (!AimFrom) {
+            AimFrom = transform;
+        }
         HandleTeamChange(_team);
     }
 
@@ -111,21 +114,11 @@ public class Cannon : CellModule {
     }
 
     Vector3 GetAimingDirection() {
-        switch (_currentTargetingStrategy) {
-            case TargetingStrategy.TargetPlayer:
-                return Player.Instance != null ? Player.Instance.transform.position - transform.position : _aimingDirection;
-            case TargetingStrategy.TargetMouseCursor:
-                var mouseAimPosition = Utils.GetPlayerAimPosition();
-                if (mouseAimPosition != null) {
-                    return mouseAimPosition - transform.position;
-                }
-                else {
-                    return _aimingDirection;
-                }
-            case TargetingStrategy.StaticDirection:
-            default:
-                return _aimingDirection;
-        }
+        return _currentTargetingStrategy switch {
+            TargetingStrategy.TargetPlayer => (Player.Instance != null ? Player.Instance.transform.position - AimFrom.position : _aimingDirection).UpdateCoords(y: 0),
+            TargetingStrategy.TargetMouseCursor => (Utils.GetMousePosition() - AimFrom.position).UpdateCoords(y: 0),
+            _ => _aimingDirection,
+        };
     }
 
     protected override void HandleTeamChange(Team newTeam) {

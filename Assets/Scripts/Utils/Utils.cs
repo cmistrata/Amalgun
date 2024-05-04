@@ -15,7 +15,7 @@ public static class Utils {
         }
     }
 
-    public static Vector3 GetPlayerAimPosition() {
+    public static Vector3 GetMousePosition() {
         MouseRaycast(out var raycastHit, Layers.MouseAimCollider);
         var mousePosition = new Vector3(raycastHit.point.x, 0, raycastHit.point.z);
         return mousePosition;
@@ -23,11 +23,6 @@ public static class Utils {
 
     public static int GetLayerMask(int layer) {
         return 1 << layer;
-    }
-
-    public static Vector3 GetMousePosition() {
-        MouseRaycast(out RaycastHit hit);
-        return hit.point;
     }
 
     public static void LogOncePerSecond(string logMessage, string key = null) {
