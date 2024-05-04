@@ -19,18 +19,14 @@ public class Player : MonoBehaviour {
 
     public static event Action SignalPlayerDeath;
 
-    private void Awake()
-    {
-        foreach (var cellProperties in GetComponentsInChildren<CellProperties>())
-        {
-            if (cellProperties.Type == CellType.PlayerNucleus)
-            {
+    private void Awake() {
+        foreach (var cellProperties in GetComponentsInChildren<CellProperties>()) {
+            if (cellProperties.Type == CellType.PlayerNucleus) {
                 _nucleus = cellProperties.gameObject;
                 break;
             }
         }
-        if (_nucleus == null)
-        {
+        if (_nucleus == null) {
             Debug.LogError("Failed to find player nucleus cell for player");
         }
 
@@ -45,8 +41,7 @@ public class Player : MonoBehaviour {
         PlayerShipPiece.SignalAttachCell += ConnectCell;
     }
 
-    private void OnDestroy()
-    {
+    private void OnDestroy() {
         CellHealthManager.SignalPlayerCellDeath -= OnPlayerCellDeath;
         PlayerShipPiece.SignalAttachCell -= ConnectCell;
     }
@@ -62,7 +57,8 @@ public class Player : MonoBehaviour {
                 var clickedGameObject = hit.collider.gameObject;
                 if (clickedGameObject == this.gameObject) {
                     Heal(1);
-                } else if (clickedGameObject.GetComponent<CellHealthManager>() != null) {
+                }
+                else if (clickedGameObject.GetComponent<CellHealthManager>() != null) {
                     var clickedCell = clickedGameObject.GetComponent<CellHealthManager>();
                     clickedCell.Meld();
                 }
@@ -77,8 +73,7 @@ public class Player : MonoBehaviour {
     /// <summary>
     /// Adds a cell to the player and updates the ship
     /// </summary>
-    public void ConnectCell(GameObject neutralCell)
-    {
+    public void ConnectCell(GameObject neutralCell) {
         neutralCell.GetComponent<TeamTracker>().ChangeTeam(Team.Player);
 
         ModifyCellToFollowShip(neutralCell);
@@ -89,8 +84,7 @@ public class Player : MonoBehaviour {
         neutralCell.GetComponent<PlayerShipPiece>().enabled = true;
     }
 
-    public void DisconnectCell(GameObject playerCell)
-    {
+    public void DisconnectCell(GameObject playerCell) {
         RestoreCellOnRemovalFromShip(playerCell);
         _playerShip.RemoveCell(playerCell);
         _rb.mass -= _newCellMassIncrease;
@@ -99,66 +93,55 @@ public class Player : MonoBehaviour {
         playerCell.GetComponent<PlayerShipPiece>().enabled = false;
     }
 
-    private void ModifyCellToFollowShip(GameObject cell)
-    {
+    private void ModifyCellToFollowShip(GameObject cell) {
         cell.transform.parent = transform;
         var rb = cell.GetComponent<Rigidbody>();
         rb.isKinematic = true;
 
-        if (cell.TryGetComponent<StayInBounds>(out var stayInBounds))
-        {
+        if (cell.TryGetComponent<StayInBounds>(out var stayInBounds)) {
             stayInBounds.enabled = false;
         }
     }
 
-    private void RestoreCellOnRemovalFromShip(GameObject cell)
-    {
+    private void RestoreCellOnRemovalFromShip(GameObject cell) {
         cell.transform.parent = null; //TODO: where should it be parented?
         Rigidbody rb = cell.GetComponent<Rigidbody>();
         rb.isKinematic = false;
 
-        if (cell.TryGetComponent<StayInBounds>(out var stayInBounds))
-        {
+        if (cell.TryGetComponent<StayInBounds>(out var stayInBounds)) {
             stayInBounds.enabled = true;
         }
     }
 
-    private void OnPlayerCellDeath(GameObject cell)
-    {
-        if (cell == _nucleus)
-        {
+    private void OnPlayerCellDeath(GameObject cell) {
+        if (cell == _nucleus) {
             Die();
             return;
         }
 
         DisconnectCell(cell);
-        foreach (var diconnectedCell in _playerShip.GetAndRemoveDisonnectedCells())
-        {
+        foreach (var diconnectedCell in _playerShip.GetAndRemoveDisonnectedCells()) {
             DisconnectLiveCell(diconnectedCell);
         }
     }
 
-    private void DisconnectLiveCell(GameObject cell)
-    {
+    private void DisconnectLiveCell(GameObject cell) {
         cell.GetComponent<CellHealthManager>().Die();
         //TODO: possible different behavior for a cell that was incidentally disconnected, become neutral?
     }
 
-    private void Die() 
-    {
+    private void Die() {
         PlayDeathFX();
         gameObject.SetActive(false);
         SignalPlayerDeath?.Invoke();
     }
 
-    public void PlayDeathFX() 
-    {
+    public void PlayDeathFX() {
         AudioManager.Instance.PlayCellDestroy();
         CinemachineCameraManager.Instance.Shake(1, .6f);
     }
 
-    private void UpdateRotationalInertia() 
-    {
+    private void UpdateRotationalInertia() {
         _rb.inertiaTensor = new(0, _playerShip.GetRotationalInertia(), 0);
     }
 }

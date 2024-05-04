@@ -40,7 +40,8 @@ public class Rocket : MonoBehaviour {
         var rotationSpeed = _inStartupPhase ? _startupRotationSpeed : _thrustingRotationSpeed;
         if (angleBetweenTarget < rotationSpeed) {
             transform.rotation = targetRotation;
-        } else {
+        }
+        else {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed);
         }
 
@@ -53,7 +54,8 @@ public class Rocket : MonoBehaviour {
     Vector3 GetTargetPosition() {
         if (gameObject.layer == Layers.EnemyBullet && GameManager.Instance.CurrentPlayer != null) {
             return GameManager.Instance.CurrentPlayer.transform.position;
-        } else if (gameObject.layer == Layers.PlayerBullet) {
+        }
+        else if (gameObject.layer == Layers.PlayerBullet) {
             return Utils.GetPlayerAimPosition();
         }
         return Vector3.zero;

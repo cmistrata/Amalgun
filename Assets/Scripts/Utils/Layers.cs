@@ -1,6 +1,4 @@
-using UnityEngine;
-
-public class Layers {
+public static class Layers {
     public const int EnemyCell = 6;
     public const int PlayerCell = 7;
     public const int NeutralCell = 8;

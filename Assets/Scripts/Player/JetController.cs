@@ -1,10 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerMovement))]
-public class JetController : MonoBehaviour
-{
+public class JetController : MonoBehaviour {
     public float Scale = .03f;
 
     public DirectionForceMovementBase Movement;
@@ -49,8 +47,7 @@ public class JetController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update() 
-    {
+    void Update() {
         Vector3 globalTargetDirection = Movement.TargetDirection;
         Vector3 localTargetDirection = transform.InverseTransformVector(globalTargetDirection).normalized;
         float lateralMovement = localTargetDirection.x;
@@ -67,23 +64,26 @@ public class JetController : MonoBehaviour
         if (clockwiseRotationInput > 0) {
             leftBackJetPower += _rotationPower * clockwiseRotationInput;
             rightFrontJetPower += _rotationPower * clockwiseRotationInput;
-        } else if (clockwiseRotationInput < 0) {
+        }
+        else if (clockwiseRotationInput < 0) {
             leftFrontJetPower += _rotationPower * Mathf.Abs(clockwiseRotationInput);
             rightBackJetPower += _rotationPower * Mathf.Abs(clockwiseRotationInput);
         }
 
         if (lateralMovement > 0) {
             leftSideJetPower += _translationPower * lateralMovement;
-        } else if (lateralMovement < 0) {
+        }
+        else if (lateralMovement < 0) {
             rightSideJetPower += _translationPower * Mathf.Abs(lateralMovement);
         }
 
         if (forwardMovement > 0) {
-            leftBackJetPower += (_translationPower/2) * forwardMovement;
-            rightBackJetPower += (_translationPower/2) * forwardMovement;
-        } else if (forwardMovement < 0) {
-            leftFrontJetPower += (_translationPower/2) * Mathf.Abs(forwardMovement);
-            rightFrontJetPower += (_translationPower/2) * Mathf.Abs(forwardMovement);
+            leftBackJetPower += (_translationPower / 2) * forwardMovement;
+            rightBackJetPower += (_translationPower / 2) * forwardMovement;
+        }
+        else if (forwardMovement < 0) {
+            leftFrontJetPower += (_translationPower / 2) * Mathf.Abs(forwardMovement);
+            rightFrontJetPower += (_translationPower / 2) * Mathf.Abs(forwardMovement);
         }
 
         _leftBackJetEmission.rateOverTime = leftBackJetPower;

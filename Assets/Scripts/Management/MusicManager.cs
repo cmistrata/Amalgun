@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
-public class MusicManager : MonoBehaviour
-{
+public class MusicManager : MonoBehaviour {
     public AudioClip EasyMusic;
     public AudioClip MediumMusic;
     public AudioClip HardMusic;
@@ -21,10 +18,8 @@ public class MusicManager : MonoBehaviour
         DontDestroyOnLoad(this);
     }
 
-    public void QueueSongStart(int difficulty)
-    {
-        if (_audioSource.clip == null)
-        {
+    public void QueueSongStart(int difficulty) {
+        if (_audioSource.clip == null) {
             _audioSource.clip = EasyMusic;
         }
         var bars = 8;
@@ -38,23 +33,20 @@ public class MusicManager : MonoBehaviour
         Invoke(nameof(StartSong), timeRemaining);
     }
 
-    private void StartSong()
-    {
+    private void StartSong() {
         var clip = _difficulty == 0 ? EasyMusic : _difficulty == 1 ? MediumMusic : HardMusic;
         _audioSource.clip = clip;
         _audioSource.time = (_audioSource.clip.length / 8) * _nextBar;
         _audioSource.Play();
     }
 
-    public void RestartEasySong()
-    {
+    public void RestartEasySong() {
         _audioSource.clip = EasyMusic;
         _audioSource.time = 0;
         _audioSource.Play();
     }
 
-    public void StopMusic()
-    {
+    public void StopMusic() {
         _audioSource.Stop();
     }
 }

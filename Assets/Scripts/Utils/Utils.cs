@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
-using Unity.Cinemachine;
 using UnityEngine;
 
 public static class Utils {
-    static Dictionary<string, int> _lastLogsecondByMessage = new();
+    static Dictionary<string, int> _lastLogSecondByMessage = new();
 
     public static bool MouseRaycast(out RaycastHit hit, int layer = -1) {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (layer == -1) {
             return Physics.Raycast(ray, out hit, 30);
-        } else {
+        }
+        else {
             return Physics.Raycast(ray, out hit, 30, GetLayerMask(layer));
         }
     }
@@ -32,8 +32,8 @@ public static class Utils {
 
     public static void LogOncePerSecond(string logMessage, string key = null) {
         key ??= logMessage[..2];
-        if (!_lastLogsecondByMessage.ContainsKey(key) || _lastLogsecondByMessage[key] < DateTime.Now.Second) {
-            _lastLogsecondByMessage[key] = DateTime.Now.Second;
+        if (!_lastLogSecondByMessage.ContainsKey(key) || _lastLogSecondByMessage[key] < DateTime.Now.Second) {
+            _lastLogSecondByMessage[key] = DateTime.Now.Second;
             Debug.Log(logMessage);
         }
     }

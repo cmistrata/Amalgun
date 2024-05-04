@@ -45,13 +45,11 @@ public class Cannon : CellModule {
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         bool firingAllowedInGameState = GameManager.Instance == null || GameManager.Instance.State == GameState.Fighting;
         if (AutoFiring
             && firingAllowedInGameState
-            && _team != Team.Neutral)
-        {
+            && _team != Team.Neutral) {
             _autoFireTimer -= Time.deltaTime;
             if (!_triggeredAnimationYet && _autoFireTimer <= FireAnimationOffsetTime && _animator != null) {
                 _animator.SetTrigger("Fire");
@@ -65,27 +63,22 @@ public class Cannon : CellModule {
         }
     }
 
-    private void FixedUpdate()
-    {
-        if (!GameManager.Instance.Paused)
-        {
+    private void FixedUpdate() {
+        if (!GameManager.Instance.Paused) {
             _aimingDirection = GetAimingDirection();
             _aimingAngle = Mathf.Atan2(_aimingDirection.x, _aimingDirection.z) * Mathf.Rad2Deg;
             CannonBase.transform.rotation = Quaternion.AngleAxis(_aimingAngle, Vector3.up);
         }
     }
 
-    public void FireProjectiles()
-    {
-        if (NumProjectiles == 1)
-        {
+    public void FireProjectiles() {
+        if (NumProjectiles == 1) {
             FireProjectile();
             return;
         }
 
         float currentFiringAngleOffset = -FiringSpreadAngles * .5f;
-        for (int i = 0; i < NumProjectiles; i++)
-        {
+        for (int i = 0; i < NumProjectiles; i++) {
             FireProjectile(currentFiringAngleOffset);
             // Choose the next angle by moving a fraction of the total firing spread, e.g.:
             //   For 2 projectiles, would move the entire spread.
@@ -95,8 +88,7 @@ public class Cannon : CellModule {
     }
 
 
-    void FireProjectile(float aimingAngleOffset = 0)
-    {
+    void FireProjectile(float aimingAngleOffset = 0) {
         float inaccuracyOffset = Random.Range(-FiringInaccuracyAngles, FiringInaccuracyAngles);
         float firingAngleAfterOffset = _aimingAngle + aimingAngleOffset + inaccuracyOffset;
 
@@ -118,17 +110,16 @@ public class Cannon : CellModule {
         _audioSource.Play();
     }
 
-    Vector3 GetAimingDirection()
-    {
-        switch (_currentTargetingStrategy)
-        {
+    Vector3 GetAimingDirection() {
+        switch (_currentTargetingStrategy) {
             case TargetingStrategy.TargetPlayer:
                 return Player.Instance != null ? Player.Instance.transform.position - transform.position : _aimingDirection;
             case TargetingStrategy.TargetMouseCursor:
                 var mouseAimPosition = Utils.GetPlayerAimPosition();
                 if (mouseAimPosition != null) {
                     return mouseAimPosition - transform.position;
-                } else {
+                }
+                else {
                     return _aimingDirection;
                 }
             case TargetingStrategy.StaticDirection:
@@ -137,12 +128,11 @@ public class Cannon : CellModule {
         }
     }
 
-    protected override void HandleTeamChange(Team newTeam)
-    {
+    protected override void HandleTeamChange(Team newTeam) {
         if (_team == Team.Player || _team == Team.Neutral) {
             _currentTargetingStrategy = _team == Team.Player ? PlayerTargetingStrategy : TargetingStrategy.StaticDirection;
         }
-        else { 
+        else {
             _currentTargetingStrategy = EnemyTargetingStrategy;
         }
     }

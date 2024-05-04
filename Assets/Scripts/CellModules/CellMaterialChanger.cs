@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(TeamTracker))]
-public class CellMaterialChanger : CellModule
-{
+public class CellMaterialChanger : CellModule {
     public Renderer Foundation;
     public Renderer Turret;
 
