@@ -24,6 +24,7 @@ public class CellHealthManager : MonoBehaviour {
     [Header("Conversion RNG")]
     public float ConvertChance = 0.15f;
     public bool Melded = false;
+    public bool HandleOwnCollisions = true;
 
     public void Awake() {
         _teamTracker = GetComponent<TeamTracker>();
@@ -34,21 +35,15 @@ public class CellHealthManager : MonoBehaviour {
         CurrentHealth = MaxHealth;
     }
 
-    public void TakeDamage(int damage) {
+    public void TakeDamage(int damage = 1) {
         if (_animator != null) {
             _animator.SetTrigger("Hit");
-        }
-        //TODO: figure out a better way to detect player damage and react to it
-        if (gameObject.GetComponent<Player>() != null) {
-            AudioManager.Instance.PlayPlayerDamagedSound(1 + (MaxHealth - CurrentHealth) / (2 * MaxHealth));
-            CameraManager.Instance.FlashDamageFilter();
         }
 
         CurrentHealth -= damage;
         if (CurrentHealth <= 0) {
             Die();
         }
-
     }
 
     /// <summary>
@@ -106,9 +101,10 @@ public class CellHealthManager : MonoBehaviour {
     }
 
     public void OnCollisionEnter(Collision collision) {
-        bool isOtherTeambullet = (_teamTracker.Team == Team.Enemy && collision.gameObject.layer == Layers.PlayerBullet)
+        if (!HandleOwnCollisions) return;
+        bool isOtherTeamBullet = (_teamTracker.Team == Team.Enemy && collision.gameObject.layer == Layers.PlayerBullet)
                || (_teamTracker.Team == Team.Player && collision.gameObject.layer == Layers.EnemyBullet);
-        if (isOtherTeambullet) {
+        if (isOtherTeamBullet) {
             TakeDamage(1);
         }
     }

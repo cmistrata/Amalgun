@@ -15,6 +15,6 @@ public class Globals : MonoBehaviour {
     public Material playerBulletMaterial;
     public Material enemyBulletMaterial;
 
-    public const float ArenaWidth = 28f;
-    public const float ArenaHeight = 18f;
+    public const float ArenaWidth = 24f;
+    public const float ArenaHeight = 24f;
 }

@@ -55,7 +55,7 @@ public class PlayerShip {
         }
     }
 
-    public List<GameObject> GetAndRemoveDisonnectedCells() {
+    public List<GameObject> GetAndRemoveDisconnectedCells() {
         var disconnectedCells = _cellGraph.Keys.Except(GetConnectedCells()).ToList();
         foreach (var cell in disconnectedCells) {
             RemoveCell(cell);

@@ -8,7 +8,7 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - NoCollision
   - Water
   - UI
   - EnemyCell
@@ -21,7 +21,7 @@ TagManager:
   - Pickup
   - Ground
   - MouseAimCollider
-  - 
+  - Bounds
   - 
   - 
   - 

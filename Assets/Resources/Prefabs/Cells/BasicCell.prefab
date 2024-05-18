@@ -656,7 +656,6 @@ GameObject:
   - component: {fileID: 8809325978400930870}
   - component: {fileID: 7177724450747333993}
   - component: {fileID: 2650112753784540064}
-  - component: {fileID: 4044615388003285852}
   - component: {fileID: 244536029975207358}
   - component: {fileID: 8288147963090237135}
   - component: {fileID: 6106495995929956293}
@@ -884,6 +883,7 @@ MonoBehaviour:
   AutoFireIntervalSeconds: 2.5
   FiringInaccuracyAngles: 0
   InitialProjectileOffset: 0
+  AimFrom: {fileID: 0}
   InitialFiringPosition: {fileID: 2936912828888888688}
   PlayerProjectileSpeed: 10
   EnemyProjectileSpeed: 4
@@ -924,19 +924,7 @@ MonoBehaviour:
   CurrentHealth: 1
   ConvertChance: 1
   Melded: 0
---- !u!114 &4044615388003285852
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3243104636506775748}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29ca85602c22cb8408bd6b554ed0b13d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ForceMagnitude: 100
+  HandleOwnCollisions: 1
 --- !u!114 &244536029975207358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -977,6 +965,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40afc8e5bac728243ab811b45be71d8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DestroyRbOnConnect: 1
 --- !u!114 &7730555478780315671
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -539,7 +539,7 @@ Material:
     - _MinColor: {r: 0, g: 0, b: 0, a: 1}
     - _OtlColor: {r: 0.1171014, g: 0.2578616, b: 0.073790535, a: 1}
     - _OutlineMaskColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Outline_Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Outline_Color: {r: 0.115000166, g: 0.26415092, b: 0, a: 1}
     - _RimColor: {r: 1, g: 0.9904847, b: 0.8160377, a: 1}
     - _RimLightColor: {r: 0.07920967, g: 0.115895346, b: 0.2830189, a: 1}
     - _RimLightMaskColor: {r: 1, g: 0, b: 1, a: 1}

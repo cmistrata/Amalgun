@@ -5,8 +5,7 @@ using UnityEngine;
 
 
 
-public class WaveSpawner
-{
+public class WaveSpawner {
     public static event Action SignalWaveComplete;
 
     private WaveWrapper _wave;
@@ -15,31 +14,26 @@ public class WaveSpawner
     private int _activeEnemies;
     private const float _minimumSpawnDistanceFromPlayerSquared = (10f * 10f);
 
-    public WaveSpawner()
-    {
+    public WaveSpawner() {
         _wave = new WaveWrapper();
         _isWaveInProgress = false;
         _activeEnemies = 0;
     }
 
-    public void LoadWave(Wave wave)
-    {
+    public void LoadWave(Wave wave) {
         Debug.Log($"Loading _wave {wave}");
         _wave.LoadWave(wave);
     }
 
-    public void StartWave()
-    {
+    public void StartWave() {
         CellHealthManager.SignalEnemyCellDeath += OnEnemyDeath;
         _isWaveInProgress = true;
     }
 
-    public void Update(float timePassed)
-    {
+    public void Update(float timePassed) {
         if (_wave == null || !_isWaveInProgress) return;
 
-        if (_wave.ShouldSpawn(timePassed))
-        {
+        if (_wave.ShouldSpawn(timePassed)) {
             GameObject cell = CellPool.GetCell(_wave.GetNextEnemy());
             cell.transform.position = GenerateSpawnPoint();
             CellUtils.ConvertToTeam(cell, Team.Enemy);
@@ -47,16 +41,15 @@ public class WaveSpawner
         }
     }
 
-    private Vector3 GenerateSpawnPoint()
-    {
+    private Vector3 GenerateSpawnPoint() {
         Vector3 spawnPoint;
-        do
-        {
+        do {
             spawnPoint = new Vector3(
                 UnityEngine.Random.Range(-Globals.ArenaWidth / 2 + 1, Globals.ArenaWidth / 2 - 1),
                 0,
                 UnityEngine.Random.Range(-Globals.ArenaHeight / 2 + 1, Globals.ArenaHeight / 2 - 2)
             );
+            spawnPoint = Quaternion.AngleAxis(45, Vector3.up) * spawnPoint;
         }
         while (
             GameManager.Instance != null
@@ -66,12 +59,10 @@ public class WaveSpawner
         return spawnPoint;
     }
 
-    private void OnEnemyDeath()
-    {
+    private void OnEnemyDeath() {
         _isWaveInProgress = (--_activeEnemies > 0 || !_wave.IsWaveComplete());
 
-        if (!_isWaveInProgress)
-        {
+        if (!_isWaveInProgress) {
             Debug.Log($"Wave Complete");
             CellHealthManager.SignalEnemyCellDeath -= OnEnemyDeath;
             SignalWaveComplete.Invoke();
