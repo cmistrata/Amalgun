@@ -3,9 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
-public class WaveSpawner {
+public class WaveSpawner : MonoBehaviour {
     public static event Action SignalWaveComplete;
 
     private WaveWrapper _wave;
@@ -30,11 +28,12 @@ public class WaveSpawner {
         _isWaveInProgress = true;
     }
 
-    public void Update(float timePassed) {
+    public void Update() {
         if (_wave == null || !_isWaveInProgress) return;
 
-        if (_wave.ShouldSpawn(timePassed)) {
-            GameObject cell = CellPool.GetCell(_wave.GetNextEnemy());
+        if (_wave.ShouldSpawn(Time.deltaTime)) {
+            // GameObject cell = CellPool.GetCell(_wave.GetNextEnemy());
+            GameObject cell = Instantiate(CellPool.GetCellPrefab(_wave.GetNextEnemy()));
             cell.transform.position = GenerateSpawnPoint();
             CellUtils.ConvertToTeam(cell, Team.Enemy);
             ++_activeEnemies;

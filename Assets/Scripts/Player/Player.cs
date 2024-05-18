@@ -21,8 +21,6 @@ public class Player : MonoBehaviour {
 
     public static event Action SignalPlayerDeath;
 
-    private float _currentHealth = 4;
-
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
         _cellHealthManager = GetComponent<CellHealthManager>();

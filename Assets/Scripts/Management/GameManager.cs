@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour {
 
     public static Action SignalGameStart;
 
-    private LevelController _levelController;
+    public LevelController LevelController;
     public List<Level> Levels;
     public bool SpawnEnemies = true;
     private int _curLevel = 0;
@@ -42,7 +42,6 @@ public class GameManager : MonoBehaviour {
 
     void Awake() {
         if (Instance != null) Debug.LogError("Multiple game managers instantiated");
-        _levelController = new LevelController();
         Instance = this;
         Player.SignalPlayerDeath += HandlePlayerDeath;
         WaveSpawner.SignalWaveComplete += OnWaveComplete;
@@ -77,7 +76,6 @@ public class GameManager : MonoBehaviour {
     }
 
     void FightingUpdate() {
-        _levelController.Update(Time.deltaTime);
         if (Input.GetKeyDown(KeyCode.P)) {
             Paused = !Paused;
             if (Paused) {
@@ -120,8 +118,8 @@ public class GameManager : MonoBehaviour {
 
         if (SpawnEnemies) {
             _curLevel = 0;
-            _levelController.LoadLevel(Levels[_curLevel++]);
-            _levelController.StartLevel();
+            LevelController.LoadLevel(Levels[_curLevel++]);
+            LevelController.StartLevel();
         }
 
 
@@ -145,8 +143,8 @@ public class GameManager : MonoBehaviour {
     }
 
     public void OnLevelComplete() {
-        _levelController.LoadLevel(Levels[_curLevel++]);
-        _levelController.StartLevel();
+        LevelController.LoadLevel(Levels[_curLevel++]);
+        LevelController.StartLevel();
         Wave = 1;
         WaveText.text = $"Wave {Wave}";
         WaveText.gameObject.SetActive(true);

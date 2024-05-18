@@ -61,6 +61,10 @@ public static class CellPool {
         return cell;
     }
 
+    public static GameObject GetCellPrefab(CellType type) {
+        return _cellPrefabs[type];
+    }
+
     public static void ReturnCell(GameObject cell, CellType type) {
         _cellPools[type].Release(cell);
     }
