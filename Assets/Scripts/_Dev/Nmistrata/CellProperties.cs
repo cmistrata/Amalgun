@@ -7,11 +7,6 @@ public enum CellType {
     Rocket = 3
 }
 
-[RequireComponent(typeof(PlayerShipPiece))]
-[RequireComponent(typeof(MovementBase))]
-[RequireComponent(typeof(CellHealthManager))]
-[RequireComponent(typeof(TeamTracker))]
 public class CellProperties : MonoBehaviour {
-    [SerializeField]
     public CellType Type;
 }

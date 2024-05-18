@@ -115,7 +115,7 @@ public class Cannon : CellModule {
 
     Vector3 GetAimingDirection() {
         return _currentTargetingStrategy switch {
-            TargetingStrategy.TargetPlayer => (Player.Instance != null ? Player.Instance.transform.position - AimFrom.position : _aimingDirection).UpdateCoords(y: 0),
+            TargetingStrategy.TargetPlayer => (GameManager.Instance.CurrentPlayer != null ? GameManager.Instance.CurrentPlayer.transform.position - AimFrom.position : _aimingDirection).UpdateCoords(y: 0),
             TargetingStrategy.TargetMouseCursor => (Utils.GetMousePosition() - AimFrom.position).UpdateCoords(y: 0),
             _ => _aimingDirection,
         };

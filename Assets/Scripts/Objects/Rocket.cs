@@ -30,7 +30,6 @@ public class Rocket : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        Utils.LogOncePerSecond($"R{gameObject} position: {transform.position}");
         Vector3 targetDirection = GetTargetPosition() - transform.position;
 
         // Rotate the rocket towards the target

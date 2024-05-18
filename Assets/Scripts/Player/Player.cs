@@ -4,8 +4,10 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CellHealthManager))]
 public class Player : MonoBehaviour {
     private Rigidbody _rb;
+    private CellHealthManager _cellHealthManager;
     private PlayerShip _playerShip;
     private GameObject _nucleus;
 
@@ -19,22 +21,16 @@ public class Player : MonoBehaviour {
 
     public static event Action SignalPlayerDeath;
 
+    private float _currentHealth = 4;
+
     private void Awake() {
-        foreach (var cellProperties in GetComponentsInChildren<CellProperties>()) {
-            if (cellProperties.Type == CellType.PlayerNucleus) {
-                _nucleus = cellProperties.gameObject;
-                break;
-            }
-        }
-        if (_nucleus == null) {
-            Debug.LogError("Failed to find player nucleus cell for player");
-        }
+        _rb = GetComponent<Rigidbody>();
+        _cellHealthManager = GetComponent<CellHealthManager>();
+        _nucleus = gameObject;
 
         _playerShip = new PlayerShip(_nucleus);
         Instance = this;
 
-
-        _rb = GetComponent<Rigidbody>();
         UpdateRotationalInertia();
 
         CellHealthManager.SignalPlayerCellDeath += OnPlayerCellDeath;
@@ -75,6 +71,7 @@ public class Player : MonoBehaviour {
     /// </summary>
     public void ConnectCell(GameObject neutralCell) {
         neutralCell.GetComponent<TeamTracker>().ChangeTeam(Team.Player);
+        Destroy(neutralCell.GetComponent<Rigidbody>());
 
         ModifyCellToFollowShip(neutralCell);
         _playerShip.ConnectCell(neutralCell);
@@ -85,7 +82,7 @@ public class Player : MonoBehaviour {
     }
 
     public void DisconnectCell(GameObject playerCell) {
-        RestoreCellOnRemovalFromShip(playerCell);
+        playerCell.transform.parent = null;
         _playerShip.RemoveCell(playerCell);
         _rb.mass -= _newCellMassIncrease;
 
@@ -97,31 +94,27 @@ public class Player : MonoBehaviour {
         cell.transform.parent = transform;
         var rb = cell.GetComponent<Rigidbody>();
         rb.isKinematic = true;
-
-        if (cell.TryGetComponent<StayInBounds>(out var stayInBounds)) {
-            stayInBounds.enabled = false;
-        }
     }
 
-    private void RestoreCellOnRemovalFromShip(GameObject cell) {
-        cell.transform.parent = null; //TODO: where should it be parented?
-        Rigidbody rb = cell.GetComponent<Rigidbody>();
-        rb.isKinematic = false;
+    // private void RestoreCellOnRemovalFromShip(GameObject cell) {
+    //     cell.transform.parent = null; //TODO: where should it be parented?
+    //     Rigidbody rb = cell.GetComponent<Rigidbody>();
+    //     rb.isKinematic = false;
 
-        if (cell.TryGetComponent<StayInBounds>(out var stayInBounds)) {
-            stayInBounds.enabled = true;
-        }
-    }
+    //     if (cell.TryGetComponent<StayInBounds>(out var stayInBounds)) {
+    //         stayInBounds.enabled = true;
+    //     }
+    // }
 
     private void OnPlayerCellDeath(GameObject cell) {
-        if (cell == _nucleus) {
+        if (cell == gameObject) {
             Die();
             return;
         }
 
         DisconnectCell(cell);
-        foreach (var diconnectedCell in _playerShip.GetAndRemoveDisonnectedCells()) {
-            DisconnectLiveCell(diconnectedCell);
+        foreach (var disconnectedCell in _playerShip.GetAndRemoveDisconnectedCells()) {
+            DisconnectLiveCell(disconnectedCell);
         }
     }
 
@@ -143,5 +136,25 @@ public class Player : MonoBehaviour {
 
     private void UpdateRotationalInertia() {
         _rb.inertiaTensor = new(0, _playerShip.GetRotationalInertia(), 0);
+    }
+
+    void OnCollisionEnter(Collision collision) {
+        int collisionLayer = collision.gameObject.layer;
+        if (collisionLayer != Layers.EnemyBullet) return;
+
+        var nonBulletObject = collision.GetContact(0).thisCollider.gameObject;
+        var collisionIsWithPlayerShip = nonBulletObject == gameObject;
+        if (collisionIsWithPlayerShip) {
+            TakeDamage();
+        }
+        else if (nonBulletObject.TryGetComponent<CellHealthManager>(out var childCellHealthManager)) {
+            childCellHealthManager.TakeDamage();
+        }
+    }
+
+    public void TakeDamage() {
+        AudioManager.Instance.PlayPlayerDamagedSound(1 + (4f - _cellHealthManager.CurrentHealth) / 8f);
+        CameraManager.Instance.FlashDamageFilter();
+        _cellHealthManager.TakeDamage();
     }
 }
