@@ -34,7 +34,9 @@ public class WaveSpawner : MonoBehaviour {
         if (_wave.ShouldSpawn(Time.deltaTime)) {
             // GameObject cell = CellPool.GetCell(_wave.GetNextEnemy());
             GameObject cell = Instantiate(CellPool.GetCellPrefab(_wave.GetNextEnemy()));
-            cell.transform.position = GenerateSpawnPoint();
+            var spawnPoint = GenerateSpawnPoint();
+            cell.transform.position = spawnPoint;
+            EffectsManager.Instance.InstantiateEnemySpawnEffect(spawnPoint);
             CellUtils.ConvertToTeam(cell, Team.Enemy);
             ++_activeEnemies;
         }
