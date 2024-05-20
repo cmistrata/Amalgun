@@ -14,7 +14,7 @@ public class Cannon : CellModule {
     [Header("Firing Parameters")]
     public GameObject ProjectilePrefab;
     public float AutoFireIntervalSeconds = 2.5f;
-    private float _autoFireTimer = 0f;
+    private float _autoFireTimer;
     public float FiringInaccuracyAngles = 0;
     public float InitialProjectileOffset = 0;
     public Transform AimFrom;
@@ -36,11 +36,13 @@ public class Cannon : CellModule {
     private TargetingStrategy _currentTargetingStrategy = TargetingStrategy.StaticDirection;
 
     public GameObject CannonBase;
+    public Animator CannonAnimator;
 
     protected override void ExtraAwake() {
         _animator = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
+        _autoFireTimer = AutoFireIntervalSeconds;
         if (!AimFrom) {
             AimFrom = transform;
         }
@@ -54,8 +56,13 @@ public class Cannon : CellModule {
             && firingAllowedInGameState
             && _team != Team.Neutral) {
             _autoFireTimer -= Time.deltaTime;
-            if (!_triggeredAnimationYet && _autoFireTimer <= FireAnimationOffsetTime && _animator != null) {
-                _animator.SetTrigger("Fire");
+            if (!_triggeredAnimationYet && _autoFireTimer <= FireAnimationOffsetTime) {
+                if (_animator != null) {
+                    _animator.SetTrigger("Fire");
+                }
+                if (CannonAnimator != null) {
+                    CannonAnimator.SetTrigger("Fire");
+                }
                 _triggeredAnimationYet = true;
             }
             if (_autoFireTimer < 0) {
@@ -122,6 +129,7 @@ public class Cannon : CellModule {
     }
 
     protected override void HandleTeamChange(Team newTeam) {
+        _autoFireTimer = AutoFireIntervalSeconds;
         if (_team == Team.Player || _team == Team.Neutral) {
             _currentTargetingStrategy = _team == Team.Player ? PlayerTargetingStrategy : TargetingStrategy.StaticDirection;
         }

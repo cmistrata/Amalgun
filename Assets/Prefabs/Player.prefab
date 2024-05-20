@@ -31505,6 +31505,7 @@ GameObject:
   - component: {fileID: 4268314162281159076}
   - component: {fileID: 1927897041796286782}
   - component: {fileID: 5393695741812969695}
+  - component: {fileID: 130331624302599082}
   m_Layer: 7
   m_Name: Cannon
   m_TagString: Untagged
@@ -31580,6 +31581,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!95 &130331624302599082
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7930783064034647508}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 57843a18031d51a4ba6f6c3e28b068d3, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8669089679140054252
 GameObject:
   m_ObjectHideFlags: 0
@@ -31891,7 +31914,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40afc8e5bac728243ab811b45be71d8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DestroyRbOnConnect: 0
 --- !u!114 &6393233132680666276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31937,6 +31959,7 @@ MonoBehaviour:
   PlayerTargetingStrategy: 2
   EnemyTargetingStrategy: 1
   CannonBase: {fileID: 3949183866313951876}
+  CannonAnimator: {fileID: 130331624302599082}
 --- !u!136 &2944868561688054896
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -31999,7 +32022,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: becb0ce8dada24048a07c8ad3af0c7dc, type: 3}
   m_Resource: {fileID: 8300000, guid: becb0ce8dada24048a07c8ad3af0c7dc, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.138
+  m_Volume: 0.07
   m_Pitch: 1.48
   Loop: 0
   Mute: 0
