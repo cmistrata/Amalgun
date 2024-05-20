@@ -25,8 +25,6 @@ public static class CellPool {
                 continue;
             }
 
-            Debug.Log($"Loaded cell prefab for {DebugString.EnumToString(cellType.Type)}");
-
             _cellPrefabs[cellType.Type] = prefab;
             _cellPools[cellType.Type] = new ObjectPool<GameObject>(
                 () => CreateCell(cellType.Type),

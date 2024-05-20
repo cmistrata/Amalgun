@@ -18,9 +18,13 @@ public class PlayerShipPiece : CellModule {
 
     public void OnCollisionStay(Collision collision) {
         if (enabled == false) return;
-
         int collisionLayer = collision.gameObject.layer;
-        if (collisionLayer == Layers.NeutralCell && Time.time >= _connectionTimeByCell[collision.gameObject]) {
+        if (collisionLayer != Layers.NeutralCell) return;
+
+        if (!_connectionTimeByCell.ContainsKey(collision.gameObject)) {
+            _connectionTimeByCell[collision.gameObject] = Time.time + _timeToConnect;
+        }
+        if (Time.time >= _connectionTimeByCell[collision.gameObject]) {
             SignalAttachCell.Invoke(collision.gameObject);
             _connectionTimeByCell.Remove(collision.gameObject);
         }

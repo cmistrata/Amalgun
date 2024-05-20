@@ -83,6 +83,7 @@ public class CellHealthManager : MonoBehaviour {
     public void PlayDeathFX() {
         AudioManager.Instance.PlayCellDestroy();
         CinemachineCameraManager.Instance.Shake();
+        EffectsManager.InstantiateEffect(Effect.ToonExplosion, transform.position);
     }
 
     public virtual void NeutralizeCell() {

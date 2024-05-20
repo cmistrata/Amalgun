@@ -1,15 +1,26 @@
+using System;
 using UnityEngine;
 using UnityEngine.VFX;
 
+public enum Effect {
+    RedSmoke,
+    ToonExplosion
+}
+
 public class EffectsManager : MonoBehaviour {
     public static EffectsManager Instance;
-    public VisualEffect EnemySpawnEffect;
+    public VisualEffect RedSmokeEffect;
+    public VisualEffect ToonExplosionEffect;
 
     void Awake() {
         Instance = this;
     }
 
-    public void InstantiateEnemySpawnEffect(Vector3 position) {
-        Instantiate(EnemySpawnEffect, position: position, rotation: Quaternion.identity);
+    public static void InstantiateEffect(Effect effect, Vector3 position) {
+        VisualEffect visualEffect =
+            effect == Effect.RedSmoke ? Instance.RedSmokeEffect
+            : effect == Effect.ToonExplosion ? Instance.ToonExplosionEffect
+            : null;
+        Instantiate(visualEffect, position: position, rotation: Quaternion.identity);
     }
 }

@@ -19,7 +19,6 @@ public class WaveSpawner : MonoBehaviour {
     }
 
     public void LoadWave(Wave wave) {
-        Debug.Log($"Loading _wave {wave}");
         _wave.LoadWave(wave);
     }
 
@@ -36,7 +35,7 @@ public class WaveSpawner : MonoBehaviour {
             GameObject cell = Instantiate(CellPool.GetCellPrefab(_wave.GetNextEnemy()));
             var spawnPoint = GenerateSpawnPoint();
             cell.transform.position = spawnPoint;
-            EffectsManager.Instance.InstantiateEnemySpawnEffect(spawnPoint);
+            EffectsManager.InstantiateEffect(Effect.RedSmoke, spawnPoint);
             CellUtils.ConvertToTeam(cell, Team.Enemy);
             ++_activeEnemies;
         }

@@ -922,7 +922,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 1
   CurrentHealth: 1
-  ConvertChance: 1
+  ConvertChance: 0.5
   Melded: 0
   HandleOwnCollisions: 1
 --- !u!114 &244536029975207358
@@ -965,7 +965,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40afc8e5bac728243ab811b45be71d8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DestroyRbOnConnect: 1
 --- !u!114 &7730555478780315671
 MonoBehaviour:
   m_ObjectHideFlags: 0
