@@ -15,7 +15,6 @@ public class MusicManager : MonoBehaviour {
     private void Awake() {
         Instance = this;
         _audioSource = GetComponent<AudioSource>();
-        DontDestroyOnLoad(this);
     }
 
     public void QueueSongStart(int difficulty) {

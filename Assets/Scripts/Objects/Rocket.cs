@@ -51,8 +51,8 @@ public class Rocket : MonoBehaviour {
     }
 
     Vector3 GetTargetPosition() {
-        if (gameObject.layer == Layers.EnemyBullet && GameManager.Instance.CurrentPlayer != null) {
-            return GameManager.Instance.CurrentPlayer.transform.position;
+        if (gameObject.layer == Layers.EnemyBullet && GameManager.Instance.Player != null) {
+            return GameManager.Instance.Player.transform.position;
         }
         else if (gameObject.layer == Layers.PlayerBullet) {
             return Utils.GetMousePosition();

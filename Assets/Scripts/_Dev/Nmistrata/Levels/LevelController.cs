@@ -39,13 +39,14 @@ public class LevelController : MonoBehaviour {
             EndLevel();
             return;
         }
-        GameManager.Instance.StartCoroutine(SpawnWaveRoutine(_waveSecondsDelay));
+        StartCoroutine(SpawnWaveRoutine(_waveSecondsDelay));
     }
 
     private IEnumerator SpawnWaveRoutine(int secondsDelay) {
         yield return new WaitForSeconds(secondsDelay);
         SpawnNextWave();
     }
+
     private void SpawnNextWave() {
         Spawner.LoadWave(_waves[_currentWave++]);
         Spawner.StartWave();

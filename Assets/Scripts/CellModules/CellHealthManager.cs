@@ -24,7 +24,6 @@ public class CellHealthManager : MonoBehaviour {
     [Header("Conversion RNG")]
     public float ConvertChance = 0.15f;
     public bool Melded = false;
-    public bool HandleOwnCollisions = true;
 
     public void Awake() {
         _teamTracker = GetComponent<TeamTracker>();
@@ -55,7 +54,7 @@ public class CellHealthManager : MonoBehaviour {
                 Debug.Log($"Killing player cell {gameObject.name}");
                 SignalPlayerCellDeath?.Invoke(gameObject);
                 PlayDeathFX();
-                RemoveFromScene();
+                Destroy(gameObject);
                 break;
             case Team.Enemy:
                 SignalEnemyCellDeath?.Invoke();
@@ -66,18 +65,12 @@ public class CellHealthManager : MonoBehaviour {
                     break;
                 }
 
-                RemoveFromScene();
+                Destroy(gameObject);
                 PlayDeathFX();
                 break;
             default:
                 break;
         }
-    }
-
-    private void RemoveFromScene() {
-        //TODO: make this check not necesarry, currently the player doesnt come from the pool though
-        if (gameObject.GetComponent<Player>() == null)
-            CellPool.ReturnCell(gameObject);
     }
 
     public void PlayDeathFX() {
@@ -102,7 +95,6 @@ public class CellHealthManager : MonoBehaviour {
     }
 
     public void OnCollisionEnter(Collision collision) {
-        if (!HandleOwnCollisions) return;
         bool isOtherTeamBullet = (_teamTracker.Team == Team.Enemy && collision.gameObject.layer == Layers.PlayerBullet)
                || (_teamTracker.Team == Team.Player && collision.gameObject.layer == Layers.EnemyBullet);
         if (isOtherTeamBullet) {

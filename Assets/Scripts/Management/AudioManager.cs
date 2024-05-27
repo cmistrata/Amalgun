@@ -4,7 +4,6 @@ public class AudioManager : MonoBehaviour {
     public static AudioManager Instance;
     public void Awake() {
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     public void PlayCellDestroy() {

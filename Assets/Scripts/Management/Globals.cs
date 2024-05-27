@@ -5,8 +5,9 @@ public class Globals : MonoBehaviour {
 
     private void Awake() {
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
+
+    public GameObject PlayerPrefab;
 
     public CellMaterials playerCellMaterials;
     public CellMaterials neutralCellMaterials;

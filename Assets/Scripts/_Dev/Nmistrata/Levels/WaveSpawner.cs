@@ -31,36 +31,14 @@ public class WaveSpawner : MonoBehaviour {
         if (_wave == null || !_isWaveInProgress) return;
 
         if (_wave.ShouldSpawn(Time.deltaTime)) {
-            // GameObject cell = CellPool.GetCell(_wave.GetNextEnemy());
-            GameObject cell = Instantiate(CellPool.GetCellPrefab(_wave.GetNextEnemy()));
-            var spawnPoint = GenerateSpawnPoint();
-            cell.transform.position = spawnPoint;
-            EffectsManager.InstantiateEffect(Effect.RedSmoke, spawnPoint);
-            CellUtils.ConvertToTeam(cell, Team.Enemy);
-            ++_activeEnemies;
+            CellType cellType = _wave.GetNextEnemy();
+            EnemySpawner.SpawnEnemy(cellType);
+            _activeEnemies++;
         }
-    }
-
-    private Vector3 GenerateSpawnPoint() {
-        Vector3 spawnPoint;
-        do {
-            spawnPoint = new Vector3(
-                UnityEngine.Random.Range(-Globals.ArenaWidth / 2 + 1, Globals.ArenaWidth / 2 - 1),
-                0,
-                UnityEngine.Random.Range(-Globals.ArenaHeight / 2 + 1, Globals.ArenaHeight / 2 - 2)
-            );
-            spawnPoint = Quaternion.AngleAxis(45, Vector3.up) * spawnPoint;
-        }
-        while (
-            GameManager.Instance != null
-            && GameManager.Instance.CurrentPlayer != null
-            && (GameManager.Instance.CurrentPlayer.transform.position - spawnPoint).sqrMagnitude < _minimumSpawnDistanceFromPlayerSquared
-            );
-        return spawnPoint;
     }
 
     private void OnEnemyDeath() {
-        _isWaveInProgress = (--_activeEnemies > 0 || !_wave.IsWaveComplete());
+        _isWaveInProgress = --_activeEnemies > 0 || !_wave.IsWaveComplete();
 
         if (!_isWaveInProgress) {
             Debug.Log($"Wave Complete");

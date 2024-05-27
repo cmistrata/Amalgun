@@ -1,28 +1,38 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour {
     private static int _cellId = 0;
 
     public static EnemySpawner Instance;
-    public GameObject EnemyPrefab;
-    public int _numEnemiesToSpawn = 0;
-    public int EnemySpawnIntervalSeconds = 1;
+    public GameObject BasicCellPrefab;
+    public GameObject RocketCellPrefab;
+    public static Dictionary<CellType, GameObject> CellPrefabByType;
 
     private const float _minimumSpawnDistanceFromPlayer = 10f;
     private const float _minimumSpawnDistanceFromPlayerSqrd = _minimumSpawnDistanceFromPlayer * _minimumSpawnDistanceFromPlayer;
 
     void Awake() {
         Instance = this;
+        CellPrefabByType = new Dictionary<CellType, GameObject>() {
+            {CellType.Basic, BasicCellPrefab},
+            {CellType.Rocket, RocketCellPrefab},
+        };
     }
 
-    void SpawnEnemy() {
-        var enemy = Instantiate(EnemyPrefab, GenerateSpawnPoint(), Quaternion.identity, EnemiesContainer.Instance.transform);
-        enemy.name = "Cell_" + _cellId++;
+    public static GameObject SpawnEnemy(CellType cellType) {
+        var enemy = Instantiate(
+            CellPrefabByType[cellType],
+            GenerateSpawnPoint(),
+            Quaternion.identity
+        );
+        enemy.name = $"Cell_{cellType}_{_cellId++}";
         enemy.GetComponent<TeamTracker>().ChangeTeam(Team.Enemy);
-        _numEnemiesToSpawn -= 1;
+        EffectsManager.InstantiateEffect(Effect.RedSmoke, enemy.transform.position);
+        return enemy;
     }
 
-    Vector3 GenerateSpawnPoint() {
+    static Vector3 GenerateSpawnPoint() {
         Vector3 spawnPoint;
         do {
             spawnPoint = new Vector3(
@@ -30,24 +40,9 @@ public class EnemySpawner : MonoBehaviour {
                 0,
                 UnityEngine.Random.Range(-Globals.ArenaHeight / 2 + 1, Globals.ArenaHeight / 2 - 2)
             );
+            spawnPoint = Quaternion.AngleAxis(45, Vector3.up) * spawnPoint;
         }
-        while (
-            GameManager.Instance != null
-            && GameManager.Instance.CurrentPlayer != null
-            && (GameManager.Instance.CurrentPlayer.transform.position - spawnPoint).sqrMagnitude < _minimumSpawnDistanceFromPlayerSqrd
-            );
+        while ((GameManager.GetPlayerPosition() - spawnPoint).sqrMagnitude < _minimumSpawnDistanceFromPlayerSqrd);
         return spawnPoint;
-    }
-
-    public void SpawnMoreEnemies(int numEnemies) {
-        _numEnemiesToSpawn += numEnemies;
-        Invoke(nameof(SpawnEnemyOnInterval), EnemySpawnIntervalSeconds);
-    }
-
-    void SpawnEnemyOnInterval() {
-        if (_numEnemiesToSpawn > 0) {
-            SpawnEnemy();
-            Invoke(nameof(SpawnEnemyOnInterval), EnemySpawnIntervalSeconds);
-        }
     }
 }

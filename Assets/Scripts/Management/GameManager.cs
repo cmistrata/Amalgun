@@ -12,16 +12,13 @@ public enum GameState {
 public class GameManager : MonoBehaviour {
     public static GameManager Instance;
 
-    public static Action SignalGameStart;
-
     public LevelController LevelController;
     public List<Level> Levels;
     public bool SpawnEnemies = true;
     private int _curLevel = 0;
 
     public GameState State = GameState.Intro;
-    public GameObject PlayerPrefab;
-    public GameObject CurrentPlayer;
+    public GameObject Player;
     public GameObject Arena;
 
     public bool Paused = false;
@@ -43,17 +40,15 @@ public class GameManager : MonoBehaviour {
     void Awake() {
         if (Instance != null) Debug.LogError("Multiple game managers instantiated");
         Instance = this;
-        Player.SignalPlayerDeath += HandlePlayerDeath;
+        global::Player.SignalPlayerDeath += HandlePlayerDeath;
         WaveSpawner.SignalWaveComplete += OnWaveComplete;
         LevelController.SignalLevelComplete += OnLevelComplete;
-        SignalGameStart += OnWaveComplete;
     }
 
     private void OnDestroy() {
-        Player.SignalPlayerDeath -= HandlePlayerDeath;
+        global::Player.SignalPlayerDeath -= HandlePlayerDeath;
         WaveSpawner.SignalWaveComplete -= OnWaveComplete;
         LevelController.SignalLevelComplete -= OnLevelComplete;
-        SignalGameStart -= OnWaveComplete;
     }
 
     private void Start() {
@@ -124,19 +119,23 @@ public class GameManager : MonoBehaviour {
 
 
         ClearUI();
-        if (CurrentPlayer != null) {
-            Destroy(CurrentPlayer);
+        if (Player != null) {
+            Destroy(Player);
         }
-        CurrentPlayer = Instantiate(PlayerPrefab);
-        CurrentPlayer.transform.position = Vector3.zero;
+        Player = Instantiate(Globals.Instance.PlayerPrefab);
+        Player.transform.position = Vector3.zero;
         State = GameState.Fighting;
         MusicManager.Instance.RestartEasySong();
         Wave = 0;
 
-        SignalGameStart.Invoke();
+        IncreaseWave();
     }
 
     public void OnWaveComplete() {
+        IncreaseWave();
+    }
+
+    public void IncreaseWave() {
         Wave += 1;
         WaveText.text = $"Wave {Wave}";
         WaveText.gameObject.SetActive(true);
@@ -150,7 +149,7 @@ public class GameManager : MonoBehaviour {
         WaveText.gameObject.SetActive(true);
 
 
-        CurrentPlayer.transform.position = Vector3.zero;
+        Player.transform.position = Vector3.zero;
     }
 
     public void ClearUI() {
@@ -174,5 +173,10 @@ public class GameManager : MonoBehaviour {
 
     public void HandlePlayerDeath() {
         GameOver();
+    }
+
+    public static Vector3 GetPlayerPosition() {
+        if (Instance == null || Instance.Player == null) return Vector3.zero;
+        return Instance.Player.transform.position;
     }
 }
