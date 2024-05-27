@@ -1,67 +1,68 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
 public enum GameState {
-    Intro,
     Fighting,
     Shop,
     GameOver,
 }
 public class GameManager : MonoBehaviour {
     public static GameManager Instance;
+    private const float _enemySpawnInterval = .2f;
 
-    public LevelController LevelController;
     public List<Level> Levels;
     public bool SpawnEnemies = true;
-    private int _curLevel = 0;
 
-    public GameState State = GameState.Intro;
-    public GameObject Player;
-    public GameObject Arena;
+
+    [Header("Game State")]
+    public GameState State;
+    public int Money = 0;
+
+    public int LevelNumber = 0;
+    private int _activeEnemies = 0;
+    private List<List<CellType>> _wavesToSpawn = new();
+    private List<CellType> _enemyTypesToSpawn = new();
+    private float _enemySpawnTimer = 0;
 
     public bool Paused = false;
-    public GameObject PauseOverlay;
-
-    public GameObject StartMenu;
-    public GameObject GameOverScreen;
+    public GameObject Player;
+    public GameObject Arena;
     public GameObject Shop;
 
 
-
-    public int Money = 0;
+    [Header("UI and Menus")]
+    public GameObject PauseOverlay;
+    public GameObject GameOverScreen;
     public TMP_Text MoneyDisplay;
-
-    public int Wave = 1;
-    public TMP_Text WaveText;
 
 
     void Awake() {
         if (Instance != null) Debug.LogError("Multiple game managers instantiated");
         Instance = this;
         global::Player.SignalPlayerDeath += HandlePlayerDeath;
-        WaveSpawner.SignalWaveComplete += OnWaveComplete;
-        LevelController.SignalLevelComplete += OnLevelComplete;
+        CellHealthManager.SignalEnemyCellDefeat += HandleEnemyCellDefeat;
     }
 
     private void OnDestroy() {
         global::Player.SignalPlayerDeath -= HandlePlayerDeath;
-        WaveSpawner.SignalWaveComplete -= OnWaveComplete;
-        LevelController.SignalLevelComplete -= OnLevelComplete;
+        CellHealthManager.SignalEnemyCellDefeat -= HandleEnemyCellDefeat;
     }
 
-    private void Start() {
-        if (State == GameState.Fighting) {
-            StartNewGame();
-        }
+    void Start() {
+        StartNewGame();
     }
 
-    // Update is called once per frame
     void Update() {
         if (Input.GetKeyDown(KeyCode.R)) {
             StartNewGame();
         }
+        if (State == GameState.Fighting || State == GameState.Shop) {
+            CheckForPause();
+        }
+
         if (State == GameState.Fighting) {
             FightingUpdate();
         }
@@ -70,7 +71,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    void FightingUpdate() {
+    void CheckForPause() {
         if (Input.GetKeyDown(KeyCode.P)) {
             Paused = !Paused;
             if (Paused) {
@@ -83,17 +84,51 @@ public class GameManager : MonoBehaviour {
             }
         }
     }
+
+    void LoadLevel(int newLevelNumber) {
+        LevelNumber = newLevelNumber;
+        Level newLevel = LevelNumber < Levels.Count - 1 ? Levels[LevelNumber] : Levels[^1];
+        _wavesToSpawn = newLevel.Waves
+            .Select(wave => wave.Enemies.ToList())
+            .ToList();
+        _enemyTypesToSpawn = new();
+        _activeEnemies = 0;
+        _enemySpawnTimer = _enemySpawnInterval;
+    }
+
+    bool NoEnemiesLeftInLevel() {
+        return _wavesToSpawn.Count == 0 && _enemyTypesToSpawn.Count == 0 && _activeEnemies == 0;
+    }
+
+    void FightingUpdate() {
+        if (NoEnemiesLeftInLevel()) {
+            EnterShopState();
+            return;
+        }
+        if (!_enemyTypesToSpawn.Any() && _activeEnemies <= 1 && _wavesToSpawn.Any()) {
+            _enemyTypesToSpawn.AddRange(_wavesToSpawn[0]);
+            _wavesToSpawn.RemoveAt(0);
+        }
+        if (_enemyTypesToSpawn.Any()) {
+            _enemySpawnTimer -= Time.deltaTime;
+            if (_enemySpawnTimer <= 0) {
+                var _enemyTypeToSpawn = _enemyTypesToSpawn[0];
+                _enemyTypesToSpawn.RemoveAt(0);
+                EnemySpawner.SpawnEnemy(_enemyTypeToSpawn);
+                _activeEnemies++;
+                _enemySpawnTimer += _enemySpawnInterval;
+            }
+        }
+    }
     void GameOverUpdate() {
         if (Input.GetKeyDown(KeyCode.Space)) {
             StartNewGame();
         }
     }
 
-    /// <summary>
-    /// End the game, bringing up the game over screen.
-    /// </summary>
-    public void GameOver() {
-        ClearUI();
+    public void EnterGameOverState() {
+        State = GameState.GameOver;
+
         GameOverScreen.SetActive(true);
         if (State == GameState.GameOver) {
             Debug.LogWarning("Tried to call GameOver while already in GameOver state.");
@@ -103,80 +138,56 @@ public class GameManager : MonoBehaviour {
 
         Debug.Log("Game over!");
         MusicManager.Instance.StopMusic();
-        State = GameState.GameOver;
     }
 
-    //TODO refactor the rest of this into game start signal handling
+    public void EnterShopState() {
+        State = GameState.Shop;
+        Arena.SetActive(false);
+        GameOverScreen.SetActive(false);
+        Shop.SetActive(true);
+    }
+
+    public void EnterFightingState() {
+        State = GameState.Fighting;
+        Arena.SetActive(true);
+        GameOverScreen.SetActive(false);
+        Shop.SetActive(false);
+    }
+
     public void StartNewGame() {
         Debug.Log("Starting new game.");
+
+        // Reset state.
         Money = 0;
-
-        if (SpawnEnemies) {
-            _curLevel = 0;
-            LevelController.LoadLevel(Levels[_curLevel++]);
-            LevelController.StartLevel();
-        }
-
-
-        ClearUI();
+        LevelNumber = 0;
+        GameOverScreen.SetActive(false);
         if (Player != null) {
             Destroy(Player);
         }
         Player = Instantiate(Globals.Instance.PlayerPrefab);
         Player.transform.position = Vector3.zero;
-        State = GameState.Fighting;
         MusicManager.Instance.RestartEasySong();
-        Wave = 0;
 
-        IncreaseWave();
-    }
-
-    public void OnWaveComplete() {
-        IncreaseWave();
-    }
-
-    public void IncreaseWave() {
-        Wave += 1;
-        WaveText.text = $"Wave {Wave}";
-        WaveText.gameObject.SetActive(true);
-    }
-
-    public void OnLevelComplete() {
-        LevelController.LoadLevel(Levels[_curLevel++]);
-        LevelController.StartLevel();
-        Wave = 1;
-        WaveText.text = $"Wave {Wave}";
-        WaveText.gameObject.SetActive(true);
-
-
-        Player.transform.position = Vector3.zero;
-    }
-
-    public void ClearUI() {
-        StartMenu.SetActive(false);
-        GameOverScreen.SetActive(false);
-    }
-
-    /*    public void OnLevelComplete()
-        {
-            State = GameState.Shop;
-
-            Arena.SetActive(false);
-            WaveText.gameObject.SetActive(false);
-            Shop.SetActive(true);
-            CurrentPlayer.transform.position = Vector3.zero;
-        }*/
-
-    public void HandleShopContinue() {
-        OnWaveComplete();
-    }
-
-    public void HandlePlayerDeath() {
-        GameOver();
+        LoadLevel(LevelNumber);
+        EnterFightingState();
     }
 
     public static Vector3 GetPlayerPosition() {
         if (Instance == null || Instance.Player == null) return Vector3.zero;
         return Instance.Player.transform.position;
+    }
+
+    public void HandleShopContinue() {
+        LevelNumber += 1;
+        LoadLevel(LevelNumber);
+        EnterFightingState();
+    }
+
+    public void HandlePlayerDeath() {
+        EnterGameOverState();
+    }
+
+    public void HandleEnemyCellDefeat() {
+        _activeEnemies -= 1;
     }
 }

@@ -23,7 +23,7 @@ public class WaveSpawner : MonoBehaviour {
     }
 
     public void StartWave() {
-        CellHealthManager.SignalEnemyCellDeath += OnEnemyDeath;
+        CellHealthManager.SignalEnemyCellDefeat += OnEnemyDeath;
         _isWaveInProgress = true;
     }
 
@@ -42,7 +42,7 @@ public class WaveSpawner : MonoBehaviour {
 
         if (!_isWaveInProgress) {
             Debug.Log($"Wave Complete");
-            CellHealthManager.SignalEnemyCellDeath -= OnEnemyDeath;
+            CellHealthManager.SignalEnemyCellDefeat -= OnEnemyDeath;
             SignalWaveComplete.Invoke();
         }
     }
