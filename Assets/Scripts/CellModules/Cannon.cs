@@ -42,7 +42,6 @@ public class Cannon : CellModule {
         _animator = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
-        _autoFireTimer = AutoFireIntervalSeconds;
         if (!AimFrom) {
             AimFrom = transform;
         }
@@ -106,7 +105,7 @@ public class Cannon : CellModule {
         Vector3 firingPosition = InitialFiringPosition.position + (InitialProjectileOffset * _aimingDirection.normalized);
 
         //TODO: replace with a object pool
-        GameObject projectile = Instantiate(ProjectilePrefab, BulletsContainer.Instance?.transform);
+        GameObject projectile = Instantiate(ProjectilePrefab, Containers.Bullets);
         Bullet bullet = projectile.GetComponent<Bullet>();
         bullet.ChangeTeam(_team);
         bullet.StartStraightMotion(firingPosition, firingAngleAfterOffset, projectileSpeed);
@@ -129,7 +128,7 @@ public class Cannon : CellModule {
     }
 
     protected override void HandleTeamChange(Team newTeam) {
-        _autoFireTimer = AutoFireIntervalSeconds;
+        _autoFireTimer = AutoFireIntervalSeconds * Random.Range(1, 2f);
         if (_team == Team.Player || _team == Team.Neutral) {
             _currentTargetingStrategy = _team == Team.Player ? PlayerTargetingStrategy : TargetingStrategy.StaticDirection;
         }

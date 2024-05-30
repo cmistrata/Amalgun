@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -69,6 +68,9 @@ public class GameManager : MonoBehaviour {
         else if (State == GameState.GameOver) {
             GameOverUpdate();
         }
+        else if (State == GameState.Shop) {
+            ShopUpdate();
+        }
     }
 
     void CheckForPause() {
@@ -83,6 +85,11 @@ public class GameManager : MonoBehaviour {
                 PauseOverlay.SetActive(false);
             }
         }
+    }
+
+    void DisableStatefulObjects() {
+        GameOverScreen.SetActive(false);
+        Shop.SetActive(false);
     }
 
     void LoadLevel(int newLevelNumber) {
@@ -102,6 +109,7 @@ public class GameManager : MonoBehaviour {
 
     void FightingUpdate() {
         if (NoEnemiesLeftInLevel()) {
+            AudioManager.Instance.PlayNewWaveSound();
             EnterShopState();
             return;
         }
@@ -120,6 +128,14 @@ public class GameManager : MonoBehaviour {
             }
         }
     }
+
+    void ShopUpdate() {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            LevelNumber += 1;
+            EnterFightingState();
+        }
+    }
+
     void GameOverUpdate() {
         if (Input.GetKeyDown(KeyCode.Space)) {
             StartNewGame();
@@ -127,31 +143,41 @@ public class GameManager : MonoBehaviour {
     }
 
     public void EnterGameOverState() {
-        State = GameState.GameOver;
-
+        DisableStatefulObjects();
         GameOverScreen.SetActive(true);
-        if (State == GameState.GameOver) {
-            Debug.LogWarning("Tried to call GameOver while already in GameOver state.");
-            return;
-        }
         State = GameState.GameOver;
-
         Debug.Log("Game over!");
         MusicManager.Instance.StopMusic();
     }
 
     public void EnterShopState() {
-        State = GameState.Shop;
-        Arena.SetActive(false);
-        GameOverScreen.SetActive(false);
+        DisableStatefulObjects();
+        foreach (Transform bullet in Containers.Bullets) {
+            Destroy(bullet.gameObject);
+        }
         Shop.SetActive(true);
+        State = GameState.Shop;
     }
 
     public void EnterFightingState() {
+        DisableStatefulObjects();
+        LoadLevel(LevelNumber);
         State = GameState.Fighting;
-        Arena.SetActive(true);
-        GameOverScreen.SetActive(false);
-        Shop.SetActive(false);
+    }
+
+    void DestroyGameElements() {
+        if (Player != null) {
+            Destroy(Player);
+        }
+        foreach (Transform cell in Containers.Cells) {
+            Destroy(cell.gameObject);
+        }
+        foreach (Transform bullet in Containers.Bullets) {
+            Destroy(bullet.gameObject);
+        }
+        foreach (Transform effect in Containers.Effects) {
+            Destroy(effect.gameObject);
+        }
     }
 
     public void StartNewGame() {
@@ -161,14 +187,13 @@ public class GameManager : MonoBehaviour {
         Money = 0;
         LevelNumber = 0;
         GameOverScreen.SetActive(false);
-        if (Player != null) {
-            Destroy(Player);
-        }
+        DestroyGameElements();
+
         Player = Instantiate(Globals.Instance.PlayerPrefab);
+        Player.name = "Player";
         Player.transform.position = Vector3.zero;
         MusicManager.Instance.RestartEasySong();
 
-        LoadLevel(LevelNumber);
         EnterFightingState();
     }
 

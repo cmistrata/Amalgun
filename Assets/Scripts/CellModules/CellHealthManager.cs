@@ -37,11 +37,15 @@ public class CellHealthManager : MonoBehaviour {
     }
 
     public void TakeDamage(int damage = 1) {
-        if (_animator != null) {
-            _animator.SetTrigger("Hit");
+        if (CurrentHealth <= 0) {
+            Debug.LogWarning($"Cell {gameObject} in state {_teamTracker.Team} took damage but does not have any health.");
+            return;
         }
 
         CurrentHealth -= damage;
+        if (_animator != null) {
+            _animator.SetTrigger("Hit");
+        }
         if (CurrentHealth <= 0) {
             Die();
         }
@@ -53,7 +57,6 @@ public class CellHealthManager : MonoBehaviour {
     public void Die() {
         switch (_teamTracker.Team) {
             case Team.Player:
-                Debug.Log($"Killing player cell {gameObject.name}");
                 SignalPlayerCellDeath?.Invoke(gameObject);
                 PlayDeathFX();
                 Destroy(gameObject);
@@ -64,13 +67,11 @@ public class CellHealthManager : MonoBehaviour {
                 bool convertCell = UnityEngine.Random.Range(0f, 1f) < ConvertChance;
                 if (convertCell) {
                     NeutralizeCell();
-                    break;
                 }
-
-                Destroy(gameObject);
-                PlayDeathFX();
-                break;
-            default:
+                else {
+                    Destroy(gameObject);
+                    PlayDeathFX();
+                }
                 break;
         }
     }
@@ -87,6 +88,7 @@ public class CellHealthManager : MonoBehaviour {
         }
         AudioManager.Instance.PlayUISound(1.4f);
         gameObject.layer = Layers.NeutralCell;
+        gameObject.transform.parent = Containers.Cells;
         _teamTracker.ChangeTeam(Team.Neutral);
 
         CurrentHealth = MaxHealth;

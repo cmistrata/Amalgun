@@ -9,7 +9,6 @@ public static class Extensions {
             Transform _HasChildren = child.GetComponentInChildren<Transform>();
             if (_HasChildren != null)
                 child.gameObject.SetLayerRecursive(layer);
-
         }
     }
 

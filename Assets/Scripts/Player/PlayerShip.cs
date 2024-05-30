@@ -31,7 +31,7 @@ public class PlayerShip {
         }
 
         //prevent instantly being hit by bullets colliding with the attached cell
-        DestroyNearbyBullets(cell.transform.position, collider.radius + DESTROY_BULLET_ON_CONNECT_DISTANCE);
+        // DestroyNearbyBullets(cell.transform.position, collider.radius + DESTROY_BULLET_ON_CONNECT_DISTANCE);
         List<GameObject> nearbyCells = FindNearbyCells(cell.transform, collider.radius + ATTACH_TOLERANCE);
 
         if (!nearbyCells.Any()) {
@@ -44,7 +44,7 @@ public class PlayerShip {
             _cellGraph[nearbyCell].Add(cell);
         }
 
-        cell.transform.position = GetAttachPosition(cell.transform, nearbyCells);
+        // cell.transform.position = GetAttachPosition(cell.transform, nearbyCells);
     }
 
     //remove the cell, and all the connections involving this cell

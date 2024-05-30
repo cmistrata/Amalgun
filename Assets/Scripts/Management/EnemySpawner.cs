@@ -24,7 +24,8 @@ public class EnemySpawner : MonoBehaviour {
         var enemy = Instantiate(
             CellPrefabByType[cellType],
             GenerateSpawnPoint(),
-            Quaternion.identity
+            Quaternion.identity,
+            Containers.Cells
         );
         enemy.name = $"Cell_{cellType}_{_cellId++}";
         enemy.GetComponent<TeamTracker>().ChangeTeam(Team.Enemy);

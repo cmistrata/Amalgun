@@ -21,7 +21,7 @@ public class EffectsManager : MonoBehaviour {
             effect == Effect.RedSmoke ? Instance.RedSmokeEffect
             : effect == Effect.ToonExplosion ? Instance.ToonExplosionEffect
             : null;
-        var instantiatedEffect = Instantiate(visualEffect, position: position, rotation: Quaternion.identity);
+        var instantiatedEffect = Instantiate(visualEffect, position: position, rotation: Quaternion.identity, Containers.Effects);
         Destroy(instantiatedEffect, 2);
     }
 }
