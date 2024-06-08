@@ -28,7 +28,6 @@ public class GameManager : MonoBehaviour {
 
     public bool Paused = false;
     public GameObject Player;
-    public GameObject Arena;
     public GameObject Shop;
 
 

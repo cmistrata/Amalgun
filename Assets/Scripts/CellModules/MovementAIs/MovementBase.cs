@@ -4,8 +4,8 @@ public abstract class MovementBase : CellModule {
     protected Rigidbody _rb;
     static protected void ClampSpeed(Rigidbody rb, float maxSpeed) {
         //use squared as an optimization to avoid expensive sqrt operations
-        if (rb.velocity.sqrMagnitude > (maxSpeed * maxSpeed)) {
-            rb.velocity = rb.velocity.normalized * maxSpeed;
+        if (rb.linearVelocity.sqrMagnitude > (maxSpeed * maxSpeed)) {
+            rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
         }
     }
     protected override void ExtraAwake() {

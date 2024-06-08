@@ -32,7 +32,7 @@ public class Bullet : MonoBehaviour {
 
     public void StartStraightMotion(Vector3 position, float motionAngle, float speed) {
         transform.SetPositionAndRotation(position, Quaternion.AngleAxis(motionAngle, Vector3.up));
-        _rb.velocity = transform.forward * speed;
+        _rb.linearVelocity = transform.forward * speed;
     }
 
     public void ChangeTeam(Team team) {
