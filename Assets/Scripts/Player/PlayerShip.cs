@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerShip {
     private const float ATTACH_TOLERANCE = .2f;
     private const float DESTROY_BULLET_ON_CONNECT_DISTANCE = .5f;
-    private const float BASE_ROTATIONAL_INERTIA = 100f;
 
     [SerializeField]
     private Dictionary<GameObject, List<GameObject>> _cellGraph = new();
@@ -14,14 +13,6 @@ public class PlayerShip {
     public PlayerShip(GameObject initialCell) {
         _cellGraph.Add(initialCell, new());
         _baseCell = initialCell;
-    }
-
-    public float GetRotationalInertia() {
-        float rotationalInertia = BASE_ROTATIONAL_INERTIA;
-        foreach (GameObject cell in _cellGraph.Keys) {
-            rotationalInertia += (cell.transform.position - _baseCell.transform.position).sqrMagnitude * 15f;
-        }
-        return rotationalInertia;
     }
 
     public void ConnectCell(GameObject cell) {

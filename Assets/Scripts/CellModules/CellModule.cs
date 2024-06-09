@@ -2,7 +2,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(TeamTracker))]
 public abstract class CellModule : MonoBehaviour {
-    private TeamTracker _teamTracker;
+    protected TeamTracker _teamTracker;
     protected Team _team {
         get {
             return _teamTracker.Team;
