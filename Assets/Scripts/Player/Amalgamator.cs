@@ -3,8 +3,8 @@ using System.Linq;
 using UnityEngine;
 
 public class Amalgamator : MonoBehaviour {
-    const float _timeToConnect = .01f;
-    const float _connectionRadius = .51f;
+    const float _timeToConnect = .03f;
+    const float _connectionRadius = .53f;
     const float _baseRotationalInertia = 100f;
     Dictionary<GameObject, HashSet<GameObject>> _cellGraph;
     Rigidbody _rb;
@@ -17,8 +17,32 @@ public class Amalgamator : MonoBehaviour {
         CellHealthManager.SignalPlayerCellDeath += HandlePlayerCellDeath;
     }
 
-    void Connect(GameObject cell) {
+    void OnDestroy() {
+        CellHealthManager.SignalPlayerCellDeath -= HandlePlayerCellDeath;
+    }
+
+
+    /// <summary>
+    /// Try to connect a cell, possibly merging it, and doing nothing if there aren't other cells nearby.
+    /// </summary>
+    void TryAmalgamate(GameObject cell) {
+        var cellType = cell.GetComponent<CellProperties>().Type;
         var touchingCells = FindTouchingCells(cell);
+        // Try merging if possible.
+        if (Globals.CellUpgradeByType.ContainsKey(cellType)) {
+            foreach (var secondaryCell in touchingCells) {
+                if (secondaryCell == gameObject || secondaryCell.GetComponent<CellProperties>().Type != cellType) continue;
+                var tertiaryCells = GetLinkedCells(secondaryCell);
+                tertiaryCells.UnionWith(touchingCells);
+                tertiaryCells.Remove(secondaryCell);
+                foreach (var tertiaryCell in tertiaryCells) {
+                    if (tertiaryCell == gameObject || tertiaryCell.GetComponent<CellProperties>().Type != cellType) continue;
+                    Merge(incomingCell: cell, secondaryCell: secondaryCell, tertiaryCell: tertiaryCell, cellType);
+                    return;
+                }
+            }
+        }
+
         foreach (var touchingCell in touchingCells) {
             Connect(cell, touchingCell);
         }
@@ -52,12 +76,50 @@ public class Amalgamator : MonoBehaviour {
         UpdatePhysicalProperties();
     }
 
+    HashSet<GameObject> GetLinkedCells(GameObject cell) {
+        if (!_cellGraph.ContainsKey(cell)) {
+            Debug.LogWarning($"Tried getting connected cells for cell {cell} not in graph.");
+            return new HashSet<GameObject>();
+        }
+        return _cellGraph[cell];
+    }
+
+    void Merge(GameObject incomingCell, GameObject secondaryCell, GameObject tertiaryCell, CellType cellType) {
+        Destroy(incomingCell);
+
+        var secondaryCellDistance = (secondaryCell.transform.position - transform.position).sqrMagnitude;
+        var tertiaryCellDistance = (tertiaryCell.transform.position - transform.position).sqrMagnitude;
+        Vector3 mergedCellPosition;
+        Quaternion mergedCellRotation;
+        // Replace tertiary cell with merged cell
+        if (secondaryCellDistance > tertiaryCellDistance) {
+            tertiaryCell.transform.GetPositionAndRotation(out mergedCellPosition, out mergedCellRotation);
+
+        }
+        // Replace secondary cell with merged cell
+        else {
+            secondaryCell.transform.GetPositionAndRotation(out mergedCellPosition, out mergedCellRotation);
+        }
+        Destroy(secondaryCell);
+        Disconnect(secondaryCell, destroyed: true);
+        Destroy(tertiaryCell);
+        Disconnect(tertiaryCell, destroyed: true);
+
+        var newCellType = Globals.CellUpgradeByType[cellType];
+        var newCellPrefab = Globals.CellPrefabByType[newCellType];
+        GameObject newCell = Instantiate(newCellPrefab, position: mergedCellPosition, rotation: mergedCellRotation, parent: Containers.Cells);
+        TryAmalgamate(newCell);
+    }
+
     void RemoveCell(GameObject cell, bool destroyed) {
         if (cell == gameObject) {
             Debug.LogError("Tried disconnecting the center of an amalgamator.");
             return;
         }
-        foreach (GameObject neighbor in _cellGraph[cell]) {
+        if (!_cellGraph.ContainsKey(cell)) {
+            return;
+        }
+        foreach (GameObject neighbor in GetLinkedCells(cell)) {
             _cellGraph[neighbor].Remove(cell);
         }
         if (!destroyed) {
@@ -89,7 +151,7 @@ public class Amalgamator : MonoBehaviour {
 
         while (cellsToVisit.Any()) {
             var currentCell = cellsToVisit.Pop();
-            foreach (GameObject neighbor in _cellGraph[currentCell]) {
+            foreach (GameObject neighbor in GetLinkedCells(currentCell)) {
                 if (!visitedCells.Contains(neighbor)) {
                     visitedCells.Add(neighbor);
                     cellsToVisit.Push(neighbor);
@@ -117,6 +179,7 @@ public class Amalgamator : MonoBehaviour {
     private void UpdateRotationalInertia() {
         float rotationalInertia = _baseRotationalInertia;
         foreach (GameObject cell in _cellGraph.Keys) {
+            PrintCellGraph();
             rotationalInertia += (cell.transform.position - transform.position).sqrMagnitude * 15f;
         }
         _rb.inertiaTensor = new(0, rotationalInertia, 0);
@@ -138,20 +201,27 @@ public class Amalgamator : MonoBehaviour {
             _connectionTimeByCell[collision.gameObject] = Time.time + _timeToConnect;
         }
         if (Time.time >= _connectionTimeByCell[collision.gameObject]) {
-            Connect(collision.gameObject);
+            TryAmalgamate(collision.gameObject);
             _connectionTimeByCell.Remove(collision.gameObject);
         }
     }
 
     public void HandlePlayerCellDeath(GameObject cell) {
-        Disconnect(cell, destroyed: true);
+        if (cell == gameObject) {
+            foreach (var secondaryCell in new HashSet<GameObject>(GetLinkedCells(gameObject))) {
+                Disconnect(secondaryCell, false);
+            }
+        }
+        else {
+            Disconnect(cell, destroyed: true);
+        }
     }
 
     public void PrintCellGraph() {
         string printStr = "Cell graph: {";
         foreach (GameObject cell in _cellGraph.Keys) {
             printStr += $"{cell.name}: [";
-            foreach (GameObject neighbor in _cellGraph[cell]) {
+            foreach (GameObject neighbor in GetLinkedCells(cell)) {
                 printStr += $"{neighbor.name},";
             }
             printStr += "],";

@@ -445,7 +445,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 455d9beda8a1a4fddb5c283861efccb0, type: 2}
+  - {fileID: 2100000, guid: 1ea1127afa16ff8479e691bb06ac8e1c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -666,7 +666,7 @@ GameObject:
   - component: {fileID: 8288147963090237135}
   - component: {fileID: 7730555478780315671}
   - component: {fileID: 8656010721668303752}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: RocketCell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -871,7 +871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6bfd12bdbb66c54dbe22590a0e8678d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Team: 1
+  Team: 2
 --- !u!114 &8809325978400930870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -971,7 +971,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edbc8ef897ec00541a3e98dba6a50874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 3
+  Type: 2
 --- !u!114 &8656010721668303752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1369,7 +1369,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d78279f2492df06489fc890844c018ce, type: 2}
+  - {fileID: 2100000, guid: 491c409b0e98fee49b844d8b8ad718a0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1617,7 +1617,7 @@ GameObject:
   - component: {fileID: 5604338665674186322}
   - component: {fileID: 2301760905537131790}
   - component: {fileID: 6138750290625311143}
-  m_Layer: 10
+  m_Layer: 8
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}

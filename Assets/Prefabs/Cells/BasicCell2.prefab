@@ -667,7 +667,7 @@ GameObject:
   - component: {fileID: 7730555478780315671}
   - component: {fileID: 2007366071971638071}
   m_Layer: 8
-  m_Name: BasicCell
+  m_Name: BasicCell2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -683,7 +683,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6287950853818815795}
@@ -758,10 +758,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1.33
+  m_Radius: 0.35714287
+  m_Height: 0.95
   m_Direction: 1
-  m_Center: {x: 0, y: 0.175, z: 0}
+  m_Center: {x: 0, y: 0.125, z: 0}
 --- !u!82 &1882283656863701800
 AudioSource:
   m_ObjectHideFlags: 0
@@ -886,12 +886,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AutoFiring: 1
   ProjectilePrefab: {fileID: 8664886127951825883, guid: 09ccd55f67491cc40858b69f087d8cce, type: 3}
-  AutoFireIntervalSeconds: 2.5
+  AutoFireIntervalSeconds: 1.25
   FiringInaccuracyAngles: 0
   InitialProjectileOffset: 0
   AimFrom: {fileID: 0}
   InitialFiringPosition: {fileID: 2936912828888888688}
-  PlayerProjectileSpeed: 6
+  PlayerProjectileSpeed: 10
   EnemyProjectileSpeed: 4
   NumProjectiles: 1
   FiringSpreadAngles: 0
@@ -929,7 +929,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 1
   CurrentHealth: 1
-  ConvertChance: 1
+  ConvertChance: 0.5
   Melded: 0
 --- !u!114 &244536029975207358
 MonoBehaviour:
@@ -971,7 +971,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edbc8ef897ec00541a3e98dba6a50874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 1
+  Type: 3
 --- !u!114 &2007366071971638071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1298,7 +1298,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.2750198, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2048022942613750064}
   - {fileID: 2936912828888888688}
@@ -1451,7 +1451,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.71428573, y: 0.71428573, z: 0.71428573}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2530492095597916841}

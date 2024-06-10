@@ -5,12 +5,14 @@ using UnityEngine;
 public class Containers : MonoBehaviour {
     public static Containers Instance;
 
-    public Transform _Bullets;
+    [SerializeField]
+    private Transform _Bullets;
     public static Transform Bullets {
         get => Instance != null ? Instance._Bullets : null;
     }
 
-    public Transform _Cells;
+    [SerializeField]
+    private Transform _Cells;
     public static Transform Cells {
         get => Instance != null ? Instance._Cells : null;
     }
