@@ -2,11 +2,11 @@ using UnityEngine;
 
 public static class CellUtils {
     public static CellType GetCellType(GameObject obj) {
-        return obj.GetComponent<CellProperties>().Type;
+        return obj.GetComponent<Cell>().Type;
     }
 
-    public static void ConvertToTeam(GameObject cell, Team team) {
-        cell.GetComponent<TeamTracker>().ChangeTeam(team);
+    public static void ConvertToTeam(GameObject cell, CellState team) {
+        cell.GetComponent<Cell>().ChangeState(team);
     }
 
     public static void EnableMovement(GameObject cell) {

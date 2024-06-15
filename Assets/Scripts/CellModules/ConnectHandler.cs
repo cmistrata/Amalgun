@@ -6,12 +6,12 @@ public class ConnectHandler : CellModule {
     private const float _disconnectForceMagnitude = 500f;
     public void Connect(GameObject newParent) {
         transform.parent = newParent.transform;
-        _teamTracker.ChangeTeam(Team.Player);
+        _teamTracker.ChangeState(CellState.Player);
         Destroy(GetComponent<Rigidbody>());
     }
 
     public void Disconnect(Rigidbody oldParent) {
-        _teamTracker.ChangeTeam(Team.Neutral);
+        _teamTracker.ChangeState(CellState.Neutral);
         transform.parent = Containers.Cells;
         var rb = AddRigidbody();
         rb.linearVelocity = oldParent.linearVelocity;

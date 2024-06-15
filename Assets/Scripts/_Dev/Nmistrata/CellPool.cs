@@ -15,7 +15,7 @@ public static class CellPool {
 
         var prefabs = Resources.LoadAll<GameObject>("Prefabs/Cells");
         foreach (GameObject prefab in prefabs) {
-            if (!prefab.TryGetComponent<CellProperties>(out CellProperties cellType)) {
+            if (!prefab.TryGetComponent<Cell>(out Cell cellType)) {
                 Debug.LogError($"Failed to find cell properties component on cell prefab {prefab.name}");
                 continue;
             }

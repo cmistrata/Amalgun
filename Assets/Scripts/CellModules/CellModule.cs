@@ -1,16 +1,16 @@
 using UnityEngine;
 
-[RequireComponent(typeof(TeamTracker))]
+[RequireComponent(typeof(Cell))]
 public abstract class CellModule : MonoBehaviour {
-    protected TeamTracker _teamTracker;
-    protected Team _team {
+    protected Cell _teamTracker;
+    protected CellState _team {
         get {
-            return _teamTracker.Team;
+            return _teamTracker.State;
         }
     }
 
     public void Awake() {
-        _teamTracker = GetComponent<TeamTracker>();
+        _teamTracker = GetComponent<Cell>();
         _teamTracker.ChangeTeamEvent += HandleTeamChange;
         ExtraAwake();
     }
@@ -23,7 +23,7 @@ public abstract class CellModule : MonoBehaviour {
         return;
     }
 
-    virtual protected void HandleTeamChange(Team newTeam) {
+    virtual protected void HandleTeamChange(CellState newTeam) {
         return;
     }
 }

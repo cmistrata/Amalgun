@@ -31887,7 +31887,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6bfd12bdbb66c54dbe22590a0e8678d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Team: 0
+  State: 0
+  Type: 0
 --- !u!114 &5451880040738014982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31952,12 +31953,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AutoFiring: 1
   ProjectilePrefab: {fileID: 8664886127951825883, guid: 09ccd55f67491cc40858b69f087d8cce, type: 3}
-  AutoFireIntervalSeconds: 0.3
+  AutoFireIntervalSeconds: 3
   FiringInaccuracyAngles: 0
   InitialProjectileOffset: 0
   AimFrom: {fileID: 5705520470747224795}
   InitialFiringPosition: {fileID: 5705520470747224795}
-  PlayerProjectileSpeed: 10
+  PlayerProjectileSpeed: 12
   EnemyProjectileSpeed: 4
   NumProjectiles: 1
   FiringSpreadAngles: 0
@@ -32002,7 +32003,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6bfd12bdbb66c54dbe22590a0e8678d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Team: 0
+  State: 0
+  Type: 0
 --- !u!82 &1762174402707464404
 AudioSource:
   m_ObjectHideFlags: 0

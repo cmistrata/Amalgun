@@ -53,7 +53,7 @@ public class Cannon : CellModule {
         bool firingAllowedInGameState = GameManager.Instance == null || GameManager.Instance.State == GameState.Fighting;
         if (AutoFiring
             && firingAllowedInGameState
-            && _team != Team.Neutral) {
+            && _team != CellState.Neutral) {
             _autoFireTimer -= Time.deltaTime;
             if (!_triggeredAnimationYet && _autoFireTimer <= FireAnimationOffsetTime) {
                 if (_animator != null) {
@@ -101,7 +101,7 @@ public class Cannon : CellModule {
         float inaccuracyOffset = Random.Range(-FiringInaccuracyAngles, FiringInaccuracyAngles);
         float firingAngleAfterOffset = _aimingAngle + aimingAngleOffset + inaccuracyOffset;
 
-        float projectileSpeed = _team == Team.Player ? PlayerProjectileSpeed : EnemyProjectileSpeed;
+        float projectileSpeed = _team == CellState.Player ? PlayerProjectileSpeed : EnemyProjectileSpeed;
         Vector3 firingPosition = InitialFiringPosition.position + (InitialProjectileOffset * _aimingDirection.normalized);
 
         //TODO: replace with a object pool
@@ -110,7 +110,7 @@ public class Cannon : CellModule {
         bullet.ChangeTeam(_team);
         bullet.StartStraightMotion(firingPosition, firingAngleAfterOffset, projectileSpeed);
         bullet.SetTimeout(5);
-        if (_team == Team.Enemy && FiringRecoilForce > 0 && _rb != null) {
+        if (_team == CellState.Enemy && FiringRecoilForce > 0 && _rb != null) {
             var forceDirection = Quaternion.AngleAxis(firingAngleAfterOffset, Vector3.up) * -Vector3.forward;
             _rb.AddForce(forceDirection * FiringRecoilForce, ForceMode.Impulse);
         }
@@ -127,10 +127,10 @@ public class Cannon : CellModule {
         };
     }
 
-    protected override void HandleTeamChange(Team newTeam) {
+    protected override void HandleTeamChange(CellState newTeam) {
         _autoFireTimer = AutoFireIntervalSeconds * Random.Range(1, 2f);
-        if (_team == Team.Player || _team == Team.Neutral) {
-            _currentTargetingStrategy = _team == Team.Player ? PlayerTargetingStrategy : TargetingStrategy.StaticDirection;
+        if (_team == CellState.Player || _team == CellState.Neutral) {
+            _currentTargetingStrategy = _team == CellState.Player ? PlayerTargetingStrategy : TargetingStrategy.StaticDirection;
         }
         else {
             _currentTargetingStrategy = EnemyTargetingStrategy;

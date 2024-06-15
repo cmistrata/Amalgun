@@ -30,7 +30,7 @@ public class PlayerShipPiece : CellModule {
         }
     }
 
-    protected override void HandleTeamChange(Team newTeam) {
-        enabled = newTeam == Team.Player;
+    protected override void HandleTeamChange(CellState newTeam) {
+        enabled = newTeam == CellState.Player;
     }
 }

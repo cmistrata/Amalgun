@@ -24,4 +24,31 @@ public static class Extensions {
         }
         return vector3;
     }
+
+    public static Vector3 Position(this GameObject go) {
+        return go.transform.position;
+    }
+
+    public static Cell Cell(this GameObject go) {
+        if (go.TryGetComponent<Cell>(out var cellComponent)) {
+            return cellComponent;
+        }
+        else {
+            return null;
+        }
+    }
+
+    public static Rigidbody Rigidbody(this GameObject go) {
+        if (go.TryGetComponent<Rigidbody>(out var rigidbody)) {
+            return rigidbody;
+        }
+        else {
+            return null;
+        }
+    }
+
+    public static void SetDistance(this GameObject target, GameObject from, float distance) {
+        Vector3 fromToTarget = (target.Position() - from.Position()).normalized;
+        target.transform.position = from.Position() + fromToTarget * distance;
+    }
 }

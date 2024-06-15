@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(TeamTracker))]
+[RequireComponent(typeof(Cell))]
 public class CellMaterialChanger : CellModule {
     public Renderer Foundation;
     public Renderer Turret;
@@ -15,16 +15,18 @@ public class CellMaterialChanger : CellModule {
     }
 
     //TODO: change this into a signal
-    override protected void HandleTeamChange(Team newTeam) {
+    override protected void HandleTeamChange(CellState newTeam) {
         if (Globals.Instance == null) return;
         switch (newTeam) {
-            case Team.Player:
+            case CellState.Player:
+            case CellState.BeingAbsorbed:
+            case CellState.Absorbing:
                 UpdateMaterials(Globals.Instance.playerCellMaterials);
                 break;
-            case Team.Neutral:
+            case CellState.Neutral:
                 UpdateMaterials(Globals.Instance.neutralCellMaterials);
                 break;
-            case Team.Enemy:
+            case CellState.Enemy:
                 UpdateMaterials(Globals.Instance.enemyCellMaterials);
                 break;
         }

@@ -23,7 +23,7 @@ public class EnemySpawner : MonoBehaviour {
             Containers.Cells
         );
         enemy.name = $"Cell_{cellType}_{_cellId++}";
-        enemy.GetComponent<TeamTracker>().ChangeTeam(Team.Enemy);
+        enemy.GetComponent<Cell>().ChangeState(CellState.Enemy);
         EffectsManager.InstantiateEffect(Effect.RedSmoke, enemy.transform.position);
         return enemy;
     }

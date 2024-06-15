@@ -27,7 +27,7 @@ public class RandomDestinationMovement : DirectionForceMovementBase {
     }
 
 
-    protected override void HandleTeamChange(Team newTeam) {
-        enabled = newTeam == Team.Enemy;
+    protected override void HandleTeamChange(CellState newTeam) {
+        enabled = newTeam == CellState.Enemy;
     }
 }

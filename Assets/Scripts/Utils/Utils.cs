@@ -44,4 +44,8 @@ public static class Utils {
         }
         return list;
     }
+
+    public static float DistanceBetween(GameObject gameObject1, GameObject gameObject2) {
+        return (gameObject1.transform.position - gameObject2.transform.position).magnitude;
+    }
 }
