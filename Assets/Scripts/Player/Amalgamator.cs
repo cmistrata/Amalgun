@@ -82,7 +82,19 @@ public class Amalgamator : MonoBehaviour {
 
         var disconnectedCells = GetUnconnectedCells();
         foreach (var disconnectedCell in disconnectedCells) {
-            RemoveCell(disconnectedCell, neutralize);
+            RemoveCell(disconnectedCell, neutralize: true);
+        }
+        UpdatePhysicalProperties();
+    }
+
+    void Disconnect(IEnumerable<GameObject> cells, bool neutralize) {
+        foreach (var cell in cells) {
+            RemoveCell(cell, neutralize);
+        }
+
+        var disconnectedCells = GetUnconnectedCells();
+        foreach (var disconnectedCell in disconnectedCells) {
+            RemoveCell(disconnectedCell, neutralize: true);
         }
         UpdatePhysicalProperties();
     }
@@ -147,11 +159,9 @@ public class Amalgamator : MonoBehaviour {
         // Effectively disable the absorbee cells.
         childCell1.Cell().ChangeState(CellState.BeingAbsorbed);
         childCell1.transform.parent = Containers.Cells;
-        Disconnect(childCell1, neutralize: false);
-
         childCell2.Cell().ChangeState(CellState.BeingAbsorbed);
         childCell2.transform.parent = Containers.Cells;
-        Disconnect(childCell2, neutralize: false);
+        Disconnect(new List<GameObject>() { childCell1, childCell2 }, neutralize: false);
 
         // Move the absorbee cells into the absorber over time.
         float mergeTimer = 0f;
@@ -177,9 +187,9 @@ public class Amalgamator : MonoBehaviour {
             newCell.GetComponent<Cannon>().CannonBase.transform.rotation = parentCannon.CannonBase.transform.rotation;
         }
 
+        Destroy(parentCell);
         Disconnect(parentCell, neutralize: false);
         _cellsBeingMerged.Remove(parentCell);
-        Destroy(parentCell);
         Destroy(childCell1);
         Destroy(childCell2);
         TryAmalgamate(newCell);
