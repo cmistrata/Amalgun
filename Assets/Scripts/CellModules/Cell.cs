@@ -46,8 +46,9 @@ public class Cell : MonoBehaviour {
             State == CellState.Player || State == CellState.Absorbing ? Layers.PlayerCell
             : State == CellState.Enemy ? Layers.EnemyCell
             : State == CellState.Neutral ? Layers.NeutralCell
+            : State == CellState.Absorbing || State == CellState.BeingAbsorbed ? Layers.NoCollision
             : Layers.NoCollision;
-        bool cellInCollidableState = State == CellState.Neutral || State == CellState.Enemy || State == CellState.Absorbing;
+        bool cellInCollidableState = State == CellState.Neutral || State == CellState.Enemy;
         if (rb != null && !cellInCollidableState) {
             DisableRigidbody();
         }

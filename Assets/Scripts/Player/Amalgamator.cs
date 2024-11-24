@@ -153,7 +153,7 @@ public class Amalgamator : MonoBehaviour {
         Debug.Log($"Parent cell: {parentCell}, childcell1: {childCell1}, childcell2: {childCell2}");
 
 
-        // parentCell.Cell().ChangeState(CellState.Absorbing);
+        parentCell.Cell().ChangeState(CellState.Absorbing);
         _cellsBeingMerged.Add(parentCell);
 
         // Effectively disable the absorbee cells.
