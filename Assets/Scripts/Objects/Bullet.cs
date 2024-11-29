@@ -37,13 +37,13 @@ public class Bullet : MonoBehaviour {
 
     public void ChangeTeam(CellState team) {
         Team = team;
-        UpdateMeshs();
+        UpdateMeshes();
         UpdateLayer();
     }
 
-    private void UpdateMeshs() {
+    private void UpdateMeshes() {
         foreach (var meshRenderer in MeshRenderers) {
-            meshRenderer.sharedMaterial = Team == CellState.Enemy
+            meshRenderer.material = Team == CellState.Enemy
                 ? Globals.Instance.enemyBulletMaterial
                 : Globals.Instance.playerBulletMaterial;
         }

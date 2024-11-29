@@ -226,7 +226,7 @@ Material:
     m_Floats:
     - _1st2nd_Shades_Feather: 0.0001
     - _1st_ShadeColor_Feather: 0.0001
-    - _1st_ShadeColor_Step: 0.5
+    - _1st_ShadeColor_Step: 0
     - _2nd_ShadeColor_Feather: 0.0001
     - _2nd_ShadeColor_Step: 0.143
     - _AORemapMax: 1
@@ -257,7 +257,7 @@ Material:
     - _AutoRenderQueue: 1
     - _BaseColorOverridden: 0
     - _BaseColorVisible: 1
-    - _BaseColor_Step: 0.5
+    - _BaseColor_Step: 0
     - _BaseShade_Feather: 0.0001
     - _Base_Speed: 0
     - _BlendMode: 0
@@ -511,7 +511,7 @@ Material:
     - _utsTechnique: 0
     - _utsVersionX: 0
     - _utsVersionY: 10
-    - _utsVersionZ: 0
+    - _utsVersionZ: 2
     m_Colors:
     - _1st_ShadeColor: {r: 0.123, g: 0.123, b: 0.123, a: 1}
     - _2nd_ShadeColor: {r: 0.09433961, g: 0.09433961, b: 0.09433961, a: 1}

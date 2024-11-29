@@ -9,7 +9,10 @@ public class Amalgamator : MonoBehaviour {
     const float _timeToConnect = .03f;
     const float _connectionRadius = .53f;
     const float _baseRotationalInertia = 100f;
-    const float _mergeTime = .6f;
+    const float _mergeTime = .7f;
+    const float _mergeGrowSize = 1.3f;
+    const float _mergeGrowDuration = _mergeTime * .7f;
+    const float _mergeShrinkSize = .8f;
     Dictionary<GameObject, HashSet<GameObject>> _cellGraph;
     Rigidbody _rb;
     private Dictionary<GameObject, float> _connectionTimeByCell = new();
@@ -108,7 +111,12 @@ public class Amalgamator : MonoBehaviour {
             return;
         }
         foreach (GameObject neighbor in GetLinkedCells(cell)) {
-            _cellGraph[neighbor].Remove(cell);
+            if (_cellGraph.ContainsKey(neighbor)) {
+                _cellGraph[neighbor].Remove(cell);
+            }
+            else {
+                Debug.LogError($"Tried disconnecting {neighbor} from {cell}, but {neighbor} isn't tracked in the cell graph.");
+            }
         }
         if (neutralize && gameObject.Cell()?.State != CellState.Neutral) {
             NeutralizeCell(cell);
@@ -136,6 +144,7 @@ public class Amalgamator : MonoBehaviour {
     }
 
     IEnumerator Merge(GameObject incomingCell, GameObject secondaryCell, GameObject tertiaryCell, CellType cellType) {
+        AudioManager.Instance.PlayAbsorbSound();
         // Figure out which cell will become the merged cell.
         var secondaryCellDistance = (secondaryCell.transform.position - transform.position).sqrMagnitude;
         var tertiaryCellDistance = (tertiaryCell.transform.position - transform.position).sqrMagnitude;
@@ -168,6 +177,21 @@ public class Amalgamator : MonoBehaviour {
         float initialChildCell1Distance = Utils.DistanceBetween(childCell1, parentCell);
         float initialChildCell2Distance = Utils.DistanceBetween(childCell2, parentCell);
         while (mergeTimer < _mergeTime) {
+            // Do a scaling animation
+            float scale = 1;
+            if (mergeTimer < _mergeGrowDuration) {
+                float growProportion = mergeTimer / _mergeGrowDuration;
+                scale = Mathf.Lerp(1, _mergeGrowSize, growProportion);
+            }
+            else {
+                float shrinkProportion = (mergeTimer - _mergeGrowDuration) / (_mergeTime - _mergeGrowDuration);
+                scale = Mathf.Lerp(_mergeGrowSize, _mergeShrinkSize, shrinkProportion);
+            }
+            childCell1.SetScale(scale);
+            childCell2.SetScale(scale);
+            parentCell.SetScale(scale);
+
+            // Move cells towards each other
             float proportionalDistance = (_mergeTime - Math.Abs(mergeTimer - .05f)) / (_mergeTime - .05f);
             float childCell1Distance = initialChildCell1Distance * proportionalDistance;
             childCell1.SetDistance(parentCell, childCell1Distance);
@@ -193,6 +217,8 @@ public class Amalgamator : MonoBehaviour {
         Destroy(childCell1);
         Destroy(childCell2);
         TryAmalgamate(newCell);
+        AudioManager.Instance.PlayMergedSound();
+        EffectsManager.InstantiateEffect(Effect.Confetti, newCell.Position() + Vector3.up);
     }
 
     private HashSet<GameObject> FindTouchingCells(GameObject cell) {
@@ -255,6 +281,7 @@ public class Amalgamator : MonoBehaviour {
         int collisionLayer = collision.gameObject.layer;
         if (collisionLayer == Layers.NeutralCell) {
             _connectionTimeByCell[collision.gameObject] = Time.time + _timeToConnect;
+            AudioManager.Instance.PlayAttachSound();
         }
     }
 

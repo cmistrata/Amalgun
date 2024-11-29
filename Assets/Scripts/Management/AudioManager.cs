@@ -16,8 +16,8 @@ public class AudioManager : MonoBehaviour {
         audioSource.Play();
     }
 
-    public void PlayUISound(float pitch = 1) {
-        var audioSource = GetAudioSourceWithName("help_text");
+    public void PlayNeutralizeSound(float pitch = 1) {
+        var audioSource = GetAudioSourceWithName("neutralize");
         audioSource.pitch = pitch;
         audioSource.Play();
     }
@@ -45,6 +45,26 @@ public class AudioManager : MonoBehaviour {
     public void PlayPlayerDamagedSound(float pitch = 1) {
         var audioSource = GetAudioSourceWithName("center_hit");
         audioSource.pitch = pitch;
+        audioSource.Play();
+    }
+
+    public void PlayAbsorbSound() {
+        var audioSource = GetAudioSourceWithName("amalgun_merging");
+        audioSource.pitch = 1.6f + Random.Range(-.2f, .2f);
+        audioSource.Play();
+    }
+
+    public void PlayMergedSound() {
+        var audioSource = GetAudioSourceWithName("small_arcade_explosion");
+        audioSource.pitch = 2.5f + Random.Range(-.2f, .2f);
+        audioSource.time = .35f;
+        audioSource.Play();
+    }
+
+    public void PlayAttachSound() {
+        var audioSource = GetAudioSourceWithName("attach");
+        audioSource.pitch = 1.6f + Random.Range(-.3f, .3f);
+        audioSource.time = 0.2f;
         audioSource.Play();
     }
 

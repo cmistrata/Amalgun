@@ -51,4 +51,9 @@ public static class Extensions {
         Vector3 fromToTarget = (target.Position() - from.Position()).normalized;
         target.transform.position = from.Position() + fromToTarget * distance;
     }
+
+    public static void SetScale(this GameObject target, float scale) {
+        Vector3 scaleVector = new Vector3(scale, scale, scale);
+        target.transform.localScale = scaleVector;
+    }
 }

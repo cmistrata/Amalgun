@@ -80,7 +80,7 @@ public class CellHealthManager : MonoBehaviour {
         if (_teamTracker.State != CellState.Enemy) {
             Debug.LogWarning("Tried to convert a cell that was not an enemy");
         }
-        AudioManager.Instance.PlayUISound(1.4f);
+        AudioManager.Instance.PlayNeutralizeSound(1.4f);
         gameObject.layer = Layers.NeutralCell;
         gameObject.transform.parent = Containers.Cells;
         _teamTracker.ChangeState(CellState.Neutral);

@@ -31889,6 +31889,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   State: 0
   Type: 0
+  rb: {fileID: 0}
 --- !u!114 &5451880040738014982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32005,6 +32006,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   State: 0
   Type: 0
+  rb: {fileID: 0}
 --- !u!82 &1762174402707464404
 AudioSource:
   m_ObjectHideFlags: 0
@@ -32018,7 +32020,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: becb0ce8dada24048a07c8ad3af0c7dc, type: 3}
   m_Resource: {fileID: 8300000, guid: becb0ce8dada24048a07c8ad3af0c7dc, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.07
+  m_Volume: 0.01
   m_Pitch: 1.48
   Loop: 0
   Mute: 0
