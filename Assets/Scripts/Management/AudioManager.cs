@@ -63,7 +63,7 @@ public class AudioManager : MonoBehaviour {
 
     public void PlayAttachSound() {
         var audioSource = GetAudioSourceWithName("attach");
-        audioSource.pitch = 1.6f + Random.Range(-.3f, .3f);
+        audioSource.pitch = 1.9f + Random.Range(-.3f, .3f);
         audioSource.time = 0.2f;
         audioSource.Play();
     }

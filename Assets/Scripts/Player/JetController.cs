@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerMovement))]
@@ -7,44 +9,57 @@ public class JetController : MonoBehaviour {
 
     public DirectionForceMovementBase Movement;
 
-    public ParticleSystem LeftBackJet;
-    private ParticleSystem.EmissionModule _leftBackJetEmission;
-    public ParticleSystem LeftSideJet;
-    private ParticleSystem.EmissionModule _leftSideJetEmission;
-    public ParticleSystem LeftFrontJet;
-    private ParticleSystem.EmissionModule _leftFrontJetEmission;
-    public ParticleSystem RightBackJet;
-    private ParticleSystem.EmissionModule _rightBackJetEmission;
-    public ParticleSystem RightSideJet;
-    private ParticleSystem.EmissionModule _rightSideJetEmission;
-    public ParticleSystem RightFrontJet;
-    private ParticleSystem.EmissionModule _rightFrontJetEmission;
+    public GameObject LeftJet;
+    private List<ParticleSystem.EmissionModule> _leftParticleSystems;
+    private List<ParticleSystem.EmissionModule> _leftEmitters;
+    public GameObject LeftBackJet;
+    private List<ParticleSystem.EmissionModule> _leftBackEmitters;
+    public GameObject LeftFrontJet;
+    private List<ParticleSystem.EmissionModule> _leftFrontEmitters;
+    public GameObject RightJet;
+    private List<ParticleSystem.EmissionModule> _rightEmitters;
+    public GameObject RightBackJet;
+    private List<ParticleSystem.EmissionModule> _rightBackEmitters;
+    public GameObject RightFrontJet;
+    private List<ParticleSystem.EmissionModule> _rightFrontEmitters;
 
     private List<ParticleSystem> _particleSystems;
 
-    private const float _rotationPower = 15f;
-    private const float _translationPower = 15f;
+    private const float _rotationPower = 30f;
+    private const float _translationPower = 30f;
 
     private void Awake() {
-        _leftBackJetEmission = LeftBackJet.emission;
-        _leftSideJetEmission = LeftSideJet.emission;
-        _leftFrontJetEmission = LeftFrontJet.emission;
-        _rightBackJetEmission = RightBackJet.emission;
-        _rightSideJetEmission = RightSideJet.emission;
-        _rightFrontJetEmission = RightFrontJet.emission;
+        _leftEmitters = LeftJet.GetComponentsInChildren<ParticleSystem>().Select(ps => ps.emission).ToList();
+        _leftEmitters.Add(LeftJet.GetComponent<ParticleSystem>().emission);
 
-        _particleSystems = new List<ParticleSystem> { LeftBackJet, LeftSideJet, LeftFrontJet, RightBackJet, RightSideJet, RightFrontJet };
+        _leftBackEmitters = LeftBackJet.GetComponentsInChildren<ParticleSystem>().Select(ps => ps.emission).ToList();
+        _leftBackEmitters.Add(LeftBackJet.GetComponent<ParticleSystem>().emission);
+
+        _leftFrontEmitters = LeftFrontJet.GetComponentsInChildren<ParticleSystem>().Select(ps => ps.emission).ToList();
+        _leftFrontEmitters.Add(LeftFrontJet.GetComponent<ParticleSystem>().emission);
+
+        _rightEmitters = RightJet.GetComponentsInChildren<ParticleSystem>().Select(ps => ps.emission).ToList();
+        _rightEmitters.Add(RightJet.GetComponent<ParticleSystem>().emission);
+
+        _rightBackEmitters = RightBackJet.GetComponentsInChildren<ParticleSystem>().Select(ps => ps.emission).ToList();
+        _rightBackEmitters.Add(RightBackJet.GetComponent<ParticleSystem>().emission);
+
+        _rightFrontEmitters = RightFrontJet.GetComponentsInChildren<ParticleSystem>().Select(ps => ps.emission).ToList();
+        _rightFrontEmitters.Add(RightFrontJet.GetComponent<ParticleSystem>().emission);
+
+
+        // _particleSystems = new List<ParticleSystem> { LeftBackJet, LeftSideJet, LeftFrontJet, RightBackJet, RightSideJet, RightFrontJet };
     }
 
-    public void UpdateScale() {
-        foreach (var particleSystem in _particleSystems) {
-            var particleSystemMain = particleSystem.main;
-            particleSystemMain.startSize = Scale;
+    // public void UpdateScale() {
+    //     foreach (var particleSystem in _particleSystems) {
+    //         var particleSystemMain = particleSystem.main;
+    //         particleSystemMain.startSize = Scale;
 
-            var particleSystemShape = particleSystem.shape;
-            particleSystemShape.scale = new(Scale, Scale, Scale);
-        }
-    }
+    //         var particleSystemShape = particleSystem.shape;
+    //         particleSystemShape.scale = new(Scale, Scale, Scale);
+    //     }
+    // }
 
     // Update is called once per frame
     void Update() {
@@ -86,11 +101,29 @@ public class JetController : MonoBehaviour {
             rightFrontJetPower += (_translationPower / 2) * Mathf.Abs(forwardMovement);
         }
 
-        _leftBackJetEmission.rateOverTime = leftBackJetPower;
-        _leftSideJetEmission.rateOverTime = leftSideJetPower;
-        _leftFrontJetEmission.rateOverTime = leftFrontJetPower;
-        _rightBackJetEmission.rateOverTime = rightBackJetPower;
-        _rightSideJetEmission.rateOverTime = rightSideJetPower;
-        _rightFrontJetEmission.rateOverTime = rightFrontJetPower;
+        for (int i = 0; i < _leftEmitters.Count(); i++) {
+            var emitter = _leftEmitters[i];
+            emitter.rateOverTime = leftSideJetPower;
+        }
+        for (int i = 0; i < _leftBackEmitters.Count(); i++) {
+            var emitter = _leftBackEmitters[i];
+            emitter.rateOverTime = leftBackJetPower;
+        }
+        for (int i = 0; i < _leftFrontEmitters.Count(); i++) {
+            var emitter = _leftFrontEmitters[i];
+            emitter.rateOverTime = leftFrontJetPower;
+        }
+        for (int i = 0; i < _rightEmitters.Count(); i++) {
+            var emitter = _rightEmitters[i];
+            emitter.rateOverTime = rightSideJetPower;
+        }
+        for (int i = 0; i < _rightBackEmitters.Count(); i++) {
+            var emitter = _rightBackEmitters[i];
+            emitter.rateOverTime = rightBackJetPower;
+        }
+        for (int i = 0; i < _rightFrontEmitters.Count(); i++) {
+            var emitter = _rightFrontEmitters[i];
+            emitter.rateOverTime = rightFrontJetPower;
+        }
     }
 }
