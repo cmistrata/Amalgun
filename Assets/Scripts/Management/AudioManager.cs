@@ -49,7 +49,7 @@ public class AudioManager : MonoBehaviour {
     }
 
     public void PlayAbsorbSound() {
-        var audioSource = GetAudioSourceWithName("amalgun_merging");
+        var audioSource = GetAudioSourceWithName("merge");
         audioSource.pitch = 1.6f + Random.Range(-.2f, .2f);
         audioSource.Play();
     }
