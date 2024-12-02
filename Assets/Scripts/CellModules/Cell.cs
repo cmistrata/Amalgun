@@ -11,9 +11,9 @@ public enum CellState {
 
 public enum CellType {
     None = 0,
-    Basic = 1,
-    Basic2 = 3,
-    Rocket = 2
+    Basic = 1, Basic2 = 2, Basic3 = 3,
+    Rocket = 4, Rocket2 = 5, Rocket3 = 6,
+    Mine = 7, Mine2 = 8, Mine3 = 9
 }
 
 public class Cell : MonoBehaviour {
@@ -22,6 +22,7 @@ public class Cell : MonoBehaviour {
     public CellType Type;
     private CellState _previousTeam;
     public event Action<CellState> ChangeTeamEvent;
+    [HideInInspector]
     public Rigidbody rb;
 
     // Start is called before the first frame update

@@ -109,7 +109,6 @@ public class Cannon : CellModule {
         Bullet bullet = projectile.GetComponent<Bullet>();
         bullet.ChangeTeam(_team);
         bullet.StartStraightMotion(firingPosition, firingAngleAfterOffset, projectileSpeed);
-        bullet.SetTimeout(5);
         if (_team == CellState.Enemy && FiringRecoilForce > 0 && _rb != null) {
             var forceDirection = Quaternion.AngleAxis(firingAngleAfterOffset, Vector3.up) * -Vector3.forward;
             _rb.AddForce(forceDirection * FiringRecoilForce, ForceMode.Impulse);

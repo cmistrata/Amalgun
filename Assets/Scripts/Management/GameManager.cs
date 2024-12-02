@@ -8,11 +8,24 @@ public enum GameState {
     Shop,
     GameOver,
 }
+
+[System.Serializable]
+public class Level {
+    public List<Wave> Waves;
+}
+
+[System.Serializable]
+public class LevelList {
+    public List<Level> Levels;
+}
+
+
+
 public class GameManager : MonoBehaviour {
     public static GameManager Instance;
     private const float _enemySpawnInterval = .2f;
 
-    public List<Level> Levels;
+    public LevelList Levels;
     public bool SpawnEnemies = true;
 
 
@@ -57,6 +70,9 @@ public class GameManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.R)) {
             StartNewGame();
         }
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            Application.Quit();
+        }
         if (State == GameState.Fighting || State == GameState.Shop) {
             CheckForPause();
         }
@@ -93,7 +109,7 @@ public class GameManager : MonoBehaviour {
 
     void LoadLevel(int newLevelNumber) {
         LevelNumber = newLevelNumber;
-        Level newLevel = LevelNumber < Levels.Count - 1 ? Levels[LevelNumber] : Levels[^1];
+        Level newLevel = LevelNumber < Levels.Levels.Count - 1 ? Levels.Levels[LevelNumber] : Levels.Levels[^1];
         _wavesToSpawn = newLevel.Waves
             .Select(wave => wave.Enemies.ToList())
             .ToList();
@@ -112,7 +128,7 @@ public class GameManager : MonoBehaviour {
             EnterShopState();
             return;
         }
-        if (!_enemyTypesToSpawn.Any() && _activeEnemies <= 1 && _wavesToSpawn.Any()) {
+        if (!_enemyTypesToSpawn.Any() && _activeEnemies <= 1 && _wavesToSpawn.Any() && SpawnEnemies) {
             _enemyTypesToSpawn.AddRange(_wavesToSpawn[0]);
             _wavesToSpawn.RemoveAt(0);
         }
