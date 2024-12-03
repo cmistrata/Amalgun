@@ -25,6 +25,8 @@ public class JetController : MonoBehaviour {
 
     private List<ParticleSystem> _particleSystems;
 
+    public AudioSource RocketSound;
+
     private const float _rotationPower = 7f;
     private const float _translationPower = 35f;
 
@@ -68,6 +70,14 @@ public class JetController : MonoBehaviour {
         float lateralMovement = localTargetDirection.x;
         float forwardMovement = localTargetDirection.z;
         float clockwiseRotationInput = Input.GetAxis("Rotate Clockwise");
+
+        bool propelling = lateralMovement != 0 || forwardMovement != 0 || clockwiseRotationInput != 0;
+        if (propelling && !RocketSound.isPlaying) {
+            RocketSound.Play();
+        }
+        else if (!propelling && RocketSound.isPlaying) {
+            RocketSound.Stop();
+        }
 
         float leftBackJetPower = 0;
         float leftSideJetPower = 0;
