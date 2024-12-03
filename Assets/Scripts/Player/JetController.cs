@@ -25,8 +25,8 @@ public class JetController : MonoBehaviour {
 
     private List<ParticleSystem> _particleSystems;
 
-    private const float _rotationPower = 30f;
-    private const float _translationPower = 30f;
+    private const float _rotationPower = 7f;
+    private const float _translationPower = 35f;
 
     private void Awake() {
         _leftEmitters = LeftJet.GetComponentsInChildren<ParticleSystem>().Select(ps => ps.emission).ToList();

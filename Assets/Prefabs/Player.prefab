@@ -8073,15 +8073,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8148,12 +8148,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.minScalar
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.m_Curve.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 19859434, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19859434, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -8170,6 +8182,10 @@ PrefabInstance:
     - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: ClampVelocityModule.enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -8196,12 +8212,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.minScalar
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.m_Curve.scalar
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: scalingMode
@@ -8214,6 +8238,10 @@ PrefabInstance:
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: ClampVelocityModule.enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -8327,15 +8355,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8402,12 +8430,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.minScalar
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.m_Curve.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 19859434, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19859434, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -8424,6 +8464,10 @@ PrefabInstance:
     - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: ClampVelocityModule.enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -8450,12 +8494,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.minScalar
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.m_Curve.scalar
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: scalingMode
@@ -8468,6 +8520,10 @@ PrefabInstance:
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: ClampVelocityModule.enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -8581,15 +8637,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8656,12 +8712,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.minScalar
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.m_Curve.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 19859434, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19859434, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -8678,6 +8746,10 @@ PrefabInstance:
     - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: ClampVelocityModule.enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -8704,12 +8776,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.minScalar
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.m_Curve.scalar
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: scalingMode
@@ -8722,6 +8802,10 @@ PrefabInstance:
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: ClampVelocityModule.enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -8835,15 +8919,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8910,12 +8994,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.minScalar
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.m_Curve.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 19859434, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19859434, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -8932,6 +9028,10 @@ PrefabInstance:
     - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: ClampVelocityModule.enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -8958,12 +9058,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.minScalar
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.m_Curve.scalar
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: scalingMode
@@ -8976,6 +9084,10 @@ PrefabInstance:
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: ClampVelocityModule.enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -9089,15 +9201,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9164,6 +9276,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
       value: 2
       objectReference: {fileID: 0}
@@ -9171,9 +9287,17 @@ PrefabInstance:
       propertyPath: InitialModule.startSpeed.minScalar
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.m_Curve.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 19859434, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: emitterVelocityMode
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 19859434, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19859434, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -9190,6 +9314,10 @@ PrefabInstance:
     - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: ClampVelocityModule.enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -9216,12 +9344,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.minScalar
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.m_Curve.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: looping
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: scalingMode
@@ -9234,6 +9374,10 @@ PrefabInstance:
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: ClampVelocityModule.enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -9347,15 +9491,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 455982, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9422,12 +9566,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.minScalar
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 19841108, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.m_Curve.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 19859434, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19859434, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -9444,6 +9600,10 @@ PrefabInstance:
     - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: ClampVelocityModule.enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19869486, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
@@ -9470,12 +9630,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.minScalar
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 19881770, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.m_Curve.scalar
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: scalingMode
@@ -9488,6 +9656,10 @@ PrefabInstance:
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: ClampVelocityModule.enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
+      propertyPath: InheritVelocityModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19884190, guid: efbd9c58ba892da4ca3fa50dcfcd894d, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
