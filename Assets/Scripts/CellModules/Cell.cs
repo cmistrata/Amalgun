@@ -2,13 +2,13 @@ using System;
 using UnityEngine;
 
 public enum CellState {
-    Player,
+    Friendly,
     Enemy,
     Neutral,
     Absorbing,
     BeingAbsorbed,
     Attaching,
-    PlayerMelded,
+    Melded,
 }
 
 public enum CellType {
@@ -46,7 +46,7 @@ public class Cell : MonoBehaviour {
         _previousState = newState;
         State = newState;
         gameObject.layer =
-            State == CellState.Player || State == CellState.Absorbing ? Layers.PlayerCell
+            State == CellState.Friendly || State == CellState.Absorbing || State == CellState.Melded ? Layers.PlayerCell
             : State == CellState.Enemy ? Layers.EnemyCell
             : State == CellState.Neutral || State == CellState.Attaching ? Layers.NeutralCell
             : State == CellState.Absorbing || State == CellState.BeingAbsorbed ? Layers.NoCollision

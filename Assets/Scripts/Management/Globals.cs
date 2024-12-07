@@ -7,9 +7,10 @@ public class Globals : MonoBehaviour {
 
     [Header("Materials")]
 
-    public CellMaterials playerCellMaterials;
+    public CellMaterials friendlyCellMaterials;
     public CellMaterials neutralCellMaterials;
     public CellMaterials enemyCellMaterials;
+    public CellMaterials meldedCellMaterials;
 
     public Material playerBulletMaterial;
     public Material enemyBulletMaterial;

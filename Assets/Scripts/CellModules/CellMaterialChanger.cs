@@ -18,17 +18,20 @@ public class CellMaterialChanger : CellModule {
     override protected void HandleStateChange(CellState newState) {
         if (Globals.Instance == null) return;
         switch (newState) {
-            case CellState.Player:
+            case CellState.Friendly:
             case CellState.BeingAbsorbed:
             case CellState.Absorbing:
             case CellState.Attaching:
-                UpdateMaterials(Globals.Instance.playerCellMaterials);
+                UpdateMaterials(Globals.Instance.friendlyCellMaterials);
                 break;
             case CellState.Neutral:
                 UpdateMaterials(Globals.Instance.neutralCellMaterials);
                 break;
             case CellState.Enemy:
                 UpdateMaterials(Globals.Instance.enemyCellMaterials);
+                break;
+            case CellState.Melded:
+                UpdateMaterials(Globals.Instance.meldedCellMaterials);
                 break;
         }
     }

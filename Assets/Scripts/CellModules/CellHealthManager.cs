@@ -35,12 +35,20 @@ public class CellHealthManager : MonoBehaviour {
             return;
         }
 
-        CurrentHealth -= damage;
         if (_animator != null) {
             _animator.SetTrigger("Hit");
         }
-        if (CurrentHealth <= 0) {
-            Die();
+        if (_stateTracker.State == CellState.Melded) {
+            if (GameManager.Instance == null || GameManager.Instance.Player == null) {
+                Debug.LogError($"Melded cell {gameObject} took damage, but player isn't tracked in game manager.");
+            }
+            GameManager.Instance.Player.GetComponent<Player>().TakeDamage();
+        }
+        else {
+            CurrentHealth -= damage;
+            if (CurrentHealth <= 0) {
+                Die();
+            }
         }
     }
 
@@ -49,7 +57,7 @@ public class CellHealthManager : MonoBehaviour {
     /// </summary>
     public void Die() {
         switch (_stateTracker.State) {
-            case CellState.Player:
+            case CellState.Friendly:
                 SignalPlayerCellDeath?.Invoke(gameObject);
                 PlayDeathFX();
                 Destroy(gameObject);
@@ -88,7 +96,7 @@ public class CellHealthManager : MonoBehaviour {
     }
 
     public void Meld() {
-        _stateTracker.ChangeState(CellState.PlayerMelded);
+        _stateTracker.ChangeState(CellState.Melded);
     }
 
     public void OnCollisionEnter(Collision collision) {
@@ -97,7 +105,7 @@ public class CellHealthManager : MonoBehaviour {
             return;
         }
         bool isOtherStateBullet = (_stateTracker.State == CellState.Enemy && collision.gameObject.layer == Layers.PlayerBullet)
-               || (_stateTracker.State == CellState.Player && collision.gameObject.layer == Layers.EnemyBullet);
+               || (_stateTracker.State == CellState.Friendly && collision.gameObject.layer == Layers.EnemyBullet);
         if (isOtherStateBullet) {
             TakeDamage(1);
         }

@@ -101,7 +101,7 @@ public class Cannon : CellModule {
         float inaccuracyOffset = Random.Range(-FiringInaccuracyAngles, FiringInaccuracyAngles);
         float firingAngleAfterOffset = _aimingAngle + aimingAngleOffset + inaccuracyOffset;
 
-        float projectileSpeed = _state == CellState.Player ? PlayerProjectileSpeed : EnemyProjectileSpeed;
+        float projectileSpeed = _state == CellState.Friendly ? PlayerProjectileSpeed : EnemyProjectileSpeed;
         Vector3 firingPosition = InitialFiringPosition.position + (InitialProjectileOffset * _aimingDirection.normalized);
 
         //TODO: replace with a object pool
@@ -128,7 +128,7 @@ public class Cannon : CellModule {
 
     protected override void HandleStateChange(CellState newState) {
         _autoFireTimer = AutoFireIntervalSeconds * Random.Range(1, 2f);
-        if (_state == CellState.Player || _state == CellState.Attaching || _state == CellState.PlayerMelded) {
+        if (_state == CellState.Friendly || _state == CellState.Attaching || _state == CellState.Melded) {
             _currentTargetingStrategy = PlayerTargetingStrategy;
         }
         else if (_state == CellState.Neutral) {

@@ -136,8 +136,8 @@ public class Amalgamator : MonoBehaviour {
         if (!_cellGraph.ContainsKey(cell1)) {
             _cellGraph[cell1] = new();
             if (cell1.TryGetComponent<Cell>(out var cellComponent)) {
-                if (cellComponent.State != CellState.Player) {
-                    cellComponent.ChangeState(CellState.Player);
+                if (cellComponent.State != CellState.Friendly) {
+                    cellComponent.ChangeState(CellState.Friendly);
                 }
             }
             cell1.transform.parent = gameObject.transform;
@@ -145,8 +145,8 @@ public class Amalgamator : MonoBehaviour {
         if (!_cellGraph.ContainsKey(cell2)) {
             _cellGraph[cell2] = new();
             if (cell2.TryGetComponent<Cell>(out var cellComponent)) {
-                if (cellComponent.State != CellState.Player) {
-                    cellComponent.ChangeState(CellState.Player);
+                if (cellComponent.State != CellState.Friendly) {
+                    cellComponent.ChangeState(CellState.Friendly);
                 }
             }
             cell2.transform.parent = gameObject.transform;

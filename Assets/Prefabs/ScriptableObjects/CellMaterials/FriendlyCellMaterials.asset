@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 633a095bbe352fc4fbb8e8f07b5a4fb2, type: 3}
-  m_Name: PlayerCellMaterials
+  m_Name: FriendlyCellMaterials
   m_EditorClassIdentifier: 
   FoundationMaterial: {fileID: 2100000, guid: d78279f2492df06489fc890844c018ce, type: 2}
   TurretMaterial: {fileID: 2100000, guid: 455d9beda8a1a4fddb5c283861efccb0, type: 2}
