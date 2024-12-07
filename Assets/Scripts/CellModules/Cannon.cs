@@ -128,8 +128,11 @@ public class Cannon : CellModule {
 
     protected override void HandleTeamChange(CellState newTeam) {
         _autoFireTimer = AutoFireIntervalSeconds * Random.Range(1, 2f);
-        if (_team == CellState.Player || _team == CellState.Neutral) {
-            _currentTargetingStrategy = _team == CellState.Player ? PlayerTargetingStrategy : TargetingStrategy.StaticDirection;
+        if (_team == CellState.Player || _team == CellState.Attaching) {
+            _currentTargetingStrategy = PlayerTargetingStrategy;
+        }
+        else if (_team == CellState.Neutral) {
+            _currentTargetingStrategy = TargetingStrategy.StaticDirection;
         }
         else {
             _currentTargetingStrategy = EnemyTargetingStrategy;
