@@ -48,4 +48,30 @@ public static class Utils {
     public static float DistanceBetween(GameObject gameObject1, GameObject gameObject2) {
         return (gameObject1.transform.position - gameObject2.transform.position).magnitude;
     }
+
+    public static void SetMinimumDistance(GameObject baseObject, GameObject remoteObject, float minDistance) {
+        Vector3 toRemote = remoteObject.Position() - baseObject.Position();
+        if (toRemote.sqrMagnitude > minDistance * minDistance) {
+            Vector3 remoteTargetPos = baseObject.Position() + minDistance * toRemote.normalized;
+            remoteObject.transform.position = remoteTargetPos;
+        }
+    }
+
+    // public static HashSet<GameObject> FindNearbyGameObjects(GameObject gameObject, float distance, int layer, HashSet<GameObject> objectsToExclude = null) {
+    //     objectsToExclude ??= new HashSet<GameObject>();
+    //     HashSet<GameObject> nearbyObjects = new();
+
+    //     Collider[] nearbyColliders = Physics.OverlapSphere(gameObject.transform.position, distance, Utils.GetLayerMask(Layers.PlayerCell));
+    //     foreach (Collider nearbyCollider in nearbyColliders) {
+    //         GameObject nearbyObject = nearbyCollider.gameObject;
+
+    //         if (objectsToExclude.Contains(nearbyObject)) continue;
+    //         if (_cellGraph.ContainsKey(nearbyObject)) {
+    //             nearbyObjects.Add(nearbyObject);
+    //         }
+    //     }
+
+    //     return nearbyObjects;
+    // }
+
 }

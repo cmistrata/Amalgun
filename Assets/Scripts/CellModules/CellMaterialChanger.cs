@@ -21,6 +21,7 @@ public class CellMaterialChanger : CellModule {
             case CellState.Player:
             case CellState.BeingAbsorbed:
             case CellState.Absorbing:
+            case CellState.Attaching:
                 UpdateMaterials(Globals.Instance.playerCellMaterials);
                 break;
             case CellState.Neutral:

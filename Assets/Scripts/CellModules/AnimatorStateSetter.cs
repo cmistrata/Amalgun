@@ -8,7 +8,7 @@ public class AnimatorStateSetter : CellModule {
         HandleTeamChange(_team);
     }
 
-    protected override void HandleTeamChange(CellState newTeam) {
-        _animator.SetBool("KnockedOut", newTeam == CellState.Neutral);
+    protected override void HandleTeamChange(CellState newState) {
+        _animator.SetBool("KnockedOut", newState == CellState.Neutral);
     }
 }

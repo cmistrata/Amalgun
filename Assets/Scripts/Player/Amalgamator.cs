@@ -4,10 +4,26 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+class DelayedJoin {
+    public readonly float ConnectionTime;
+    public readonly float NearbyCellSqrDistance;
+    public readonly GameObject HingeCell;
+
+    public DelayedJoin(float connectionTime, float nearbyCellSqrDistance, GameObject hingeCell) {
+        ConnectionTime = connectionTime;
+        NearbyCellSqrDistance = nearbyCellSqrDistance;
+        HingeCell = hingeCell;
+    }
+}
+
 public class Amalgamator : MonoBehaviour {
-    private const float _disconnectForceMagnitude = 500f;
-    const float _timeToConnect = .03f;
+    private const float _disconnectForceMagnitude = 45f;
+    const float _timeToConnect = .6f;
+    // How close two cells need to be to be joined together.
     const float _connectionRadius = .53f;
+    // How close two cells need to be in order to be considered connection candidates
+    // and delay immediate connection of a cell to allow a new one to slot into a better place.
+    const float _nearbyRadius = 1.1f;
     const float _baseRotationalInertia = 100f;
     const float _mergeTime = .7f;
     const float _mergeGrowSize = 1.3f;
@@ -15,7 +31,8 @@ public class Amalgamator : MonoBehaviour {
     const float _mergeShrinkSize = .8f;
     Dictionary<GameObject, HashSet<GameObject>> _cellGraph;
     Rigidbody _rb;
-    private Dictionary<GameObject, float> _connectionTimeByCell = new();
+    private Dictionary<GameObject, DelayedJoin> _delayedJoinsByIncomingCell = new();
+    // A list of cells currently being animated merged together.
     private HashSet<GameObject> _cellsBeingMerged = new();
     void Awake() {
         _cellGraph = new() {
@@ -29,35 +46,93 @@ public class Amalgamator : MonoBehaviour {
         CellHealthManager.SignalPlayerCellDeath -= HandlePlayerCellDeath;
     }
 
+    void Update() {
+        HandleHinges();
+    }
+
 
     /// <summary>
     /// Try to connect a cell, possibly merging it, and doing nothing if there aren't other cells nearby.
     /// </summary>
     void TryAmalgamate(GameObject cell) {
-        var cellType = cell.GetComponent<Cell>().Type;
-        var touchingCells = FindTouchingCells(cell);
+        var touchingCells = FindNearbyCells(cell, _connectionRadius);
         // Try merging if possible.
-        if (!_cellsBeingMerged.Contains(cell) && Globals.CellUpgradeByType.ContainsKey(cellType)) {
-            foreach (var secondaryCell in touchingCells) {
-                if (secondaryCell == gameObject || secondaryCell.GetComponent<Cell>().Type != cellType) continue;
-                var tertiaryCells = GetLinkedCells(secondaryCell);
-                tertiaryCells.UnionWith(touchingCells);
-                tertiaryCells.Remove(secondaryCell);
-                foreach (var tertiaryCell in tertiaryCells) {
-                    if (tertiaryCell == gameObject || tertiaryCell.GetComponent<Cell>().Type != cellType) continue;
-                    StartCoroutine(Merge(incomingCell: cell, secondaryCell: secondaryCell, tertiaryCell: tertiaryCell, cellType));
-                    return;
-                }
+        if (TryMerging(cell, touchingCells)) return;
+    }
+
+    bool TryMerging(GameObject incomingCell, HashSet<GameObject> touchingCells) {
+        var cellType = incomingCell.GetComponent<Cell>().Type;
+        if (_cellsBeingMerged.Contains(incomingCell) || !Globals.CellUpgradeByType.ContainsKey(cellType)) return false;
+
+        foreach (var secondaryCell in touchingCells) {
+            if (secondaryCell == gameObject || secondaryCell.GetComponent<Cell>().Type != cellType) continue;
+            var tertiaryCells = GetLinkedCells(secondaryCell);
+            tertiaryCells.UnionWith(touchingCells);
+            tertiaryCells.Remove(secondaryCell);
+            foreach (var tertiaryCell in tertiaryCells) {
+                if (tertiaryCell == gameObject || tertiaryCell.GetComponent<Cell>().Type != cellType) continue;
+                StartCoroutine(Merge(incomingCell: incomingCell, secondaryCell: secondaryCell, tertiaryCell: tertiaryCell, cellType));
+                CleanUpJoinData(incomingCell);
+                return true;
             }
         }
+        return false;
+    }
 
+    void ConnectToPlayer(GameObject incomingCell, IEnumerable<GameObject> touchingCells) {
         foreach (var touchingCell in touchingCells) {
-            Connect(cell, touchingCell);
+            ConnectToCell(incomingCell, touchingCell);
         }
+        CleanUpJoinData(incomingCell);
         UpdatePhysicalProperties();
     }
 
-    void Connect(GameObject cell1, GameObject cell2) {
+    /// <summary>
+    /// Clean up data for an incoming cell that is now being joined, mainly connection timer and hinge joint if existing.
+    /// </summary>
+    /// <param name="incomingCell"></param>
+    void CleanUpJoinData(GameObject incomingCell) {
+        _delayedJoinsByIncomingCell.Remove(incomingCell);
+    }
+
+    void HandleHinges() {
+        var cellsWithDestroyedHinges = new List<GameObject>();
+        var cellsToConnect = new Dictionary<GameObject, HashSet<GameObject>>();
+        foreach (var incomingCellAndDelayedJoin in _delayedJoinsByIncomingCell) {
+            var incomingCell = incomingCellAndDelayedJoin.Key;
+            var delayedJoin = incomingCellAndDelayedJoin.Value;
+            if (delayedJoin.HingeCell == null) {
+                cellsWithDestroyedHinges.Add(incomingCell);
+                continue;
+            }
+            var touchingCells = FindNearbyCells(incomingCell, _connectionRadius);
+            var nearbyCells = FindNearbyCells(incomingCell, _nearbyRadius);
+            if (touchingCells.Count() != 0 &&
+                (touchingCells.Count() >= 2
+                || nearbyCells.Count() <= 1
+                ||
+                    nearbyCells.Where(cell => !touchingCells.Contains(cell))
+                    .Select(cell => (cell.Position() - incomingCell.Position()).sqrMagnitude)
+                    .Min() > (delayedJoin.NearbyCellSqrDistance + .03))) {
+                cellsToConnect[incomingCell] = touchingCells;
+                continue;
+            }
+            Utils.SetMinimumDistance(baseObject: delayedJoin.HingeCell, remoteObject: incomingCell, 1f);
+        }
+
+        foreach (var cell in cellsWithDestroyedHinges) {
+            // If the hinge cell was destroyed before the incoming cell could attach, stop
+            // the attachment of the incoming cell.
+            CleanUpJoinData(cell);
+            cell.GetComponent<Cell>().ChangeState(CellState.Neutral);
+        }
+        foreach (var cellAndTouching in cellsToConnect) {
+            HandleIncomingCellConnectImmediately(cellAndTouching.Key, cellAndTouching.Value);
+        }
+    }
+
+
+    void ConnectToCell(GameObject cell1, GameObject cell2) {
         if (!_cellGraph.ContainsKey(cell1)) {
             _cellGraph[cell1] = new();
             if (cell1.TryGetComponent<Cell>(out var cellComponent)) {
@@ -118,7 +193,7 @@ public class Amalgamator : MonoBehaviour {
                 Debug.LogError($"Tried disconnecting {neighbor} from {cell}, but {neighbor} isn't tracked in the cell graph.");
             }
         }
-        if (neutralize && gameObject.Cell()?.State != CellState.Neutral) {
+        if (neutralize && cell.Cell()?.State != CellState.Neutral) {
             NeutralizeCell(cell);
         }
         _cellGraph.Remove(cell);
@@ -131,8 +206,8 @@ public class Amalgamator : MonoBehaviour {
         // Propel the newly neutralized cell away from us.
         var cellRb = cell.Rigidbody();
         cellRb.linearVelocity = _rb.linearVelocity;
-        Vector3 disconnectForce = (transform.position - gameObject.transform.position) * _disconnectForceMagnitude;
-        cellRb.AddForce(disconnectForce);
+        Vector3 disconnectForce = (cell.transform.position - transform.position).normalized * _disconnectForceMagnitude;
+        cellRb.AddForce(disconnectForce, ForceMode.Impulse);
     }
 
     HashSet<GameObject> GetLinkedCells(GameObject cell) {
@@ -159,8 +234,6 @@ public class Amalgamator : MonoBehaviour {
             parentCell = tertiaryCell;
             childCell2 = secondaryCell;
         }
-        Debug.Log($"Parent cell: {parentCell}, childcell1: {childCell1}, childcell2: {childCell2}");
-
 
         parentCell.Cell().ChangeState(CellState.Absorbing);
         _cellsBeingMerged.Add(parentCell);
@@ -216,15 +289,16 @@ public class Amalgamator : MonoBehaviour {
         _cellsBeingMerged.Remove(parentCell);
         Destroy(childCell1);
         Destroy(childCell2);
-        TryAmalgamate(newCell);
+        UpdatePhysicalProperties();
+        HandleIncomingCellConnectImmediately(newCell);
         AudioManager.Instance.PlayMergedSound();
         EffectsManager.InstantiateEffect(Effect.Confetti, newCell.Position() + Vector3.up);
     }
 
-    private HashSet<GameObject> FindTouchingCells(GameObject cell) {
+    private HashSet<GameObject> FindNearbyCells(GameObject cell, float distance) {
         HashSet<GameObject> adjacentCells = new();
 
-        Collider[] nearbyColliders = Physics.OverlapSphere(cell.transform.position, _connectionRadius, Utils.GetLayerMask(Layers.PlayerCell));
+        Collider[] nearbyColliders = Physics.OverlapSphere(cell.transform.position, distance, Utils.GetLayerMask(Layers.PlayerCell));
         foreach (Collider nearbyCollider in nearbyColliders) {
             GameObject nearbyObject = nearbyCollider.gameObject;
 
@@ -280,8 +354,59 @@ public class Amalgamator : MonoBehaviour {
     public void OnCollisionEnter(Collision collision) {
         int collisionLayer = collision.gameObject.layer;
         if (collisionLayer == Layers.NeutralCell) {
-            _connectionTimeByCell[collision.gameObject] = Time.time + _timeToConnect;
-            AudioManager.Instance.PlayAttachSound();
+            HandleIncomingCellFancy(collision.gameObject);
+        }
+    }
+
+    /// <summary>
+    /// Handle an incoming cell, either giving it time to gracefully connect if it can or connecting it immediately.
+    /// </summary>
+    /// <param name="incomingCell"></param>
+    public void HandleIncomingCellFancy(GameObject incomingCell) {
+        bool cellAlreadyConnectingOrMerging = _delayedJoinsByIncomingCell.ContainsKey(incomingCell) || _cellsBeingMerged.Contains(incomingCell);
+        if (cellAlreadyConnectingOrMerging) return;
+
+        AudioManager.Instance.PlayAttachSound();
+        // If we can merge, connect and merge immediately. 
+        var touchingCells = FindNearbyCells(incomingCell, _connectionRadius);
+        if (TryMerging(incomingCell, touchingCells)) {
+            return;
+        }
+        var nearbyCells = FindNearbyCells(incomingCell, _nearbyRadius);
+        // Otherwise, give some time to slot the cell into place if its only touching one and there's a better nearby spot to be.
+        if (touchingCells.Count() == 1 && nearbyCells.Count() > 1) {
+            var nearestSqrDistance = nearbyCells
+                .Where(cell => !touchingCells.Contains(cell))
+                .Select(cell => (cell.Position() - incomingCell.Position()).sqrMagnitude)
+                .Min();
+            _delayedJoinsByIncomingCell[incomingCell] = new DelayedJoin(
+                connectionTime: Time.time + _timeToConnect,
+                nearbyCellSqrDistance: nearestSqrDistance,
+                hingeCell: touchingCells.First()
+            );
+            incomingCell.GetComponent<Cell>().ChangeState(CellState.Attaching);
+        }
+        // Otherwise if the cell is already touching multiple, consider it in a good spot and connect it immediately.
+        else {
+            ConnectToPlayer(incomingCell, touchingCells);
+        }
+    }
+
+    /// <summary>
+    /// Handle an incoming cell by joining it immediately to the 
+    /// </summary>
+    /// <param name="incomingCell"></param>
+    public void HandleIncomingCellConnectImmediately(GameObject incomingCell, HashSet<GameObject> touchingCells = null) {
+        touchingCells ??= FindNearbyCells(incomingCell, _connectionRadius);
+        if (touchingCells.Count() == 0) {
+            Debug.LogWarning($"Tried connecting {incomingCell} but it was not touching any other cells.");
+            return;
+        }
+        if (TryMerging(incomingCell, touchingCells)) {
+            return;
+        }
+        else {
+            ConnectToPlayer(incomingCell, touchingCells);
         }
     }
 
@@ -290,12 +415,8 @@ public class Amalgamator : MonoBehaviour {
         int collisionLayer = collision.gameObject.layer;
         if (collisionLayer != Layers.NeutralCell) return;
 
-        if (!_connectionTimeByCell.ContainsKey(collision.gameObject)) {
-            _connectionTimeByCell[collision.gameObject] = Time.time + _timeToConnect;
-        }
-        if (Time.time >= _connectionTimeByCell[collision.gameObject]) {
-            TryAmalgamate(collision.gameObject);
-            _connectionTimeByCell.Remove(collision.gameObject);
+        if (Time.time >= _delayedJoinsByIncomingCell[collision.gameObject].ConnectionTime) {
+            HandleIncomingCellConnectImmediately(collision.gameObject);
         }
     }
 

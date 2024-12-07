@@ -6,7 +6,8 @@ public enum CellState {
     Enemy,
     Neutral,
     Absorbing,
-    BeingAbsorbed
+    BeingAbsorbed,
+    Attaching,
 }
 
 public enum CellType {
@@ -46,10 +47,10 @@ public class Cell : MonoBehaviour {
         gameObject.layer =
             State == CellState.Player || State == CellState.Absorbing ? Layers.PlayerCell
             : State == CellState.Enemy ? Layers.EnemyCell
-            : State == CellState.Neutral ? Layers.NeutralCell
+            : State == CellState.Neutral || State == CellState.Attaching ? Layers.NeutralCell
             : State == CellState.Absorbing || State == CellState.BeingAbsorbed ? Layers.NoCollision
             : Layers.NoCollision;
-        bool cellInCollidableState = State == CellState.Neutral || State == CellState.Enemy;
+        bool cellInCollidableState = State == CellState.Neutral || State == CellState.Enemy || State == CellState.Attaching;
         if (rb != null && !cellInCollidableState) {
             DisableRigidbody();
         }
