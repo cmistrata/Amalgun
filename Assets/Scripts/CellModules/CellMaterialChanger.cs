@@ -6,7 +6,7 @@ public class CellMaterialChanger : CellModule {
     public Renderer Turret;
 
     private void Start() {
-        HandleTeamChange(_team);
+        HandleStateChange(_state);
     }
 
     private void UpdateMaterials(CellMaterials cellMaterials) {
@@ -15,9 +15,9 @@ public class CellMaterialChanger : CellModule {
     }
 
     //TODO: change this into a signal
-    override protected void HandleTeamChange(CellState newTeam) {
+    override protected void HandleStateChange(CellState newState) {
         if (Globals.Instance == null) return;
-        switch (newTeam) {
+        switch (newState) {
             case CellState.Player:
             case CellState.BeingAbsorbed:
             case CellState.Absorbing:

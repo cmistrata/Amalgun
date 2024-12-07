@@ -9,6 +9,13 @@ public class Player : MonoBehaviour {
     private Rigidbody _rb;
     private CellHealthManager _cellHealthManager;
     public static Player Instance;
+    public int Health {
+        get => _cellHealthManager.CurrentHealth;
+    }
+
+    public int MaxHealth {
+        get => _cellHealthManager.MaxHealth;
+    }
 
     private const float _torque = 5000f;
     private const float _newCellMassIncrease = 30f;

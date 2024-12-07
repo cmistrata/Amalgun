@@ -230,4 +230,16 @@ public class GameManager : MonoBehaviour {
     public void HandleEnemyCellDefeat() {
         _activeEnemies -= 1;
     }
+
+    public static int GetMaxHealth() {
+        if (Instance == null) return -1;
+        if (Instance.Player == null) return -1;
+        return Instance.Player.GetComponent<Player>().MaxHealth;
+    }
+
+    public static int GetHealth() {
+        if (Instance == null) return -1;
+        if (Instance.Player == null) return -1;
+        return Instance.Player.GetComponent<Player>().Health;
+    }
 }

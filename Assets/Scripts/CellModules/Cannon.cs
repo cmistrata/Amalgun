@@ -45,7 +45,7 @@ public class Cannon : CellModule {
         if (!AimFrom) {
             AimFrom = transform;
         }
-        HandleTeamChange(_team);
+        HandleStateChange(_state);
     }
 
     // Update is called once per frame
@@ -53,7 +53,7 @@ public class Cannon : CellModule {
         bool firingAllowedInGameState = GameManager.Instance == null || GameManager.Instance.State == GameState.Fighting;
         if (AutoFiring
             && firingAllowedInGameState
-            && _team != CellState.Neutral) {
+            && _state != CellState.Neutral) {
             _autoFireTimer -= Time.deltaTime;
             if (!_triggeredAnimationYet && _autoFireTimer <= FireAnimationOffsetTime) {
                 if (_animator != null) {
@@ -101,15 +101,15 @@ public class Cannon : CellModule {
         float inaccuracyOffset = Random.Range(-FiringInaccuracyAngles, FiringInaccuracyAngles);
         float firingAngleAfterOffset = _aimingAngle + aimingAngleOffset + inaccuracyOffset;
 
-        float projectileSpeed = _team == CellState.Player ? PlayerProjectileSpeed : EnemyProjectileSpeed;
+        float projectileSpeed = _state == CellState.Player ? PlayerProjectileSpeed : EnemyProjectileSpeed;
         Vector3 firingPosition = InitialFiringPosition.position + (InitialProjectileOffset * _aimingDirection.normalized);
 
         //TODO: replace with a object pool
         GameObject projectile = Instantiate(ProjectilePrefab, Containers.Bullets);
         Bullet bullet = projectile.GetComponent<Bullet>();
-        bullet.ChangeTeam(_team);
+        bullet.ChangeState(_state);
         bullet.StartStraightMotion(firingPosition, firingAngleAfterOffset, projectileSpeed);
-        if (_team == CellState.Enemy && FiringRecoilForce > 0 && _rb != null) {
+        if (_state == CellState.Enemy && FiringRecoilForce > 0 && _rb != null) {
             var forceDirection = Quaternion.AngleAxis(firingAngleAfterOffset, Vector3.up) * -Vector3.forward;
             _rb.AddForce(forceDirection * FiringRecoilForce, ForceMode.Impulse);
         }
@@ -126,12 +126,12 @@ public class Cannon : CellModule {
         };
     }
 
-    protected override void HandleTeamChange(CellState newTeam) {
+    protected override void HandleStateChange(CellState newState) {
         _autoFireTimer = AutoFireIntervalSeconds * Random.Range(1, 2f);
-        if (_team == CellState.Player || _team == CellState.Attaching) {
+        if (_state == CellState.Player || _state == CellState.Attaching || _state == CellState.PlayerMelded) {
             _currentTargetingStrategy = PlayerTargetingStrategy;
         }
-        else if (_team == CellState.Neutral) {
+        else if (_state == CellState.Neutral) {
             _currentTargetingStrategy = TargetingStrategy.StaticDirection;
         }
         else {

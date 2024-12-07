@@ -10,7 +10,7 @@ public abstract class MovementBase : CellModule {
     }
     protected override void ExtraAwake() {
         _rb = gameObject.GetComponent<Rigidbody>();
-        HandleTeamChange(_team);
+        HandleStateChange(_state);
     }
     public void FixedUpdate() {
         if (_rb != null) {

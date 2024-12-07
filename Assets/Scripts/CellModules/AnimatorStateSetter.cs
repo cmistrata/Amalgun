@@ -5,10 +5,10 @@ public class AnimatorStateSetter : CellModule {
 
     protected override void ExtraAwake() {
         _animator = GetComponent<Animator>();
-        HandleTeamChange(_team);
+        HandleStateChange(_state);
     }
 
-    protected override void HandleTeamChange(CellState newState) {
+    protected override void HandleStateChange(CellState newState) {
         _animator.SetBool("KnockedOut", newState == CellState.Neutral);
     }
 }

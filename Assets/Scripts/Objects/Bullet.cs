@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour {
-    public CellState Team;
+    public CellState State;
     public float TimeOutSeconds = 5f;
     protected float _lifetime = 0;
     private Rigidbody _rb;
@@ -35,22 +35,22 @@ public class Bullet : MonoBehaviour {
         _rb.linearVelocity = transform.forward * speed;
     }
 
-    public void ChangeTeam(CellState team) {
-        Team = team;
+    public void ChangeState(CellState state) {
+        State = state;
         UpdateMeshes();
         UpdateLayer();
     }
 
     private void UpdateMeshes() {
         foreach (var meshRenderer in MeshRenderers) {
-            meshRenderer.material = Team == CellState.Enemy
+            meshRenderer.material = State == CellState.Enemy
                 ? Globals.Instance.enemyBulletMaterial
                 : Globals.Instance.playerBulletMaterial;
         }
     }
 
     private void UpdateLayer() {
-        gameObject.layer = Team == CellState.Enemy
+        gameObject.layer = State == CellState.Enemy
             ? Layers.EnemyBullet
             : Layers.PlayerBullet;
     }

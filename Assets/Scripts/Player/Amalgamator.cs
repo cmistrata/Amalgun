@@ -18,7 +18,7 @@ class DelayedJoin {
 
 public class Amalgamator : MonoBehaviour {
     private const float _disconnectForceMagnitude = 45f;
-    const float _timeToConnect = .6f;
+    const float _timeToConnect = .3f;
     // How close two cells need to be to be joined together.
     const float _connectionRadius = .53f;
     // How close two cells need to be in order to be considered connection candidates
@@ -190,7 +190,7 @@ public class Amalgamator : MonoBehaviour {
                 _cellGraph[neighbor].Remove(cell);
             }
             else {
-                Debug.LogError($"Tried disconnecting {neighbor} from {cell}, but {neighbor} isn't tracked in the cell graph.");
+                Debug.LogError($"During removal of {cell}, tried disconnecting cell-graph-untracked {neighbor}.");
             }
         }
         if (neutralize && cell.Cell()?.State != CellState.Neutral) {
@@ -284,9 +284,11 @@ public class Amalgamator : MonoBehaviour {
             newCell.GetComponent<Cannon>().CannonBase.transform.rotation = parentCannon.CannonBase.transform.rotation;
         }
 
-        Destroy(parentCell);
+        // Error: some neighbors don't exist when we try removing parent cell.
         Disconnect(parentCell, neutralize: false);
+        Destroy(parentCell);
         _cellsBeingMerged.Remove(parentCell);
+        _delayedJoinsByIncomingCell.Remove(parentCell);
         Destroy(childCell1);
         Destroy(childCell2);
         UpdatePhysicalProperties();

@@ -8,6 +8,7 @@ public enum CellState {
     Absorbing,
     BeingAbsorbed,
     Attaching,
+    PlayerMelded,
 }
 
 public enum CellType {
@@ -21,29 +22,29 @@ public class Cell : MonoBehaviour {
 
     public CellState State = CellState.Neutral;
     public CellType Type;
-    private CellState _previousTeam;
-    public event Action<CellState> ChangeTeamEvent;
+    private CellState _previousState;
+    public event Action<CellState> ChangeStateEvent;
     [HideInInspector]
     public Rigidbody rb;
 
     // Start is called before the first frame update
     void Awake() {
-        _previousTeam = State;
+        _previousState = State;
         rb = GetComponent<Rigidbody>();
     }
 
     private void Update() {
-        // For when Team gets updated through the inspector or by direct attribute access.
-        // TODO: Add an editor widget to call ChangeTeam in the inspector, and remove
-        // this logic and public access to Team.
-        if (State != _previousTeam) {
+        // For when State gets updated through the inspector or by direct attribute access.
+        // TODO: Add an editor widget to call ChangeState in the inspector, and remove
+        // this logic and public access to State.
+        if (State != _previousState) {
             ChangeState(State);
         }
     }
 
-    public void ChangeState(CellState newTeam) {
-        _previousTeam = newTeam;
-        State = newTeam;
+    public void ChangeState(CellState newState) {
+        _previousState = newState;
+        State = newState;
         gameObject.layer =
             State == CellState.Player || State == CellState.Absorbing ? Layers.PlayerCell
             : State == CellState.Enemy ? Layers.EnemyCell
@@ -57,7 +58,7 @@ public class Cell : MonoBehaviour {
         else if (rb == null && cellInCollidableState) {
             EnableRigidbody();
         }
-        ChangeTeamEvent?.Invoke(newTeam);
+        ChangeStateEvent?.Invoke(newState);
     }
 
     void DisableRigidbody() {
