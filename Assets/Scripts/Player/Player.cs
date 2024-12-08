@@ -60,7 +60,12 @@ public class Player : MonoBehaviour {
             TakeDamage();
         }
         else if (nonBulletObject.TryGetComponent<CellHealthManager>(out var childCellHealthManager)) {
-            childCellHealthManager.TakeDamage();
+            if (childCellHealthManager.GetComponent<Cell>().State == CellState.Melded) {
+                TakeDamage();
+            }
+            else {
+                childCellHealthManager.TakeDamage();
+            }
         }
     }
 

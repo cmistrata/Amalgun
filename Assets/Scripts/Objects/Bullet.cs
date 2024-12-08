@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour {
-    public CellState State;
+    public CellState FiringCellState;
     public float TimeOutSeconds = 5f;
     protected float _lifetime = 0;
     private Rigidbody _rb;
@@ -35,22 +35,24 @@ public class Bullet : MonoBehaviour {
         _rb.linearVelocity = transform.forward * speed;
     }
 
-    public void ChangeState(CellState state) {
-        State = state;
+    public void SetFiringCellState(CellState state) {
+        FiringCellState = state;
         UpdateMeshes();
         UpdateLayer();
     }
 
     private void UpdateMeshes() {
         foreach (var meshRenderer in MeshRenderers) {
-            meshRenderer.material = State == CellState.Enemy
-                ? Globals.Instance.enemyBulletMaterial
-                : Globals.Instance.playerBulletMaterial;
+            meshRenderer.material =
+                FiringCellState == CellState.Enemy ? Globals.Instance.enemyBulletMaterial
+                : FiringCellState == CellState.Friendly ? Globals.Instance.friendlyBulletMaterial
+                : FiringCellState == CellState.Melded ? Globals.Instance.meldedBulletMaterial
+                : Globals.Instance.meldedBulletMaterial;
         }
     }
 
     private void UpdateLayer() {
-        gameObject.layer = State == CellState.Enemy
+        gameObject.layer = FiringCellState == CellState.Enemy
             ? Layers.EnemyBullet
             : Layers.PlayerBullet;
     }

@@ -49,8 +49,9 @@ MonoBehaviour:
   neutralCellMaterials: {fileID: 11400000, guid: be23172c6d69a8e418c5ebcf2c661418, type: 2}
   enemyCellMaterials: {fileID: 11400000, guid: 3b4ef10e5f5b821468281a5f77c61a9d, type: 2}
   meldedCellMaterials: {fileID: 11400000, guid: 174e62544b4333e45b283c042cafa106, type: 2}
-  playerBulletMaterial: {fileID: 2100000, guid: 455d9beda8a1a4fddb5c283861efccb0, type: 2}
+  friendlyBulletMaterial: {fileID: 2100000, guid: 455d9beda8a1a4fddb5c283861efccb0, type: 2}
   enemyBulletMaterial: {fileID: 2100000, guid: 56429f3de956d1c4a8706164aed45ae8, type: 2}
+  meldedBulletMaterial: {fileID: 2100000, guid: c9c419c37eff1ec40a027768c81b6ac1, type: 2}
   BasicCellPrefab: {fileID: 3243104636506775748, guid: af0ba13247cefe44887df3f15e8d3c42, type: 3}
   BasicCell2Prefab: {fileID: 3243104636506775748, guid: 745c7b7da3604be4f949a6d06153f9a5, type: 3}
   BasicCell3Prefab: {fileID: 3243104636506775748, guid: f21b1707eb3dfe14a90760205232b331, type: 3}

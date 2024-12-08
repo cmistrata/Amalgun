@@ -401,7 +401,7 @@ public class Amalgamator : MonoBehaviour {
     public void HandleIncomingCellConnectImmediately(GameObject incomingCell, HashSet<GameObject> touchingCells = null) {
         touchingCells ??= FindNearbyCells(incomingCell, _connectionRadius);
         if (touchingCells.Count() == 0) {
-            Debug.LogWarning($"Tried connecting {incomingCell} but it was not touching any other cells.");
+            Utils.LogOncePerSecond($"Tried connecting {incomingCell} but it was not touching any other cells.");
             return;
         }
         if (TryMerging(incomingCell, touchingCells)) {
@@ -444,5 +444,18 @@ public class Amalgamator : MonoBehaviour {
         }
         printStr += "}";
         Debug.Log(printStr);
+    }
+
+    public void OnMouseDown() {
+        if (Utils.MouseRaycast(out RaycastHit hit)) {
+            Debug.Log($"Clicked {hit.collider.gameObject}.");
+            if (hit.collider.gameObject.TryGetComponent<Cell>(out var cell)) {
+                if (cell.gameObject == this.gameObject) return;
+                if (cell.State == CellState.Friendly) {
+                    AudioManager.Instance.PlayAttachSound();
+                    cell.ChangeState(CellState.Melded);
+                }
+            }
+        }
     }
 }

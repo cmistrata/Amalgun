@@ -101,13 +101,13 @@ public class Cannon : CellModule {
         float inaccuracyOffset = Random.Range(-FiringInaccuracyAngles, FiringInaccuracyAngles);
         float firingAngleAfterOffset = _aimingAngle + aimingAngleOffset + inaccuracyOffset;
 
-        float projectileSpeed = _state == CellState.Friendly ? PlayerProjectileSpeed : EnemyProjectileSpeed;
+        float projectileSpeed = _state == CellState.Friendly || _state == CellState.Melded ? PlayerProjectileSpeed : EnemyProjectileSpeed;
         Vector3 firingPosition = InitialFiringPosition.position + (InitialProjectileOffset * _aimingDirection.normalized);
 
         //TODO: replace with a object pool
         GameObject projectile = Instantiate(ProjectilePrefab, Containers.Bullets);
         Bullet bullet = projectile.GetComponent<Bullet>();
-        bullet.ChangeState(_state);
+        bullet.SetFiringCellState(_state);
         bullet.StartStraightMotion(firingPosition, firingAngleAfterOffset, projectileSpeed);
         if (_state == CellState.Enemy && FiringRecoilForce > 0 && _rb != null) {
             var forceDirection = Quaternion.AngleAxis(firingAngleAfterOffset, Vector3.up) * -Vector3.forward;

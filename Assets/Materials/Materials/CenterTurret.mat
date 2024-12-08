@@ -488,7 +488,7 @@ Material:
     - _Tweak_MatcapMaskLevel: 0
     - _Tweak_RimLightMaskLevel: 0
     - _Tweak_ShadingGradeMapLevel: 0
-    - _Tweak_SystemShadowsLevel: -0.28
+    - _Tweak_SystemShadowsLevel: -0.37
     - _Tweak_transparency: 0
     - _UVBase: 0
     - _UVDetail: 0
@@ -513,7 +513,7 @@ Material:
     - _utsVersionY: 10
     - _utsVersionZ: 2
     m_Colors:
-    - _1st_ShadeColor: {r: 0.21047148, g: 0.49056602, b: 0.12187009, a: 1}
+    - _1st_ShadeColor: {r: 0.31507394, g: 0.7169812, b: 0.1826272, a: 1}
     - _2nd_ShadeColor: {r: 0.15770265, g: 0.36477977, b: 0.09062133, a: 1}
     - _AngelRingMaskColor: {r: 0, g: 1, b: 0, a: 1}
     - _AngelRing_Color: {r: 1, g: 1, b: 1, a: 1}

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: MeldedCellMaterials
   m_EditorClassIdentifier: 
   FoundationMaterial: {fileID: 2100000, guid: 3bd5ec3f1136c834f8b13d83257780dc, type: 2}
-  TurretMaterial: {fileID: 2100000, guid: 01a702973046e3e4492ff92d14d24bae, type: 2}
+  TurretMaterial: {fileID: 2100000, guid: c9c419c37eff1ec40a027768c81b6ac1, type: 2}

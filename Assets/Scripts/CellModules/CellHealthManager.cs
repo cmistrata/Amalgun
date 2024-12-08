@@ -38,7 +38,7 @@ public class CellHealthManager : MonoBehaviour {
         if (_animator != null) {
             _animator.SetTrigger("Hit");
         }
-        if (_stateTracker.State == CellState.Melded) {
+        if (_stateTracker.State == CellState.Melded && gameObject != GameManager.Instance.Player) {
             if (GameManager.Instance == null || GameManager.Instance.Player == null) {
                 Debug.LogError($"Melded cell {gameObject} took damage, but player isn't tracked in game manager.");
             }
@@ -99,6 +99,8 @@ public class CellHealthManager : MonoBehaviour {
         _stateTracker.ChangeState(CellState.Melded);
     }
 
+    // Note: collisions for rigidbodyless colliders under a rigidbodyfull parent (friendly cells under player)
+    // will have the OnCollisionEnter event be triggered on the parent.
     public void OnCollisionEnter(Collision collision) {
         if (_isPlayerHealthManager) {
             // Player script handles collisions.

@@ -12,8 +12,9 @@ public class Globals : MonoBehaviour {
     public CellMaterials enemyCellMaterials;
     public CellMaterials meldedCellMaterials;
 
-    public Material playerBulletMaterial;
+    public Material friendlyBulletMaterial;
     public Material enemyBulletMaterial;
+    public Material meldedBulletMaterial;
 
     public const float ArenaWidth = 24f;
     public const float ArenaHeight = 24f;
