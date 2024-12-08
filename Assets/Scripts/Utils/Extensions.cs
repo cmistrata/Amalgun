@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class Extensions {
@@ -44,6 +45,21 @@ public static class Extensions {
         }
         else {
             return null;
+        }
+    }
+
+    public static List<GameObject> Descendants(this GameObject go) {
+        List<GameObject> descendants = new();
+        foreach (Transform child in go.transform) {
+            AddDescendants(descendants, child);
+        }
+        return descendants;
+    }
+
+    private static void AddDescendants(List<GameObject> descendants, Transform current) {
+        descendants.Add(current.gameObject);
+        foreach (Transform child in current.transform) {
+            AddDescendants(descendants, child);
         }
     }
 

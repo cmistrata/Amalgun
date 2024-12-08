@@ -417,7 +417,12 @@ public class Amalgamator : MonoBehaviour {
         int collisionLayer = collision.gameObject.layer;
         if (collisionLayer != Layers.NeutralCell) return;
 
-        if (Time.time >= _delayedJoinsByIncomingCell[collision.gameObject].ConnectionTime) {
+        // If we haven't already detected a collision with this new cell, (e.g. we we're already touching
+        // it and then it's layer changed), act like we are touching it for the first time.
+        if (!_delayedJoinsByIncomingCell.ContainsKey(collision.gameObject)) {
+            HandleIncomingCellFancy(collision.gameObject);
+        }
+        else if (Time.time >= _delayedJoinsByIncomingCell[collision.gameObject].ConnectionTime) {
             HandleIncomingCellConnectImmediately(collision.gameObject);
         }
     }
@@ -444,18 +449,5 @@ public class Amalgamator : MonoBehaviour {
         }
         printStr += "}";
         Debug.Log(printStr);
-    }
-
-    public void OnMouseDown() {
-        if (Utils.MouseRaycast(out RaycastHit hit)) {
-            Debug.Log($"Clicked {hit.collider.gameObject}.");
-            if (hit.collider.gameObject.TryGetComponent<Cell>(out var cell)) {
-                if (cell.gameObject == this.gameObject) return;
-                if (cell.State == CellState.Friendly) {
-                    AudioManager.Instance.PlayAttachSound();
-                    cell.ChangeState(CellState.Melded);
-                }
-            }
-        }
     }
 }

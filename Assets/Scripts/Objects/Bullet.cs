@@ -39,6 +39,7 @@ public class Bullet : MonoBehaviour {
         FiringCellState = state;
         UpdateMeshes();
         UpdateLayer();
+        UpdateCollider();
     }
 
     private void UpdateMeshes() {
@@ -55,5 +56,16 @@ public class Bullet : MonoBehaviour {
         gameObject.layer = FiringCellState == CellState.Enemy
             ? Layers.EnemyBullet
             : Layers.PlayerBullet;
+    }
+
+    private void UpdateCollider() {
+        if (FiringCellState != CellState.Enemy) {
+            if (TryGetComponent<CapsuleCollider>(out var cCollider)) {
+                cCollider.radius += .2f / gameObject.transform.localScale.x;
+            }
+            else if (TryGetComponent<SphereCollider>(out var sCollider)) {
+                sCollider.radius += .2f / gameObject.transform.localScale.x;
+            }
+        }
     }
 }

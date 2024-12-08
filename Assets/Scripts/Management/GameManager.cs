@@ -142,6 +142,20 @@ public class GameManager : MonoBehaviour {
                 _enemySpawnTimer += _enemySpawnInterval;
             }
         }
+        DetectMeldingClick();
+    }
+
+    void DetectMeldingClick() {
+        if (!Input.GetMouseButtonDown(0)) return;
+        if (!Utils.MouseRaycast(out RaycastHit hit, Layers.PlayerCell)) return;
+
+        if (hit.collider.gameObject.TryGetComponent<Cell>(out var cell)) {
+            if (cell.gameObject == Player) return;
+            if (cell.State == CellState.Friendly) {
+                AudioManager.Instance.PlayAttachSound();
+                cell.ChangeState(CellState.Melded);
+            }
+        }
     }
 
     void ShopUpdate() {
@@ -229,6 +243,11 @@ public class GameManager : MonoBehaviour {
 
     public void HandleEnemyCellDefeat() {
         _activeEnemies -= 1;
+    }
+
+    public GameObject GetPlayer() {
+        if (Instance == null) return null;
+        return Instance.Player;
     }
 
     public static int GetMaxHealth() {

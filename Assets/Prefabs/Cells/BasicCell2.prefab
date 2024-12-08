@@ -757,7 +757,7 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.35714287
-  m_Height: 0.95
+  m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0.125, z: 0}
 --- !u!82 &1882283656863701800
@@ -930,7 +930,6 @@ MonoBehaviour:
   MaxHealth: 1
   CurrentHealth: 1
   ConvertChance: 0.5
-  Melded: 0
 --- !u!114 &244536029975207358
 MonoBehaviour:
   m_ObjectHideFlags: 0
