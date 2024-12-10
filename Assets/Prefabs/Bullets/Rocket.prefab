@@ -182,11 +182,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6986154287279087571}
-  - component: {fileID: 711475336391499627}
   - component: {fileID: 8632835147635040893}
   - component: {fileID: 8019574021220394979}
   - component: {fileID: -6321311405155962825}
   - component: {fileID: 8076889880278187615}
+  - component: {fileID: 6589569296359938378}
   m_Layer: 10
   m_Name: Rocket
   m_TagString: Untagged
@@ -211,27 +211,6 @@ Transform:
   - {fileID: 357135971951884328}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &711475336391499627
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8664886127951825883}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8632835147635040893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,7 +223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8b6b3576a823e9489cba320a3b94cd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Team: 0
+  FiringCellState: 0
   TimeOutSeconds: 5
   MeshRenderers:
   - {fileID: 8163031096234171002}
@@ -386,6 +365,29 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!136 &6589569296359938378
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8664886127951825883}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.12
+  m_Height: 0.41
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: -0.1}
 --- !u!1001 &205580427909025306
 PrefabInstance:
   m_ObjectHideFlags: 0

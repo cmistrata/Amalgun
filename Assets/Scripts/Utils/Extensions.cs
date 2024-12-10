@@ -63,6 +63,12 @@ public static class Extensions {
         }
     }
 
+    public static void DestroyChildren(this GameObject parent) {
+        foreach (Transform child in parent.transform) {
+            MonoBehaviour.Destroy(child.gameObject);
+        }
+    }
+
     public static void SetDistance(this GameObject target, GameObject from, float distance) {
         Vector3 fromToTarget = (target.Position() - from.Position()).normalized;
         target.transform.position = from.Position() + fromToTarget * distance;

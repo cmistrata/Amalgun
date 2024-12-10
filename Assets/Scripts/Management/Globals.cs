@@ -36,6 +36,9 @@ public class Globals : MonoBehaviour {
         {CellType.Mine, CellType.Mine2}, {CellType.Mine2, CellType.Mine3},
     };
 
+    [Header("Shop Items")]
+    public GameObject MeldUpgradePrefab;
+
     private void Awake() {
         Instance = this;
         CellPrefabByType = new Dictionary<CellType, GameObject>() {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -24,14 +25,17 @@ public class LevelList {
 public class GameManager : MonoBehaviour {
     public static GameManager Instance;
     private const float _enemySpawnInterval = .2f;
+    private Dictionary<GameState, Tuple<Action, Action>> EntryAndExitActionByState;
 
+
+    [Header("General State")]
+    public bool Paused = false;
+    public GameObject Player;
+    public GameState State;
+
+    [Header("Fighting State")]
     public LevelList Levels;
     public bool SpawnEnemies = true;
-
-
-    [Header("Game State")]
-    public GameState State;
-    public int Money = 0;
 
     public int LevelNumber = 0;
     private int _activeEnemies = 0;
@@ -39,15 +43,19 @@ public class GameManager : MonoBehaviour {
     private List<CellType> _enemyTypesToSpawn = new();
     private float _enemySpawnTimer = 0;
 
-    public bool Paused = false;
-    public GameObject Player;
-    public GameObject Shop;
+    [Header("Shopping State")]
+    public Shop Shop;
+    public int Money = 0;
+    public int MeldCost = 2;
+    [HideInInspector]
+    public ShopItem SelectedShopItem;
 
 
     [Header("UI and Menus")]
     public GameObject PauseOverlay;
     public GameObject GameOverScreen;
-    public TMP_Text MoneyDisplay;
+
+    private Dictionary<Action, Action> _signalHandlers = new Dictionary<Action, Action>();
 
 
     void Awake() {
@@ -55,11 +63,18 @@ public class GameManager : MonoBehaviour {
         Instance = this;
         global::Player.SignalPlayerDeath += HandlePlayerDeath;
         CellHealthManager.SignalEnemyCellDefeat += HandleEnemyCellDefeat;
+        ShopItem.SignalShopItemBought += HandleShopItemBought;
+        ShopItem.SignalShopItemSelected += HandleShopItemSelected;
+        // EntryAndExitActionByState = new Dictionary<GameState, Tuple<Action, Action>>() {
+        //     [GameState.Fighting] = (EnterFightingState, ExitFightingState)
+        // };
     }
 
     private void OnDestroy() {
         global::Player.SignalPlayerDeath -= HandlePlayerDeath;
         CellHealthManager.SignalEnemyCellDefeat -= HandleEnemyCellDefeat;
+        ShopItem.SignalShopItemBought -= HandleShopItemBought;
+        ShopItem.SignalShopItemSelected -= HandleShopItemSelected;
     }
 
     void Start() {
@@ -104,7 +119,7 @@ public class GameManager : MonoBehaviour {
 
     void DisableStatefulObjects() {
         GameOverScreen.SetActive(false);
-        Shop.SetActive(false);
+        Shop.Disappear();
     }
 
     void LoadLevel(int newLevelNumber) {
@@ -142,23 +157,34 @@ public class GameManager : MonoBehaviour {
                 _enemySpawnTimer += _enemySpawnInterval;
             }
         }
-        DetectMeldingClick();
+
     }
 
-    void DetectMeldingClick() {
+    void HandleCellClick() {
         if (!Input.GetMouseButtonDown(0)) return;
         if (!Utils.MouseRaycast(out RaycastHit hit, Layers.PlayerCell)) return;
 
         if (hit.collider.gameObject.TryGetComponent<Cell>(out var cell)) {
             if (cell.gameObject == Player) return;
-            if (cell.State == CellState.Friendly) {
-                AudioManager.Instance.PlayAttachSound();
-                cell.ChangeState(CellState.Melded);
+            if (cell.State == CellState.Friendly && SelectedShopItem != null && Money >= SelectedShopItem.Cost) {
+                Money -= SelectedShopItem.Cost;
+                if (SelectedShopItem.Type == ShopItemType.Melder) {
+                    AudioManager.Instance.PlayAttachSound();
+                    cell.ChangeState(CellState.Melded);
+                }
+                PurchaseSelectedItem();
             }
         }
     }
 
+    void PurchaseSelectedItem() {
+        Money -= SelectedShopItem.Cost;
+        Destroy(SelectedShopItem.gameObject);
+        SelectedShopItem = null;
+    }
+
     void ShopUpdate() {
+        HandleCellClick();
         if (Input.GetKeyDown(KeyCode.Space)) {
             LevelNumber += 1;
             EnterFightingState();
@@ -184,7 +210,7 @@ public class GameManager : MonoBehaviour {
         foreach (Transform bullet in Containers.Bullets) {
             Destroy(bullet.gameObject);
         }
-        Shop.SetActive(true);
+        Shop.Appear();
         State = GameState.Shop;
     }
 
@@ -192,6 +218,10 @@ public class GameManager : MonoBehaviour {
         DisableStatefulObjects();
         LoadLevel(LevelNumber);
         State = GameState.Fighting;
+    }
+
+    public void ExitFightingState() {
+
     }
 
     void DestroyGameElements() {
@@ -226,11 +256,7 @@ public class GameManager : MonoBehaviour {
         EnterFightingState();
     }
 
-    public static Vector3 GetPlayerPosition() {
-        if (Instance == null || Instance.Player == null) return Vector3.zero;
-        return Instance.Player.transform.position;
-    }
-
+    #region Signal Handlers
     public void HandleShopContinue() {
         LevelNumber += 1;
         LoadLevel(LevelNumber);
@@ -243,9 +269,27 @@ public class GameManager : MonoBehaviour {
 
     public void HandleEnemyCellDefeat() {
         _activeEnemies -= 1;
+        Money += 1;
     }
 
-    public GameObject GetPlayer() {
+    void HandleShopItemBought(ShopItem boughtItem) {
+        return;
+    }
+
+    void HandleShopItemSelected(ShopItem selectedItem) {
+        Debug.Log($"Selecting {selectedItem.gameObject}");
+        SelectedShopItem = selectedItem;
+    }
+    #endregion
+
+
+    #region Getters
+    public static Vector3 GetPlayerPosition() {
+        if (Instance == null || Instance.Player == null) return Vector3.zero;
+        return Instance.Player.transform.position;
+    }
+
+    public static GameObject GetPlayer() {
         if (Instance == null) return null;
         return Instance.Player;
     }
@@ -261,4 +305,10 @@ public class GameManager : MonoBehaviour {
         if (Instance.Player == null) return -1;
         return Instance.Player.GetComponent<Player>().Health;
     }
+
+    public static int GetMoney() {
+        if (Instance == null) return -1;
+        return Instance.Money;
+    }
+    #endregion
 }
