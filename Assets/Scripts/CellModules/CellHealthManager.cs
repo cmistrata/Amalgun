@@ -9,7 +9,6 @@ public class CellHealthManager : MonoBehaviour {
 
     private Cell _stateTracker;
     private Animator _animator;
-    private bool _isPlayerHealthManager;
 
     [Header("Health info")]
     public int MaxHealth = 1;
@@ -22,7 +21,6 @@ public class CellHealthManager : MonoBehaviour {
     public void Awake() {
         _stateTracker = GetComponent<Cell>();
         _animator = GetComponent<Animator>();
-        _isPlayerHealthManager = GetComponent<Player>() != null;
     }
 
     virtual public void Start() {
@@ -102,10 +100,6 @@ public class CellHealthManager : MonoBehaviour {
     // Note: collisions for rigidbodyless colliders under a rigidbodyfull parent (friendly cells under player)
     // will have the OnCollisionEnter event be triggered on the parent.
     public void OnCollisionEnter(Collision collision) {
-        if (_isPlayerHealthManager) {
-            // Player script handles collisions.
-            return;
-        }
         bool isOtherStateBullet = (_stateTracker.State == CellState.Enemy && collision.gameObject.layer == Layers.PlayerBullet)
                || (_stateTracker.State == CellState.Friendly && collision.gameObject.layer == Layers.EnemyBullet);
         if (isOtherStateBullet) {

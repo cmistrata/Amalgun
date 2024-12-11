@@ -7724,7 +7724,6 @@ GameObject:
   - component: {fileID: 4775675228061808827}
   - component: {fileID: 5451880040738014982}
   - component: {fileID: 2225342104191978951}
-  - component: {fileID: 6393233132680666276}
   - component: {fileID: 1938549635520911473}
   - component: {fileID: 2944868561688054896}
   - component: {fileID: 4315147728504072900}
@@ -7794,6 +7793,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a847cdc5156e1264f8e5d79e1ca18436, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Health: 4
+  MaxHealth: 4
 --- !u!114 &4775675228061808827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7843,21 +7844,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Spine2: {fileID: 2075974544313384687}
   Neck: {fileID: 4990962809664857106}
---- !u!114 &6393233132680666276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9055605997633475303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 577c3c5f77ca5f24fb4703e4e4a52f9a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MaxHealth: 4
-  CurrentHealth: 4
-  ConvertChance: 0
 --- !u!114 &1938549635520911473
 MonoBehaviour:
   m_ObjectHideFlags: 0

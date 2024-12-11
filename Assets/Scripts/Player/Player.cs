@@ -5,19 +5,13 @@ using UnityEngine;
 
 [RequireComponent(typeof(Mover))]
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(CellHealthManager))]
 public class Player : MonoBehaviour {
     private Rigidbody _rb;
-    private CellHealthManager _cellHealthManager;
     private Mover _mover;
     public static Player Instance;
-    public int Health {
-        get => _cellHealthManager.CurrentHealth;
-    }
+    public int Health = 4;
 
-    public int MaxHealth {
-        get => _cellHealthManager.MaxHealth;
-    }
+    public int MaxHealth = 4;
 
     private const float _torque = 5000f;
     private const float _newCellMassIncrease = 30f;
@@ -26,7 +20,6 @@ public class Player : MonoBehaviour {
 
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
-        _cellHealthManager = GetComponent<CellHealthManager>();
         _mover = GetComponent<Mover>();
 
         Instance = this;
@@ -80,8 +73,8 @@ public class Player : MonoBehaviour {
     }
 
     public void TakeDamage() {
-        AudioManager.Instance.PlayPlayerDamagedSound(1 + (4f - _cellHealthManager.CurrentHealth) / 8f);
+        AudioManager.Instance.PlayPlayerDamagedSound(1 + (4f - Health) / 8f);
         CameraManager.Instance.FlashDamageFilter();
-        _cellHealthManager.TakeDamage();
+        Health -= 1;
     }
 }
