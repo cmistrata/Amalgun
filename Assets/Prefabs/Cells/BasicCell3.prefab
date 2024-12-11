@@ -662,8 +662,9 @@ GameObject:
   - component: {fileID: 8809325978400930870}
   - component: {fileID: 7177724450747333993}
   - component: {fileID: 2650112753784540064}
-  - component: {fileID: 244536029975207358}
   - component: {fileID: 8288147963090237135}
+  - component: {fileID: 6793225429967518551}
+  - component: {fileID: 3529566147018501145}
   m_Layer: 8
   m_Name: BasicCell3
   m_TagString: Untagged
@@ -930,22 +931,6 @@ MonoBehaviour:
   MaxHealth: 1
   CurrentHealth: 1
   ConvertChance: 0.5
---- !u!114 &244536029975207358
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3243104636506775748}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fab350ad32de8e94c8d6b5b370345bc3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Acceleration: 4
-  MaxSpeed: -1
-  TargetDirection: {x: 0, y: 0, z: 0}
-  _timerPeriod: 4
 --- !u!114 &8288147963090237135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -958,6 +943,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d96a49b33f611a40ba2756dd38a67f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6793225429967518551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3243104636506775748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 322ec4397b3861846a4cb6aae0dc9cb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TargetDirection: {x: 0, y: 0, z: 0}
+  MaxSpeed: 4
+  BaseAcceleration: 4
+--- !u!114 &3529566147018501145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3243104636506775748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1d9e8f908b42594492fabac2f1fae3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MovingRecalculateIntervalSeconds: 3
 --- !u!1 &3535061953976132784
 GameObject:
   m_ObjectHideFlags: 0

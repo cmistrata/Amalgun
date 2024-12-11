@@ -7720,7 +7720,6 @@ GameObject:
   m_Component:
   - component: {fileID: 9059153207448918900}
   - component: {fileID: 8703361499644301946}
-  - component: {fileID: 134193214677044353}
   - component: {fileID: 8316701303954030259}
   - component: {fileID: 4775675228061808827}
   - component: {fileID: 5451880040738014982}
@@ -7731,6 +7730,7 @@ GameObject:
   - component: {fileID: 4315147728504072900}
   - component: {fileID: 1762174402707464404}
   - component: {fileID: 2820808792696681128}
+  - component: {fileID: 6450543301767048469}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -7782,21 +7782,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 84
   m_CollisionDetection: 0
---- !u!114 &134193214677044353
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9055605997633475303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54ba6ab2f00f0be4390bf36f77170a14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Acceleration: 80
-  MaxSpeed: 7
-  TargetDirection: {x: 0, y: 0, z: 0}
 --- !u!114 &8316701303954030259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7837,7 +7822,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Scale: 0.03
-  Movement: {fileID: 134193214677044353}
   LeftJet: {fileID: 3157856990469589302}
   LeftBackJet: {fileID: 5790750326860162661}
   LeftFrontJet: {fileID: 7721179665201623494}
@@ -8050,6 +8034,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f8d587b1cb89cb49bd1c2f526b8b8c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6450543301767048469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9055605997633475303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 322ec4397b3861846a4cb6aae0dc9cb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TargetDirection: {x: 0, y: 0, z: 0}
+  MaxSpeed: 7
+  BaseAcceleration: 80
 --- !u!1 &9152106014982575966
 GameObject:
   m_ObjectHideFlags: 0

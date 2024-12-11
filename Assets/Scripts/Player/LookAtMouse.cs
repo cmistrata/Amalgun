@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerMovement))]
 public class LookAtMouse : MonoBehaviour {
     public Transform Spine2;
     public Transform Neck;

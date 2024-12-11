@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerMovement))]
+[RequireComponent(typeof(Mover))]
 public class JetController : MonoBehaviour {
     public float Scale = .03f;
 
-    public DirectionForceMovementBase Movement;
+    private Mover _mover;
 
     public GameObject LeftJet;
     private List<ParticleSystem.EmissionModule> _leftParticleSystems;
@@ -31,6 +31,7 @@ public class JetController : MonoBehaviour {
     private const float _translationPower = 35f;
 
     private void Awake() {
+        _mover = GetComponent<Mover>();
         _leftEmitters = LeftJet.GetComponentsInChildren<ParticleSystem>().Select(ps => ps.emission).ToList();
         _leftEmitters.Add(LeftJet.GetComponent<ParticleSystem>().emission);
 
@@ -65,7 +66,7 @@ public class JetController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        Vector3 globalTargetDirection = Movement.TargetDirection;
+        Vector3 globalTargetDirection = _mover.TargetDirection;
         Vector3 localTargetDirection = transform.InverseTransformVector(globalTargetDirection).normalized;
         float lateralMovement = localTargetDirection.x;
         float forwardMovement = localTargetDirection.z;

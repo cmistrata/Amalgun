@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+[RequireComponent(typeof(Mover))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CellHealthManager))]
 public class Player : MonoBehaviour {
     private Rigidbody _rb;
     private CellHealthManager _cellHealthManager;
+    private Mover _mover;
     public static Player Instance;
     public int Health {
         get => _cellHealthManager.CurrentHealth;
@@ -25,8 +27,16 @@ public class Player : MonoBehaviour {
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
         _cellHealthManager = GetComponent<CellHealthManager>();
+        _mover = GetComponent<Mover>();
 
         Instance = this;
+    }
+
+    private void FixedUpdate() {
+        Vector3 newTargetDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        _mover.TargetDirection = newTargetDirection.normalized;
+        float clockwiseRotationInput = Input.GetAxis("Rotate Clockwise");
+        _rb.AddTorque(Vector3.up * _torque * clockwiseRotationInput);
     }
 
     public void Heal(int amount) {
