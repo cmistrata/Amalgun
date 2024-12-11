@@ -25,11 +25,19 @@ public class Player : MonoBehaviour {
         Instance = this;
     }
 
+    public void Update() {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            Vector3 newTargetDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            _mover.TargetDirection = newTargetDirection.normalized;
+            _mover.Dash();
+        }
+    }
+
     private void FixedUpdate() {
         Vector3 newTargetDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         _mover.TargetDirection = newTargetDirection.normalized;
         float clockwiseRotationInput = Input.GetAxis("Rotate Clockwise");
-        _rb.AddTorque(Vector3.up * _torque * clockwiseRotationInput);
+        _rb.AddTorque(_torque * clockwiseRotationInput * Vector3.up);
     }
 
     public void Heal(int amount) {

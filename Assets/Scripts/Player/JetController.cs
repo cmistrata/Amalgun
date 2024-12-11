@@ -87,6 +87,9 @@ public class JetController : MonoBehaviour {
         float rightSideJetPower = 0;
         float rightFrontJetPower = 0;
 
+        float effectiveTranslationPower = _translationPower;
+        if (_mover.Dashing) effectiveTranslationPower *= 3;
+
         if (clockwiseRotationInput > 0) {
             leftBackJetPower += _rotationPower * clockwiseRotationInput;
             rightFrontJetPower += _rotationPower * clockwiseRotationInput;
@@ -97,19 +100,19 @@ public class JetController : MonoBehaviour {
         }
 
         if (lateralMovement > 0) {
-            leftSideJetPower += _translationPower * lateralMovement;
+            leftSideJetPower += effectiveTranslationPower * lateralMovement;
         }
         else if (lateralMovement < 0) {
-            rightSideJetPower += _translationPower * Mathf.Abs(lateralMovement);
+            rightSideJetPower += effectiveTranslationPower * Mathf.Abs(lateralMovement);
         }
 
         if (forwardMovement > 0) {
-            leftBackJetPower += (_translationPower / 2) * forwardMovement;
-            rightBackJetPower += (_translationPower / 2) * forwardMovement;
+            leftBackJetPower += (effectiveTranslationPower / 2) * forwardMovement;
+            rightBackJetPower += (effectiveTranslationPower / 2) * forwardMovement;
         }
         else if (forwardMovement < 0) {
-            leftFrontJetPower += (_translationPower / 2) * Mathf.Abs(forwardMovement);
-            rightFrontJetPower += (_translationPower / 2) * Mathf.Abs(forwardMovement);
+            leftFrontJetPower += (effectiveTranslationPower / 2) * Mathf.Abs(forwardMovement);
+            rightFrontJetPower += (effectiveTranslationPower / 2) * Mathf.Abs(forwardMovement);
         }
 
         for (int i = 0; i < _leftEmitters.Count(); i++) {
