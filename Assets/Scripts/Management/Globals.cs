@@ -23,17 +23,29 @@ public class Globals : MonoBehaviour {
     public GameObject BasicCellPrefab;
     public GameObject BasicCell2Prefab;
     public GameObject BasicCell3Prefab;
+
     public GameObject RocketCellPrefab;
     public GameObject RocketCell2Prefab;
     public GameObject RocketCell3Prefab;
+
     public GameObject MineCellPrefab;
     public GameObject MineCell2Prefab;
     public GameObject MineCell3Prefab;
+
+    public GameObject TriCellPrefab;
+    public GameObject TriCell2Prefab;
+    public GameObject TriCell3Prefab;
+
+    public GameObject ShieldCellPrefab;
+    public GameObject ShieldCell2Prefab;
+    public GameObject ShieldCell3Prefab;
     public static Dictionary<CellType, GameObject> CellPrefabByType;
     public static Dictionary<CellType, CellType> CellUpgradeByType = new() {
         {CellType.Basic, CellType.Basic2}, {CellType.Basic2, CellType.Basic3},
         {CellType.Rocket, CellType.Rocket2}, {CellType.Rocket2, CellType.Rocket3},
         {CellType.Mine, CellType.Mine2}, {CellType.Mine2, CellType.Mine3},
+        {CellType.Tri, CellType.Tri2}, {CellType.Tri2, CellType.Tri3},
+        {CellType.Shield, CellType.Shield2}, {CellType.Shield2, CellType.Shield3},
     };
 
     [Header("Shop Items")]
@@ -53,6 +65,14 @@ public class Globals : MonoBehaviour {
             {CellType.Mine, MineCellPrefab},
             {CellType.Mine2, MineCell2Prefab},
             {CellType.Mine3, MineCell3Prefab},
+
+            {CellType.Tri, TriCellPrefab},
+            {CellType.Tri2, TriCell2Prefab},
+            {CellType.Tri3, TriCell3Prefab},
+
+            {CellType.Shield, ShieldCellPrefab},
+            {CellType.Shield2, ShieldCell2Prefab},
+            {CellType.Shield3, ShieldCell3Prefab},
         };
     }
 }

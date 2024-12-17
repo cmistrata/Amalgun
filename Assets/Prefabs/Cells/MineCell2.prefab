@@ -822,6 +822,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7553e0bebd756d641b1ce4005c952cfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FireAudioSource: {fileID: 1882283656863701800}
   AutoFiring: 1
   ProjectilePrefab: {fileID: 8664886127951825883, guid: 1b4145e1cf804bd43a26975e220f3ea7, type: 3}
   AutoFireIntervalSeconds: 3

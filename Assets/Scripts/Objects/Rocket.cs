@@ -13,6 +13,7 @@ public class Rocket : MonoBehaviour {
     private const float _thrustStrength = 30f;
     private const float _startupRotationSpeed = 20f;
     private const float _thrustingRotationSpeed = 1.4f;
+    private bool _passedTarget = false;
 
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
@@ -31,18 +32,21 @@ public class Rocket : MonoBehaviour {
 
     void FixedUpdate() {
         Vector3 targetDirection = GetTargetPosition() - transform.position;
+        _passedTarget = _passedTarget || Vector3.Dot(targetDirection, _rb.linearVelocity) < 0;
+        if (!_passedTarget) {
+            // Rotate the rocket towards the target
+            var angle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
+            var targetRotation = Quaternion.AngleAxis(angle, Vector3.up);
+            var angleBetweenTarget = Quaternion.Angle(transform.rotation, targetRotation);
+            var rotationSpeed = _inStartupPhase ? _startupRotationSpeed : _thrustingRotationSpeed;
+            if (angleBetweenTarget < rotationSpeed) {
+                transform.rotation = targetRotation;
+            }
+            else {
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed);
+            }
+        }
 
-        // Rotate the rocket towards the target
-        var angle = Mathf.Atan2(targetDirection.x, targetDirection.z) * Mathf.Rad2Deg;
-        var targetRotation = Quaternion.AngleAxis(angle, Vector3.up);
-        var angleBetweenTarget = Quaternion.Angle(transform.rotation, targetRotation);
-        var rotationSpeed = _inStartupPhase ? _startupRotationSpeed : _thrustingRotationSpeed;
-        if (angleBetweenTarget < rotationSpeed) {
-            transform.rotation = targetRotation;
-        }
-        else {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed);
-        }
 
         if (!_inStartupPhase) {
             // Apply force in the direction the rocket is facing

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum CellState {
@@ -15,7 +16,9 @@ public enum CellType {
     None = 0,
     Basic = 1, Basic2 = 2, Basic3 = 3,
     Rocket = 4, Rocket2 = 5, Rocket3 = 6,
-    Mine = 7, Mine2 = 8, Mine3 = 9
+    Mine = 7, Mine2 = 8, Mine3 = 9,
+    Tri = 10, Tri2 = 11, Tri3 = 12,
+    Shield = 13, Shield2 = 14, Shield3 = 15
 }
 
 public class Cell : MonoBehaviour {
@@ -31,6 +34,10 @@ public class Cell : MonoBehaviour {
     void Awake() {
         _previousState = State;
         rb = GetComponent<Rigidbody>();
+    }
+
+    void Start() {
+        ChangeState(State);
     }
 
     private void Update() {

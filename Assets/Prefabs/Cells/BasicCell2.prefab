@@ -885,15 +885,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7553e0bebd756d641b1ce4005c952cfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FireAudioSource: {fileID: 1882283656863701800}
   AutoFiring: 1
   ProjectilePrefab: {fileID: 8664886127951825883, guid: 09ccd55f67491cc40858b69f087d8cce, type: 3}
-  AutoFireIntervalSeconds: 1.25
+  AutoFireIntervalSeconds: 1.1
   FiringInaccuracyAngles: 0
   InitialProjectileOffset: 0
   AimFrom: {fileID: 0}
   InitialFiringPosition: {fileID: 2936912828888888688}
-  PlayerProjectileSpeed: 10
-  EnemyProjectileSpeed: 4
+  PlayerProjectileSpeed: 6
+  EnemyProjectileSpeed: 6
   NumProjectiles: 1
   FiringSpreadAngles: 0
   FireAnimationOffsetTime: 0.37

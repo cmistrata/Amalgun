@@ -3,7 +3,7 @@ using UnityEngine;
 public class Cannon : CellModule {
     private Animator _animator;
     private Rigidbody _rb;
-    private AudioSource _audioSource;
+    public AudioSource FireAudioSource;
 
 
     [Header("State")]
@@ -41,11 +41,12 @@ public class Cannon : CellModule {
     protected override void ExtraAwake() {
         _animator = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody>();
-        _audioSource = GetComponent<AudioSource>();
+        FireAudioSource = GetComponent<AudioSource>();
         if (!AimFrom) {
             AimFrom = transform;
         }
         HandleStateChange(_state);
+        _autoFireTimer = .3f * AutoFireIntervalSeconds;
     }
 
     // Update is called once per frame
@@ -115,7 +116,7 @@ public class Cannon : CellModule {
         }
 
         //TODO: replace with some kind of event and an audio manager
-        _audioSource.Play();
+        FireAudioSource.Play();
     }
 
     Vector3 GetAimingDirection() {
@@ -127,7 +128,7 @@ public class Cannon : CellModule {
     }
 
     protected override void HandleStateChange(CellState newState) {
-        _autoFireTimer = AutoFireIntervalSeconds * Random.Range(1, 2f);
+        _autoFireTimer = AutoFireIntervalSeconds * Random.Range(.3f, .8f);
         if (_state == CellState.Friendly || _state == CellState.Attaching || _state == CellState.Melded) {
             _currentTargetingStrategy = PlayerTargetingStrategy;
         }

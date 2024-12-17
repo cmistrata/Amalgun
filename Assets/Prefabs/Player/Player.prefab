@@ -7905,7 +7905,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TargetDirection: {x: 0, y: 0, z: 0}
   MaxSpeed: 4
-  BaseAcceleration: 80
+  BaseAcceleration: 30
 --- !u!82 &1762174402707464404
 AudioSource:
   m_ObjectHideFlags: 0

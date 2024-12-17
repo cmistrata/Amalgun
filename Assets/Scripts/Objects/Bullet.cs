@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour {
     public CellState FiringCellState;
-    public float TimeOutSeconds = 5f;
+    public float TimeOutSeconds;
     protected float _lifetime = 0;
     private Rigidbody _rb;
     public List<MeshRenderer> MeshRenderers;
+    public bool IncreasePlayerBulletSize;
 
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
@@ -39,7 +40,12 @@ public class Bullet : MonoBehaviour {
         FiringCellState = state;
         UpdateMeshes();
         UpdateLayer();
-        UpdateCollider();
+        if (IncreasePlayerBulletSize && FiringCellState != CellState.Enemy) {
+            UpdateCollider();
+        }
+        if (FiringCellState == CellState.Enemy) {
+            TimeOutSeconds *= 2;
+        }
     }
 
     private void UpdateMeshes() {

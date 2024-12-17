@@ -61,6 +61,12 @@ MonoBehaviour:
   MineCellPrefab: {fileID: 3243104636506775748, guid: eafd7483e579ecb4e99ad373cabf860c, type: 3}
   MineCell2Prefab: {fileID: 3243104636506775748, guid: b99c56aecdb23c04093beb10ef158714, type: 3}
   MineCell3Prefab: {fileID: 3243104636506775748, guid: 1bde526e6cb4e6248bdf1c0ac5f09617, type: 3}
+  TriCellPrefab: {fileID: 3243104636506775748, guid: 04ba76a6600863d4abc31b12018c816b, type: 3}
+  TriCell2Prefab: {fileID: 3243104636506775748, guid: 062855162dbad0d49995c3a0e1226776, type: 3}
+  TriCell3Prefab: {fileID: 3243104636506775748, guid: f2132cf85c45d21428e88fa5cb95efab, type: 3}
+  ShieldCellPrefab: {fileID: 3243104636506775748, guid: a112a3052061ae547b711903b99a70d1, type: 3}
+  ShieldCell2Prefab: {fileID: 3243104636506775748, guid: 4759cad598fe52246949df029d5cc648, type: 3}
+  ShieldCell3Prefab: {fileID: 3243104636506775748, guid: 46f7719825249cd4fbc9ac4d3fced537, type: 3}
   MeldUpgradePrefab: {fileID: 4915011639938276398, guid: 1ba851eb83d246244a3df4669d6cfdfd, type: 3}
 --- !u!1 &1557012745008964064
 GameObject:

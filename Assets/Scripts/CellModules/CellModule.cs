@@ -20,9 +20,9 @@ public abstract class CellModule : MonoBehaviour {
         ExtraAwake();
     }
 
-    public void OnEnable() {
-        ExtraAwake();
-    }
+    // public void OnEnable() {
+    //     ExtraAwake();
+    // }
 
     virtual protected void ExtraAwake() {
         return;
@@ -30,5 +30,17 @@ public abstract class CellModule : MonoBehaviour {
 
     virtual protected void HandleStateChange(CellState newState) {
         return;
+    }
+
+    protected bool InActiveState() {
+        return _state == CellState.Friendly || _state == CellState.Enemy || _state == CellState.Melded;
+    }
+
+    protected bool InAlliedState() {
+        return _state == CellState.Friendly
+        || _state == CellState.Melded
+        || _state == CellState.Absorbing
+        || _state == CellState.BeingAbsorbed
+        || _state == CellState.Attaching;
     }
 }

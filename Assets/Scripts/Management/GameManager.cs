@@ -24,7 +24,11 @@ public class LevelList {
 
 public class GameManager : MonoBehaviour {
     public static GameManager Instance;
-    private const float _enemySpawnInterval = .2f;
+    private const float _initialEnemySpawnInterval = .2f;
+    // How many enemies we spawn in the initial spawn burst, as well
+    // as a floor that we will spawn an enemy upon dropping below (if any are left).
+    private const int _minEnemies = 5;
+    private const float _laterEnemySpawnInterval = 2f;
     private Dictionary<GameState, Tuple<Action, Action>> EntryAndExitActionByState;
 
 
@@ -130,7 +134,7 @@ public class GameManager : MonoBehaviour {
             .ToList();
         _enemyTypesToSpawn = new();
         _activeEnemies = 0;
-        _enemySpawnTimer = _enemySpawnInterval;
+        _enemySpawnTimer = _initialEnemySpawnInterval;
     }
 
     bool NoEnemiesLeftInLevel() {
@@ -149,12 +153,21 @@ public class GameManager : MonoBehaviour {
         }
         if (_enemyTypesToSpawn.Any()) {
             _enemySpawnTimer -= Time.deltaTime;
+            // Lower the timer quickly if the number of enemies drops below a certain point.
+            if (_activeEnemies < _minEnemies) {
+                _enemySpawnTimer = Math.Min(_enemySpawnTimer, _initialEnemySpawnInterval);
+            }
             if (_enemySpawnTimer <= 0) {
                 var _enemyTypeToSpawn = _enemyTypesToSpawn[0];
                 _enemyTypesToSpawn.RemoveAt(0);
                 EnemySpawner.SpawnEnemy(_enemyTypeToSpawn);
                 _activeEnemies++;
-                _enemySpawnTimer += _enemySpawnInterval;
+                if (_activeEnemies < _minEnemies) {
+                    _enemySpawnTimer += _initialEnemySpawnInterval;
+                }
+                else {
+                    _enemySpawnTimer += _laterEnemySpawnInterval;
+                }
             }
         }
 

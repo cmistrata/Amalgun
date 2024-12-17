@@ -63,6 +63,7 @@ MeshRenderer:
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -121,10 +122,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8b6b3576a823e9489cba320a3b94cd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Team: 0
-  TimeOutSeconds: 5
+  FiringCellState: 0
+  TimeOutSeconds: 2
   MeshRenderers:
   - {fileID: 5046730184246632520}
+  IncreasePlayerBulletSize: 1
 --- !u!54 &-6321311405155962825
 Rigidbody:
   m_ObjectHideFlags: 0

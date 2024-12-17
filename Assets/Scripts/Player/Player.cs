@@ -13,7 +13,7 @@ public class Player : MonoBehaviour {
 
     public int MaxHealth = 4;
 
-    private const float _torque = 5000f;
+    private const float _torque = 3000f;
     private const float _newCellMassIncrease = 30f;
 
     public static event Action SignalPlayerDeath;

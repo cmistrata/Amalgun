@@ -29,6 +29,8 @@ public class Amalgamator : MonoBehaviour {
     const float _mergeGrowSize = 1.3f;
     const float _mergeGrowDuration = _mergeTime * .7f;
     const float _mergeShrinkSize = .8f;
+    const float _newCellMassIncrease = 8f;
+    const float _baseMass = 100f;
     Dictionary<GameObject, HashSet<GameObject>> _cellGraph;
     Rigidbody _rb;
     private Dictionary<GameObject, DelayedJoin> _delayedJoinsByIncomingCell = new();
@@ -40,6 +42,7 @@ public class Amalgamator : MonoBehaviour {
         };
         _rb = GetComponent<Rigidbody>();
         CellHealthManager.SignalPlayerCellDeath += HandlePlayerCellDeath;
+        UpdateMass();
     }
 
     void OnDestroy() {
@@ -341,7 +344,7 @@ public class Amalgamator : MonoBehaviour {
     }
 
     private void UpdateMass() {
-        float mass = 100f + 30f * (_cellGraph.Count - 1);
+        float mass = _baseMass + _newCellMassIncrease * (_cellGraph.Count - 1);
         _rb.mass = mass;
     }
 

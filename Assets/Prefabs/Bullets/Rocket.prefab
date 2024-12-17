@@ -228,6 +228,7 @@ MonoBehaviour:
   MeshRenderers:
   - {fileID: 8163031096234171002}
   - {fileID: 5888488324756262249}
+  IncreasePlayerBulletSize: 1
 --- !u!114 &8019574021220394979
 MonoBehaviour:
   m_ObjectHideFlags: 0

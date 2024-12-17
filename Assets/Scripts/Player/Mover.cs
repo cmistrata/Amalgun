@@ -11,6 +11,7 @@ public class Mover : MonoBehaviour {
     private float _dashSpeed = 20;
     private float _dashDuration = .2f;
     private float _dashTimer = 0f;
+    private readonly float _decelerationForce = 100 * 40;
     public bool Dashing {
         get => _dashTimer > 0;
     }
@@ -44,9 +45,10 @@ public class Mover : MonoBehaviour {
             _dashTimer -= Time.deltaTime;
         }
         // Slow down the body if it is moving too fast outside of a dash.
-        else if (_rb.linearVelocity.sqrMagnitude > _sqrMaximumVelocity) {
-            _rb.linearVelocity = _rb.linearVelocity.normalized * MaxSpeed;
-        }
+        // else if (_rb.linearVelocity.sqrMagnitude > _sqrMaximumVelocity) {
+        //     _rb.AddForce(-_rb.linearVelocity.normalized * _decelerationForce);
+        //     // _rb.linearVelocity = _rb.linearVelocity.normalized * MaxSpeed;
+        // }
     }
 
     public void Dash() {
