@@ -3,7 +3,7 @@ using UnityEngine;
 public class BetweenPlayerAndMouse : MonoBehaviour {
     public float Factor = .2f;
 
-    // Update is called once per frame
+    // Must be fixed update to match the player position updates.
     void FixedUpdate() {
         if (GameManager.Instance != null && GameManager.Instance.Player != null) {
             var playerPosition = GameManager.Instance.Player.transform.position;

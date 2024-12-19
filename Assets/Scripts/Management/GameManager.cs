@@ -319,6 +319,18 @@ public class GameManager : MonoBehaviour {
         return Instance.Player.GetComponent<Player>().Health;
     }
 
+    public static int GetMaxDashes() {
+        if (Instance == null) return -1;
+        if (Instance.Player == null) return -1;
+        return Instance.Player.GetComponent<Player>().MaxDashes;
+    }
+
+    public static int GetCurrentDashes() {
+        if (Instance == null) return -1;
+        if (Instance.Player == null) return -1;
+        return (int)Mathf.Floor(Instance.Player.GetComponent<Player>().CurrentDashCharge);
+    }
+
     public static int GetMoney() {
         if (Instance == null) return -1;
         return Instance.Money;

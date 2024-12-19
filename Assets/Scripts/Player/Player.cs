@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 
@@ -18,18 +19,27 @@ public class Player : MonoBehaviour {
 
     public static event Action SignalPlayerDeath;
 
+    public int MaxDashes = 3;
+    public float CurrentDashCharge;
+    private float _secondsPerDash = 9;
+
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
         _mover = GetComponent<Mover>();
+        CurrentDashCharge = MaxDashes;
 
         Instance = this;
     }
 
     public void Update() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (CurrentDashCharge < MaxDashes) {
+            CurrentDashCharge += Time.deltaTime / _secondsPerDash;
+        }
+        if (CurrentDashCharge >= 1 && Input.GetKeyDown(KeyCode.Space)) {
             Vector3 newTargetDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
             _mover.TargetDirection = newTargetDirection.normalized;
             _mover.Dash();
+            CurrentDashCharge -= 1;
         }
     }
 
