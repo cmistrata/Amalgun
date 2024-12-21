@@ -42,11 +42,13 @@ public class GameManager : MonoBehaviour {
     public bool SpawnEnemies = true;
     public bool AutoKoEnemies;
 
-    public int LevelNumber = 0;
-    private int _activeEnemies = 0;
+    public int LevelNumber0Indexed = 0;
+    private HashSet<GameObject> _activeEnemies = new();
+    // private int _activeEnemies = 0;
     private List<List<CellType>> _wavesToSpawn = new();
     private List<CellType> _enemyTypesToSpawn = new();
     private float _enemySpawnTimer = 0;
+    private const int _wavesPerLevel = 3;
 
     [Header("Shopping State")]
     public Shop Shop;
@@ -128,18 +130,22 @@ public class GameManager : MonoBehaviour {
     }
 
     void LoadLevel(int newLevelNumber) {
-        LevelNumber = newLevelNumber;
-        Level newLevel = LevelNumber < Levels.Levels.Count - 1 ? Levels.Levels[LevelNumber] : Levels.Levels[^1];
-        _wavesToSpawn = newLevel.Waves
-            .Select(wave => wave.Enemies.ToList())
-            .ToList();
+        LevelNumber0Indexed = newLevelNumber;
+        var difficulty = CalculateLevelDifficulty(LevelNumber0Indexed);
+        // Level newLevel = LevelNumber < Levels.Levels.Count - 1 ? Levels.Levels[LevelNumber] : Levels.Levels[^1];
+        for (int i = 0; i < _wavesPerLevel; i++) {
+            _wavesToSpawn.Add(GenerateWave(difficulty));
+        }
+        // _wavesToSpawn = newLevel.Waves
+        //     .Select(wave => wave.Enemies.ToList())
+        //     .ToList();
         _enemyTypesToSpawn = new();
-        _activeEnemies = 0;
+        // _activeEnemies = 0;
         _enemySpawnTimer = _initialEnemySpawnInterval;
     }
 
     bool NoEnemiesLeftInLevel() {
-        return _wavesToSpawn.Count == 0 && _enemyTypesToSpawn.Count == 0 && _activeEnemies == 0;
+        return _wavesToSpawn.Count == 0 && _enemyTypesToSpawn.Count == 0 && _activeEnemies.Count() == 0;
     }
 
     void FightingUpdate() {
@@ -148,22 +154,22 @@ public class GameManager : MonoBehaviour {
             EnterShopState();
             return;
         }
-        if (!_enemyTypesToSpawn.Any() && _activeEnemies <= 1 && _wavesToSpawn.Any() && SpawnEnemies) {
+        if (SpawnEnemies && !_enemyTypesToSpawn.Any() && _activeEnemies.Count() == 0 && _wavesToSpawn.Any()) {
             _enemyTypesToSpawn.AddRange(_wavesToSpawn[0]);
             _wavesToSpawn.RemoveAt(0);
         }
         if (_enemyTypesToSpawn.Any()) {
             _enemySpawnTimer -= Time.deltaTime;
             // Lower the timer quickly if the number of enemies drops below a certain point.
-            if (_activeEnemies < _minEnemies) {
+            if (_activeEnemies.Count() < _minEnemies) {
                 _enemySpawnTimer = Math.Min(_enemySpawnTimer, _initialEnemySpawnInterval);
             }
             if (_enemySpawnTimer <= 0) {
                 var _enemyTypeToSpawn = _enemyTypesToSpawn[0];
                 _enemyTypesToSpawn.RemoveAt(0);
-                EnemySpawner.SpawnEnemy(_enemyTypeToSpawn);
-                _activeEnemies++;
-                if (_activeEnemies < _minEnemies) {
+                var newEnemy = EnemySpawner.SpawnEnemy(_enemyTypeToSpawn);
+                _activeEnemies.Add(newEnemy);
+                if (_activeEnemies.Count() < _minEnemies) {
                     _enemySpawnTimer += _initialEnemySpawnInterval;
                 }
                 else {
@@ -171,7 +177,23 @@ public class GameManager : MonoBehaviour {
                 }
             }
         }
+    }
 
+    public void ForceEndLevel() {
+        _wavesToSpawn.Clear();
+        _enemyTypesToSpawn.Clear();
+        int safetyCheck = 0;
+        while (_activeEnemies.Count() > 0 && safetyCheck < 100) {
+            safetyCheck += 1;
+            _activeEnemies.First().GetComponent<CellHealthManager>().Defeat();
+        }
+        // foreach (GameObject enemy in _activeEnemies) {
+        //     if (enemy == null) {
+        //         Debug.LogError("Found null enemy when force ending level.");
+        //         continue;
+        //     }
+        //     enemy.GetComponent<CellHealthManager>().Defeat();
+        // }
     }
 
     void HandleCellClick() {
@@ -200,7 +222,7 @@ public class GameManager : MonoBehaviour {
     void ShopUpdate() {
         HandleCellClick();
         if (Input.GetKeyDown(KeyCode.Space)) {
-            LevelNumber += 1;
+            LevelNumber0Indexed += 1;
             EnterFightingState();
         }
     }
@@ -230,7 +252,7 @@ public class GameManager : MonoBehaviour {
 
     public void EnterFightingState() {
         DisableStatefulObjects();
-        LoadLevel(LevelNumber);
+        LoadLevel(LevelNumber0Indexed);
         State = GameState.Fighting;
     }
 
@@ -258,7 +280,7 @@ public class GameManager : MonoBehaviour {
 
         // Reset state.
         Money = 0;
-        LevelNumber = 0;
+        LevelNumber0Indexed = 0;
         GameOverScreen.SetActive(false);
         DestroyGameElements();
 
@@ -270,10 +292,35 @@ public class GameManager : MonoBehaviour {
         EnterFightingState();
     }
 
+
+    private static int CalculateLevelDifficulty(int levelNumber0Indexed) {
+        return levelNumber0Indexed * 5 + 10;
+    }
+
+    private static List<CellType> GenerateWave(int difficulty) {
+        int difficultyRemaining = difficulty;
+        List<CellType> wave = new();
+        int safetyCounter = 0;
+        while (safetyCounter < 1000 && difficultyRemaining > 0) {
+            var potentialNextCell = Globals.StatsByCellType.ChooseRandomWeighted(
+                cellTypeAndStats => 1f / cellTypeAndStats.Value.Rarity
+            );
+            if (potentialNextCell.Value.Difficulty <= (difficultyRemaining + 1)) {
+                wave.Add(potentialNextCell.Key);
+                difficultyRemaining -= potentialNextCell.Value.Difficulty;
+            }
+            safetyCounter += 1;
+        }
+        if (safetyCounter >= 1000) {
+            Debug.LogError("Error in while loop while generating wave.");
+        }
+        return wave;
+    }
+
     #region Signal Handlers
     public void HandleShopContinue() {
-        LevelNumber += 1;
-        LoadLevel(LevelNumber);
+        LevelNumber0Indexed += 1;
+        LoadLevel(LevelNumber0Indexed);
         EnterFightingState();
     }
 
@@ -281,8 +328,10 @@ public class GameManager : MonoBehaviour {
         EnterGameOverState();
     }
 
-    public void HandleEnemyCellDefeat() {
-        _activeEnemies -= 1;
+    public void HandleEnemyCellDefeat(GameObject enemyCell) {
+        if (!_activeEnemies.Remove(enemyCell)) {
+            Debug.LogWarning($"Enemy cell {enemyCell} was defeated but wasn't being tracked by game manager.");
+        }
         Money += 1;
     }
 
@@ -295,6 +344,7 @@ public class GameManager : MonoBehaviour {
         SelectedShopItem = selectedItem;
     }
     #endregion
+
 
 
     #region Getters
@@ -335,6 +385,11 @@ public class GameManager : MonoBehaviour {
     public static int GetMoney() {
         if (Instance == null) return -1;
         return Instance.Money;
+    }
+
+    public static int EnemiesLeftInWave() {
+        if (Instance == null) return -1;
+        return Instance._activeEnemies.Count();
     }
     #endregion
 }

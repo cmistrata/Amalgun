@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class Extensions {
@@ -78,4 +80,41 @@ public static class Extensions {
         Vector3 scaleVector = new Vector3(scale, scale, scale);
         target.transform.localScale = scaleVector;
     }
+
+    public static T ChooseRandom<T>(this IEnumerable<T> e) {
+        int selection = UnityEngine.Random.Range(0, e.Count());
+
+        if (e is IReadOnlyList<T> eAsList) {
+            return eAsList[selection];
+        }
+        else {
+            int i = 0;
+            foreach (T element in e) {
+                if (i == selection) return element;
+                i += 1;
+            }
+        }
+        return e.First();
+    }
+
+    public static T ChooseRandomWeighted<T>(this IEnumerable<T> e, Func<T, float> randomness) {
+        Dictionary<T, float> weightByObject = e.ToDictionary(t => t, t => randomness(t));
+        float totalWeight = weightByObject.Values.Sum();
+        float selection = UnityEngine.Random.Range(0, totalWeight);
+
+        float passedWeight = 0;
+
+        foreach (var tAndWeight in weightByObject) {
+            var t = tAndWeight.Key;
+            var tWeight = tAndWeight.Value;
+            var nextPassedWeight = passedWeight + tWeight;
+            if (selection <= nextPassedWeight) {
+                return t;
+            }
+            passedWeight = nextPassedWeight;
+        }
+
+        return e.First();
+    }
+
 }

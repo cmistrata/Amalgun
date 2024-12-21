@@ -7816,6 +7816,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Health: 4
   MaxHealth: 4
+  MaxDashes: 3
+  CurrentDashCharge: 0
 --- !u!114 &5451880040738014982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7862,6 +7864,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7553e0bebd756d641b1ce4005c952cfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FireAudioSource: {fileID: 0}
   AutoFiring: 1
   ProjectilePrefab: {fileID: 8664886127951825883, guid: 09ccd55f67491cc40858b69f087d8cce, type: 3}
   AutoFireIntervalSeconds: 3
@@ -7905,7 +7908,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TargetDirection: {x: 0, y: 0, z: 0}
   MaxSpeed: 4
-  BaseAcceleration: 30
+  BaseAcceleration: 50
 --- !u!82 &1762174402707464404
 AudioSource:
   m_ObjectHideFlags: 0

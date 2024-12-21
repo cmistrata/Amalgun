@@ -22,6 +22,16 @@ public enum CellType {
     Gatling = 16, Gatling2 = 17, Gatling3 = 18
 }
 
+public class CellStats {
+    public int Difficulty;
+    public int Rarity;
+
+    public CellStats(int difficulty, int rarity) {
+        Difficulty = difficulty;
+        Rarity = rarity;
+    }
+}
+
 public class Cell : MonoBehaviour {
 
     public CellState State = CellState.Neutral;

@@ -3,7 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 public class CellHealthManager : MonoBehaviour {
-    public static event Action SignalEnemyCellDefeat;
+    public static event Action<GameObject> SignalEnemyCellDefeat;
     public static event Action<GameObject> SignalPlayerCellDeath;
 
 
@@ -45,7 +45,7 @@ public class CellHealthManager : MonoBehaviour {
         else {
             CurrentHealth -= damage;
             if (CurrentHealth <= 0) {
-                Die();
+                Defeat();
             }
         }
     }
@@ -53,27 +53,30 @@ public class CellHealthManager : MonoBehaviour {
     /// <summary>
     /// Kills the cell. Returns true if the cell is being destroyed
     /// </summary>
-    public void Die() {
+    public void Defeat() {
         switch (_stateTracker.State) {
             case CellState.Friendly:
                 SignalPlayerCellDeath?.Invoke(gameObject);
-                PlayDeathFX();
-                Destroy(gameObject);
+                Destruct();
                 break;
             case CellState.Enemy:
-                SignalEnemyCellDefeat?.Invoke();
+                bool convertCell = GameManager.Instance.AutoKoEnemies || GameManager.EnemiesLeftInWave() <= 1 || UnityEngine.Random.Range(0f, 1f) < ConvertChance;
+                SignalEnemyCellDefeat?.Invoke(gameObject);
                 // Convert an enemy with a given chance, or auto convert if it is the last enemy in the wave
-                bool convertCell = GameManager.Instance.AutoKoEnemies || UnityEngine.Random.Range(0f, 1f) < ConvertChance;
                 if (convertCell) {
                     NeutralizeCell();
                     PlayNeutralizeFx();
                 }
                 else {
-                    Destroy(gameObject);
-                    PlayDeathFX();
+                    Destruct();
                 }
                 break;
         }
+    }
+
+    public void Destruct() {
+        PlayDeathFX();
+        Destroy(gameObject);
     }
 
     public void PlayDeathFX() {

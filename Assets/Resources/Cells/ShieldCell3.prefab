@@ -1179,7 +1179,7 @@ MonoBehaviour:
   ShieldHitAudioSource: {fileID: 1882283656863701800}
   ShieldDeactivateAudioSource: {fileID: 4444589727735454593}
   ShieldCollider: {fileID: 1933878853012510028}
-  ShieldRechargeTime: 5
+  ShieldRechargeTime: 6
   MaxShieldHealth: 7
 --- !u!1 &3535061953976132784
 GameObject:

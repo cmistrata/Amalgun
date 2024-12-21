@@ -6,12 +6,12 @@ public class LevelText : MonoBehaviour {
     private int _level = 0;
 
     public void Start() {
-        _level = GameManager.Instance != null ? GameManager.Instance.LevelNumber : -1;
+        _level = GameManager.Instance != null ? GameManager.Instance.LevelNumber0Indexed : -1;
         UpdateText();
     }
 
     public void Update() {
-        int newLevel = GameManager.Instance != null ? GameManager.Instance.LevelNumber : -1;
+        int newLevel = GameManager.Instance != null ? GameManager.Instance.LevelNumber0Indexed : -1;
         if (newLevel != _level) {
             _level = newLevel;
             UpdateText();

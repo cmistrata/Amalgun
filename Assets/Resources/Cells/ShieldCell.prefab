@@ -1122,7 +1122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 1
   CurrentHealth: 1
-  ConvertChance: 1
+  ConvertChance: 0.15
 --- !u!114 &8288147963090237135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1180,7 +1180,7 @@ MonoBehaviour:
   ShieldDeactivateAudioSource: {fileID: 4444589727735454593}
   ShieldCollider: {fileID: 1933878853012510028}
   ShieldRechargeTime: 10
-  MaxShieldHealth: 3
+  MaxShieldHealth: 2
 --- !u!1 &3535061953976132784
 GameObject:
   m_ObjectHideFlags: 0
