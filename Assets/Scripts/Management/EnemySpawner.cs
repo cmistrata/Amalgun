@@ -22,10 +22,21 @@ public class EnemySpawner : MonoBehaviour {
             Quaternion.identity,
             Containers.Cells
         );
-        enemy.name = $"Cell_{cellType}_{_cellId++}";
+        enemy.name = $"{ConvertToCellName(cellType)}_{_cellId++}";
         enemy.GetComponent<Cell>().ChangeState(CellState.Enemy);
         EffectsManager.InstantiateEffect(Effect.RedSmoke, enemy.transform.position);
         return enemy;
+    }
+
+    private static string ConvertToCellName(CellType cellType) {
+        var cellTypeStr = cellType.ToString();
+        var cellTypeLastChar = cellTypeStr[^1];
+        if (!char.IsNumber(cellTypeLastChar)) {
+            return $"{cellTypeStr}Cell";
+        }
+        else {
+            return $"{cellTypeStr[..^1]}Cell{cellTypeLastChar}";
+        }
     }
 
     static Vector3 GenerateSpawnPoint() {
