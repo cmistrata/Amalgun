@@ -18,7 +18,8 @@ public enum CellType {
     Rocket = 4, Rocket2 = 5, Rocket3 = 6,
     Mine = 7, Mine2 = 8, Mine3 = 9,
     Tri = 10, Tri2 = 11, Tri3 = 12,
-    Shield = 13, Shield2 = 14, Shield3 = 15
+    Shield = 13, Shield2 = 14, Shield3 = 15,
+    Gatling = 16, Gatling2 = 17, Gatling3 = 18
 }
 
 public class Cell : MonoBehaviour {
