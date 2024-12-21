@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Globals : MonoBehaviour {
@@ -18,61 +20,38 @@ public class Globals : MonoBehaviour {
 
     public const float ArenaWidth = 24f;
     public const float ArenaHeight = 24f;
-
-    [Header("Cell Prefabs")]
-    public GameObject BasicCellPrefab;
-    public GameObject BasicCell2Prefab;
-    public GameObject BasicCell3Prefab;
-
-    public GameObject RocketCellPrefab;
-    public GameObject RocketCell2Prefab;
-    public GameObject RocketCell3Prefab;
-
-    public GameObject MineCellPrefab;
-    public GameObject MineCell2Prefab;
-    public GameObject MineCell3Prefab;
-
-    public GameObject TriCellPrefab;
-    public GameObject TriCell2Prefab;
-    public GameObject TriCell3Prefab;
-
-    public GameObject ShieldCellPrefab;
-    public GameObject ShieldCell2Prefab;
-    public GameObject ShieldCell3Prefab;
+    // Cell globals instantiated via reflection, looking at the "Resources/Cells" folder and parsing
+    // names there.
+    public static GameObject[] Cells;
     public static Dictionary<CellType, GameObject> CellPrefabByType;
-    public static Dictionary<CellType, CellType> CellUpgradeByType = new() {
-        {CellType.Basic, CellType.Basic2}, {CellType.Basic2, CellType.Basic3},
-        {CellType.Rocket, CellType.Rocket2}, {CellType.Rocket2, CellType.Rocket3},
-        {CellType.Mine, CellType.Mine2}, {CellType.Mine2, CellType.Mine3},
-        {CellType.Tri, CellType.Tri2}, {CellType.Tri2, CellType.Tri3},
-        {CellType.Shield, CellType.Shield2}, {CellType.Shield2, CellType.Shield3},
-    };
+    public static Dictionary<CellType, CellType> CellUpgradeByType = new();
 
     [Header("Shop Items")]
     public GameObject MeldUpgradePrefab;
 
     private void Awake() {
         Instance = this;
-        CellPrefabByType = new Dictionary<CellType, GameObject>() {
-            {CellType.Basic, BasicCellPrefab},
-            {CellType.Basic2, BasicCell2Prefab},
-            {CellType.Basic3, BasicCell3Prefab},
-
-            {CellType.Rocket, RocketCellPrefab},
-            {CellType.Rocket2, RocketCell2Prefab},
-            {CellType.Rocket3, RocketCell3Prefab},
-
-            {CellType.Mine, MineCellPrefab},
-            {CellType.Mine2, MineCell2Prefab},
-            {CellType.Mine3, MineCell3Prefab},
-
-            {CellType.Tri, TriCellPrefab},
-            {CellType.Tri2, TriCell2Prefab},
-            {CellType.Tri3, TriCell3Prefab},
-
-            {CellType.Shield, ShieldCellPrefab},
-            {CellType.Shield2, ShieldCell2Prefab},
-            {CellType.Shield3, ShieldCell3Prefab},
-        };
+        if (Cells == null) {
+            var CellPrefabs = Resources.LoadAll<GameObject>("Cells");
+            CellPrefabByType = CellPrefabs
+                .ToDictionary(
+                    cell => Utils.ParseEnum<CellType>(cell.name.Replace("Cell", "")),
+                    cell => cell
+                );
+            foreach (CellType cellType in CellPrefabByType.Keys) {
+                var cellTypeStr = cellType.ToString();
+                var cellTypeLastChar = cellTypeStr[^1];
+                string nextCellTypeStr = "";
+                if (!char.IsNumber(cellTypeLastChar)) {
+                    nextCellTypeStr = $"{cellTypeStr}2";
+                }
+                else {
+                    nextCellTypeStr = $"{cellTypeStr[..^1]}{(char)(cellTypeLastChar + 1)}";
+                }
+                if (Enum.TryParse(nextCellTypeStr, out CellType nextCellType)) {
+                    CellUpgradeByType[cellType] = nextCellType;
+                }
+            }
+        }
     }
 }

@@ -57,6 +57,10 @@ public static class Utils {
         }
     }
 
+    public static T ParseEnum<T>(string value) {
+        return (T)Enum.Parse(typeof(T), value, true);
+    }
+
     // public static HashSet<GameObject> FindNearbyGameObjects(GameObject gameObject, float distance, int layer, HashSet<GameObject> objectsToExclude = null) {
     //     objectsToExclude ??= new HashSet<GameObject>();
     //     HashSet<GameObject> nearbyObjects = new();
