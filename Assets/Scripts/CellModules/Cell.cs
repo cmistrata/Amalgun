@@ -30,6 +30,7 @@ public class Cell : MonoBehaviour {
     public event Action<CellState> ChangeStateEvent;
     [HideInInspector]
     public Rigidbody rb;
+    private GameObject _knockoutStars;
 
     // Start is called before the first frame update
     void Awake() {
@@ -39,6 +40,7 @@ public class Cell : MonoBehaviour {
 
     void Start() {
         ChangeState(State);
+        _knockoutStars = transform.Find("KnockoutStars").gameObject;
     }
 
     private void Update() {
@@ -65,6 +67,9 @@ public class Cell : MonoBehaviour {
         }
         else if (rb == null && cellInCollidableState) {
             EnableRigidbody();
+        }
+        if (_knockoutStars != null) {
+            _knockoutStars.SetActive(State == CellState.Neutral);
         }
         ChangeStateEvent?.Invoke(newState);
     }
