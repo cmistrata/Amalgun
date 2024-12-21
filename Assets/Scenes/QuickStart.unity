@@ -2946,6 +2946,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 4344678151240407630, guid: 48d5083858d4aac41a51e5be2b0857ea, type: 3}
+      propertyPath: AutoKoEnemies
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4344678151240407630, guid: 48d5083858d4aac41a51e5be2b0857ea, type: 3}
       propertyPath: CameraManager
       value: 
       objectReference: {fileID: 0}

@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour {
     [Header("Fighting State")]
     public LevelList Levels;
     public bool SpawnEnemies = true;
+    public bool AutoKoEnemies;
 
     public int LevelNumber = 0;
     private int _activeEnemies = 0;

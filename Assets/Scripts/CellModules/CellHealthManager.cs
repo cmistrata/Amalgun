@@ -63,9 +63,10 @@ public class CellHealthManager : MonoBehaviour {
             case CellState.Enemy:
                 SignalEnemyCellDefeat?.Invoke();
                 // Convert an enemy with a given chance, or auto convert if it is the last enemy in the wave
-                bool convertCell = UnityEngine.Random.Range(0f, 1f) < ConvertChance;
+                bool convertCell = GameManager.Instance.AutoKoEnemies || UnityEngine.Random.Range(0f, 1f) < ConvertChance;
                 if (convertCell) {
                     NeutralizeCell();
+                    PlayNeutralizeFx();
                 }
                 else {
                     Destroy(gameObject);
@@ -81,11 +82,16 @@ public class CellHealthManager : MonoBehaviour {
         EffectsManager.InstantiateEffect(Effect.ToonExplosion, transform.position);
     }
 
+    public void PlayNeutralizeFx() {
+        AudioManager.Instance.PlayNeutralizeSound(1.4f);
+        EffectsManager.InstantiateEffect(Effect.KnockoutHit, transform.position);
+    }
+
     public virtual void NeutralizeCell() {
         if (_stateTracker.State != CellState.Enemy) {
             Debug.LogWarning("Tried to convert a cell that was not an enemy");
         }
-        AudioManager.Instance.PlayNeutralizeSound(1.4f);
+
         gameObject.layer = Layers.NeutralCell;
         gameObject.transform.parent = Containers.Cells;
         _stateTracker.ChangeState(CellState.Neutral);

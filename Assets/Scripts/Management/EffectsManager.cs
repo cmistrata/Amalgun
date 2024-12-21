@@ -6,7 +6,8 @@ using UnityEngine.VFX;
 public enum Effect {
     RedSmoke,
     ToonExplosion,
-    Confetti
+    Confetti,
+    KnockoutHit,
 }
 
 public class EffectsManager : MonoBehaviour {
@@ -14,6 +15,7 @@ public class EffectsManager : MonoBehaviour {
     public VisualEffect RedSmokeEffect;
     public VisualEffect ToonExplosionEffect;
     public GameObject DirectionalConfetti;
+    public GameObject KnockoutHit;
 
     static HashSet<Effect> visualEffects = new HashSet<Effect>() { Effect.RedSmoke, Effect.ToonExplosion };
 
@@ -33,6 +35,7 @@ public class EffectsManager : MonoBehaviour {
         else {
             GameObject gameObjectEffect =
                 effect == Effect.Confetti ? Instance.DirectionalConfetti
+                : effect == Effect.KnockoutHit ? Instance.KnockoutHit
                 : null;
             var instantiatedEffect = Instantiate(gameObjectEffect, position: position, rotation: Quaternion.identity, Containers.Effects);
             Destroy(instantiatedEffect, 2);
