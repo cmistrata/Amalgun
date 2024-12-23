@@ -869,7 +869,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 1
   CurrentHealth: 1
-  ConvertChance: 0.15
+  ConvertChance: 0.07
 --- !u!114 &7258616795085999995
 MonoBehaviour:
   m_ObjectHideFlags: 0

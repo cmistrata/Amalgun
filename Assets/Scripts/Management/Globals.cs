@@ -31,11 +31,11 @@ public class Globals : MonoBehaviour {
 
     public static Dictionary<CellType, CellStats> StatsByCellType = new() {
         {CellType.Basic, new CellStats(difficulty: 1, rarity: 1)},
-        {CellType.Mine, new CellStats(difficulty: 1, rarity:  2)},
-        {CellType.Rocket, new CellStats(difficulty: 4, rarity: 6)},
-        {CellType.Shield, new CellStats(difficulty: 1, rarity: 3)},
-        {CellType.Gatling, new CellStats(difficulty: 7, rarity: 6)},
-        {CellType.Tri, new CellStats(difficulty: 2, rarity: 3)},
+        {CellType.Mine, new CellStats(difficulty: 1, rarity:  8)},
+        {CellType.Rocket, new CellStats(difficulty: 4, rarity: 12)},
+        {CellType.Shield, new CellStats(difficulty: 1, rarity: 12)},
+        {CellType.Gatling, new CellStats(difficulty: 7, rarity: 12)},
+        {CellType.Tri, new CellStats(difficulty: 2, rarity: 6)},
     };
 
     private void Awake() {

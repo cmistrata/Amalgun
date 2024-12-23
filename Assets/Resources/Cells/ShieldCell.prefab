@@ -801,7 +801,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 72ced4b03de2ae74ea06aeb07d3048b9, type: 3}
   m_Resource: {fileID: 8300000, guid: 72ced4b03de2ae74ea06aeb07d3048b9, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.05
+  m_Volume: 0.15
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -898,7 +898,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: e515e065509687845b7640beec18b5c3, type: 3}
   m_Resource: {fileID: 8300000, guid: e515e065509687845b7640beec18b5c3, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.05
+  m_Volume: 0.15
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -995,7 +995,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 8a081e609e5f1ec44b67d3087c5a1b8b, type: 3}
   m_Resource: {fileID: 8300000, guid: 8a081e609e5f1ec44b67d3087c5a1b8b, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.05
+  m_Volume: 0.15
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1122,7 +1122,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 1
   CurrentHealth: 1
-  ConvertChance: 0.15
+  ConvertChance: 0.07
 --- !u!114 &8288147963090237135
 MonoBehaviour:
   m_ObjectHideFlags: 0

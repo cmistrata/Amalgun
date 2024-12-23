@@ -775,7 +775,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: ce4be110cf857454f8e8cc828f6bc97d, type: 3}
   m_Resource: {fileID: 8300000, guid: ce4be110cf857454f8e8cc828f6bc97d, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.015
+  m_Volume: 0.1
   m_Pitch: 0.86
   Loop: 0
   Mute: 0
@@ -932,7 +932,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 1
   CurrentHealth: 1
-  ConvertChance: 0.15
+  ConvertChance: 0.07
 --- !u!114 &8288147963090237135
 MonoBehaviour:
   m_ObjectHideFlags: 0

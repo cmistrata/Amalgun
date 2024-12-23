@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class Utils {
@@ -23,6 +24,10 @@ public static class Utils {
 
     public static int GetLayerMask(int layer) {
         return 1 << layer;
+    }
+
+    public static int GetLayerMask(params int[] layers) {
+        return layers.Select(layer => 1 << layer).Sum();
     }
 
     public static void LogOncePerSecond(string logMessage, string key = null) {
@@ -61,18 +66,21 @@ public static class Utils {
         return (T)Enum.Parse(typeof(T), value, true);
     }
 
-    // public static HashSet<GameObject> FindNearbyGameObjects(GameObject gameObject, float distance, int layer, HashSet<GameObject> objectsToExclude = null) {
-    //     objectsToExclude ??= new HashSet<GameObject>();
+    public static bool AnyNearbyGameObjects(Vector3 position, float distance, int layerMask) {
+        return Physics.OverlapSphereNonAlloc(position, distance, new Collider[0], layerMask: layerMask) > 0;
+    }
+
+    public static bool Chance(float chance) {
+        return UnityEngine.Random.Range(0f, 1f) >= chance;
+    }
+
+    // public static HashSet<GameObject> FindNearbyGameObjects(Vector3 position, float distance, IEnumerable<int> layers) {
     //     HashSet<GameObject> nearbyObjects = new();
 
-    //     Collider[] nearbyColliders = Physics.OverlapSphere(gameObject.transform.position, distance, Utils.GetLayerMask(Layers.PlayerCell));
+    //     Collider[] nearbyColliders = Physics.OverlapSphere(position, distance, Utils.GetLayerMask(layers));
     //     foreach (Collider nearbyCollider in nearbyColliders) {
     //         GameObject nearbyObject = nearbyCollider.gameObject;
-
-    //         if (objectsToExclude.Contains(nearbyObject)) continue;
-    //         if (_cellGraph.ContainsKey(nearbyObject)) {
-    //             nearbyObjects.Add(nearbyObject);
-    //         }
+    //         nearbyObjects.Add(nearbyObject);
     //     }
 
     //     return nearbyObjects;

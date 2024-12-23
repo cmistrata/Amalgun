@@ -40,9 +40,9 @@ public class Bullet : MonoBehaviour {
         FiringCellState = state;
         UpdateMeshes();
         UpdateLayer();
-        if (IncreasePlayerBulletSize && FiringCellState != CellState.Enemy) {
-            UpdateCollider();
-        }
+        // if (IncreasePlayerBulletSize && FiringCellState != CellState.Enemy) {
+        //     UpdateCollider();
+        // }
         if (FiringCellState == CellState.Enemy) {
             TimeOutSeconds *= 2;
         }

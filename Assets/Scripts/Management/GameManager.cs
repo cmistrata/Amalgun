@@ -160,10 +160,10 @@ public class GameManager : MonoBehaviour {
         }
         if (_enemyTypesToSpawn.Any()) {
             _enemySpawnTimer -= Time.deltaTime;
-            // Lower the timer quickly if the number of enemies drops below a certain point.
-            if (_activeEnemies.Count() < _minEnemies) {
-                _enemySpawnTimer = Math.Min(_enemySpawnTimer, _initialEnemySpawnInterval);
-            }
+            // // Lower the timer quickly if the number of enemies drops below a certain point.
+            // if (_activeEnemies.Count() < _minEnemies) {
+            //     _enemySpawnTimer = Math.Min(_enemySpawnTimer, _initialEnemySpawnInterval);
+            // }
             if (_enemySpawnTimer <= 0) {
                 var _enemyTypeToSpawn = _enemyTypesToSpawn[0];
                 _enemyTypesToSpawn.RemoveAt(0);
@@ -294,7 +294,7 @@ public class GameManager : MonoBehaviour {
 
 
     private static int CalculateLevelDifficulty(int levelNumber0Indexed) {
-        return levelNumber0Indexed * 5 + 10;
+        return levelNumber0Indexed * 3 + 5;
     }
 
     private static List<CellType> GenerateWave(int difficulty) {
