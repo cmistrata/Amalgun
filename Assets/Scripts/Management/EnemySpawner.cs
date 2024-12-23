@@ -1,12 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class EnemySpawner : MonoBehaviour {
     private static int _cellId = 0;
 
     public static EnemySpawner Instance;
+    public static event Action<GameObject> SignalCellSpawn;
 
 
+    private const float _spawnDelay = 1.5f;
     private const float _minimumSpawnDistanceFromPlayer = 8f;
     private const float _minimumSpawnDistanceFromPlayerSqrd = _minimumSpawnDistanceFromPlayer * _minimumSpawnDistanceFromPlayer;
 
@@ -17,16 +20,29 @@ public class EnemySpawner : MonoBehaviour {
     }
 
     public static GameObject SpawnEnemy(CellType cellType) {
+        // Generate enemy details.
+        var spawnPoint = GenerateSpawnPoint();
         var enemy = Instantiate(
             Globals.CellPrefabByType[cellType],
-            GenerateSpawnPoint(),
+            spawnPoint,
             Quaternion.identity,
             Containers.Cells
         );
         enemy.name = $"{ConvertToCellName(cellType)}_{_cellId++}";
         enemy.GetComponent<Cell>().ChangeState(CellState.Enemy);
-        EffectsManager.InstantiateEffect(Effect.RedSmoke, enemy.transform.position);
+
+        // Deactivate the enemy, spawning a spawn signal initially, and then
+        // reactivating it to actually spawn it in.
+        EffectsManager.InstantiateEffect(Effect.EnemySpawnCircle, spawnPoint, _spawnDelay);
+        enemy.SetActive(false);
+        Instance.StartCoroutine(ActivateEnemyAfterDelay(enemy, _spawnDelay));
         return enemy;
+    }
+
+    static IEnumerator<WaitForSeconds> ActivateEnemyAfterDelay(GameObject enemy, float delay) {
+        yield return new WaitForSeconds(delay);
+        EffectsManager.InstantiateEffect(Effect.RedSmoke, enemy.transform.position);
+        enemy.SetActive(true);
     }
 
     private static string ConvertToCellName(CellType cellType) {

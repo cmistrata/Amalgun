@@ -4,21 +4,32 @@ using TMPro;
 public class LevelText : MonoBehaviour {
     public TMP_Text Text;
     private int _level = 0;
+    private int _wave = 0;
 
     public void Start() {
-        _level = GameManager.Instance != null ? GameManager.Instance.LevelNumber0Indexed : -1;
+        _level = GameManager.Instance != null ? GameManager.Instance.Level0Indexed : -1;
         UpdateText();
     }
 
     public void Update() {
-        int newLevel = GameManager.Instance != null ? GameManager.Instance.LevelNumber0Indexed : -1;
-        if (newLevel != _level) {
+        int newLevel = GameManager.Instance != null ? GameManager.Instance.Level0Indexed : -1;
+        int newWave = GameManager.Instance != null ? GameManager.Instance.Wave0Indexed : -1;
+        if (newLevel != _level || _wave != newWave) {
             _level = newLevel;
+            _wave = newWave;
             UpdateText();
         }
     }
 
     void UpdateText() {
-        Text.text = $"Level {_level + 1}";
+        if (GameManager.Instance.State == GameState.Fighting) {
+            Text.text = $"Level {_level + 1} Wave {_wave + 1}";
+        }
+        else if (GameManager.Instance.State == GameState.Shop) {
+            Text.text = $"Level {_level + 1} Shop";
+        }
+        else {
+            Text.text = "";
+        }
     }
 }

@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour {
     private const float _initialEnemySpawnInterval = .2f;
     // How many enemies we spawn in the initial spawn burst, as well
     // as a floor that we will spawn an enemy upon dropping below (if any are left).
-    private const int _minEnemies = 5;
+    private const int _minEnemies = 3;
     private const float _laterEnemySpawnInterval = 2f;
     private Dictionary<GameState, Tuple<Action, Action>> EntryAndExitActionByState;
 
@@ -42,13 +42,15 @@ public class GameManager : MonoBehaviour {
     public bool SpawnEnemies = true;
     public bool AutoKoEnemies;
 
-    public int LevelNumber0Indexed = 0;
+    public int Level0Indexed = 0;
+    public int Wave0Indexed = 0;
     private HashSet<GameObject> _activeEnemies = new();
     // private int _activeEnemies = 0;
     private List<List<CellType>> _wavesToSpawn = new();
     private List<CellType> _enemyTypesToSpawn = new();
     private float _enemySpawnTimer = 0;
     private const int _wavesPerLevel = 3;
+    private float _enemiesSpawnedInWave;
 
     [Header("Shopping State")]
     public Shop Shop;
@@ -130,17 +132,12 @@ public class GameManager : MonoBehaviour {
     }
 
     void LoadLevel(int newLevelNumber) {
-        LevelNumber0Indexed = newLevelNumber;
-        var difficulty = CalculateLevelDifficulty(LevelNumber0Indexed);
-        // Level newLevel = LevelNumber < Levels.Levels.Count - 1 ? Levels.Levels[LevelNumber] : Levels.Levels[^1];
+        Level0Indexed = newLevelNumber;
+        var difficulty = CalculateLevelDifficulty(Level0Indexed);
         for (int i = 0; i < _wavesPerLevel; i++) {
             _wavesToSpawn.Add(GenerateWave(difficulty));
         }
-        // _wavesToSpawn = newLevel.Waves
-        //     .Select(wave => wave.Enemies.ToList())
-        //     .ToList();
         _enemyTypesToSpawn = new();
-        // _activeEnemies = 0;
         _enemySpawnTimer = _initialEnemySpawnInterval;
     }
 
@@ -154,29 +151,34 @@ public class GameManager : MonoBehaviour {
             EnterShopState();
             return;
         }
-        if (SpawnEnemies && !_enemyTypesToSpawn.Any() && _activeEnemies.Count() == 0 && _wavesToSpawn.Any()) {
-            _enemyTypesToSpawn.AddRange(_wavesToSpawn[0]);
-            _wavesToSpawn.RemoveAt(0);
+        else if (SpawnEnemies && !_enemyTypesToSpawn.Any() && _activeEnemies.Count() == 0 && _wavesToSpawn.Any()) {
+            QueueNewWave();
         }
-        if (_enemyTypesToSpawn.Any()) {
+        else if (_enemyTypesToSpawn.Any()) {
             _enemySpawnTimer -= Time.deltaTime;
-            // // Lower the timer quickly if the number of enemies drops below a certain point.
-            // if (_activeEnemies.Count() < _minEnemies) {
-            //     _enemySpawnTimer = Math.Min(_enemySpawnTimer, _initialEnemySpawnInterval);
-            // }
+            // Lower the timer quickly if we haven't spawned the minimum yet.
+            if (_enemiesSpawnedInWave < Math.Min(Level0Indexed + _minEnemies, 6)) {
+                _enemySpawnTimer = Math.Min(_enemySpawnTimer, _initialEnemySpawnInterval);
+            }
             if (_enemySpawnTimer <= 0) {
                 var _enemyTypeToSpawn = _enemyTypesToSpawn[0];
                 _enemyTypesToSpawn.RemoveAt(0);
                 var newEnemy = EnemySpawner.SpawnEnemy(_enemyTypeToSpawn);
                 _activeEnemies.Add(newEnemy);
-                if (_activeEnemies.Count() < _minEnemies) {
-                    _enemySpawnTimer += _initialEnemySpawnInterval;
-                }
-                else {
-                    _enemySpawnTimer += _laterEnemySpawnInterval;
-                }
+                _enemySpawnTimer += _laterEnemySpawnInterval;
+                _enemiesSpawnedInWave += 1;
             }
         }
+    }
+
+    void QueueNewWave() {
+        Wave0Indexed += 1;
+        if (Wave0Indexed > 0) {
+            AudioManager.Instance.PlayNewWaveSound();
+        }
+        _enemyTypesToSpawn.AddRange(_wavesToSpawn[0]);
+        _wavesToSpawn.RemoveAt(0);
+        _enemiesSpawnedInWave = 0;
     }
 
     public void ForceEndLevel() {
@@ -222,7 +224,7 @@ public class GameManager : MonoBehaviour {
     void ShopUpdate() {
         HandleCellClick();
         if (Input.GetKeyDown(KeyCode.Space)) {
-            LevelNumber0Indexed += 1;
+            Level0Indexed += 1;
             EnterFightingState();
         }
     }
@@ -252,7 +254,8 @@ public class GameManager : MonoBehaviour {
 
     public void EnterFightingState() {
         DisableStatefulObjects();
-        LoadLevel(LevelNumber0Indexed);
+        Wave0Indexed = -1;
+        LoadLevel(Level0Indexed);
         State = GameState.Fighting;
     }
 
@@ -280,7 +283,7 @@ public class GameManager : MonoBehaviour {
 
         // Reset state.
         Money = 0;
-        LevelNumber0Indexed = 0;
+        Level0Indexed = 0;
         GameOverScreen.SetActive(false);
         DestroyGameElements();
 
@@ -319,8 +322,8 @@ public class GameManager : MonoBehaviour {
 
     #region Signal Handlers
     public void HandleShopContinue() {
-        LevelNumber0Indexed += 1;
-        LoadLevel(LevelNumber0Indexed);
+        Level0Indexed += 1;
+        LoadLevel(Level0Indexed);
         EnterFightingState();
     }
 

@@ -8,38 +8,35 @@ public enum Effect {
     ToonExplosion,
     Confetti,
     KnockoutHit,
+    EnemySpawnCircle
 }
 
 public class EffectsManager : MonoBehaviour {
     public static EffectsManager Instance;
-    public VisualEffect RedSmokeEffect;
-    public VisualEffect ToonExplosionEffect;
-    public GameObject DirectionalConfetti;
+    public GameObject RedSmokeEffect;
+    public GameObject ToonExplosionEffect;
+    public GameObject ConfettiEffect;
     public GameObject KnockoutHit;
-
-    static HashSet<Effect> visualEffects = new HashSet<Effect>() { Effect.RedSmoke, Effect.ToonExplosion };
+    public GameObject EnemySpawnCircleEffect;
+    [HideInInspector]
+    public Dictionary<Effect, GameObject> Effects;
 
     void Awake() {
         Instance = this;
+        Effects = new(){
+            {Effect.RedSmoke, RedSmokeEffect},
+            {Effect.ToonExplosion, ToonExplosionEffect},
+            {Effect.Confetti, ConfettiEffect},
+            {Effect.KnockoutHit, KnockoutHit},
+            {Effect.EnemySpawnCircle, EnemySpawnCircleEffect}
+        };
     }
 
-    public static void InstantiateEffect(Effect effect, Vector3 position) {
-        if (visualEffects.Contains(effect)) {
-            VisualEffect visualEffect =
-                effect == Effect.RedSmoke ? Instance.RedSmokeEffect
-                : effect == Effect.ToonExplosion ? Instance.ToonExplosionEffect
-                : null;
-            var instantiatedEffect = Instantiate(visualEffect, position: position, rotation: Quaternion.identity, Containers.Effects);
-            Destroy(instantiatedEffect, 2);
-        }
-        else {
-            GameObject gameObjectEffect =
-                effect == Effect.Confetti ? Instance.DirectionalConfetti
-                : effect == Effect.KnockoutHit ? Instance.KnockoutHit
-                : null;
-            var instantiatedEffect = Instantiate(gameObjectEffect, position: position, rotation: Quaternion.identity, Containers.Effects);
-            Destroy(instantiatedEffect, 2);
-        }
+    public static void InstantiateEffect(Effect effect, Vector3 position, float duration = 2f) {
+        if (Instance == null) return;
+        GameObject gameObjectEffect = Instance.Effects[effect];
 
+        var instantiatedEffect = Instantiate(gameObjectEffect, position: position + gameObjectEffect.transform.position, rotation: gameObjectEffect.transform.rotation, Containers.Effects);
+        Destroy(instantiatedEffect, duration);
     }
 }
