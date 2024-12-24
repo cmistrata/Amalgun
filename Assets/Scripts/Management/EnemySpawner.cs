@@ -6,7 +6,7 @@ public class EnemySpawner : MonoBehaviour {
     private static int _cellId = 0;
 
     public static EnemySpawner Instance;
-    public static event Action<GameObject> SignalCellSpawn;
+    // public static event Action<GameObject> SignalCellSpawn;
 
 
     private const float _spawnDelay = 1.5f;

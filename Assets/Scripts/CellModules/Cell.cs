@@ -41,6 +41,11 @@ public class Cell : MonoBehaviour {
     [HideInInspector]
     public Rigidbody rb;
     private GameObject _knockoutStars;
+    private GameObject _shell;
+    private GameObject _armature;
+    private List<GameObject> _renderedObjects = new();
+
+    private const float _knockoutTimeout = 40f;
 
     // Start is called before the first frame update
     void Awake() {
@@ -50,7 +55,12 @@ public class Cell : MonoBehaviour {
 
     void Start() {
         ChangeState(State);
-        _knockoutStars = transform.Find("KnockoutStars").gameObject;
+        _knockoutStars = transform.Find("KnockoutStars")?.gameObject;
+        _shell = transform.Find("Shell")?.gameObject;
+        _armature = transform.Find("Armature")?.gameObject;
+        _renderedObjects.Add(_knockoutStars);
+        _renderedObjects.Add(_shell);
+        _renderedObjects.Add(_armature);
     }
 
     private void Update() {
@@ -78,10 +88,59 @@ public class Cell : MonoBehaviour {
         else if (rb == null && cellInCollidableState) {
             EnableRigidbody();
         }
-        if (_knockoutStars != null) {
-            _knockoutStars.SetActive(State == CellState.Neutral);
+        if (State == CellState.Neutral) {
+            Knockout();
+        }
+        else if (_knockoutStars != null) {
+            _knockoutStars.SetActive(false);
         }
         ChangeStateEvent?.Invoke(newState);
+    }
+
+    void Knockout() {
+        if (_knockoutStars != null) {
+            _knockoutStars.SetActive(true);
+        }
+        StartCoroutine(BlinkOutAfterDuration());
+    }
+
+    IEnumerator<WaitForSeconds> BlinkOutAfterDuration() {
+        float updateInterval = .1f;
+        int iterations = 0;
+        int totalIterations = (int)(_knockoutTimeout / updateInterval);
+        while (iterations < totalIterations) {
+            if (State != CellState.Neutral) {
+                SetEnabledOfRenderers(true);
+                _knockoutStars.SetActive(false);
+                yield break;
+            }
+            // Blink the cell in intervals of increasing frequency.
+            if (iterations >= 300) {
+                if (iterations < 360) {
+                    SetEnabledOfRenderers(iterations % 10 <= 4);
+                }
+                else {
+                    SetEnabledOfRenderers(iterations % 2 == 0);
+                }
+            }
+            iterations += 1;
+            yield return new WaitForSeconds(updateInterval);
+        }
+        if (State != CellState.Neutral) {
+            SetEnabledOfRenderers(true);
+            _knockoutStars.SetActive(false);
+            yield break;
+        }
+        Destroy(gameObject);
+        yield break;
+    }
+
+    void SetEnabledOfRenderers(bool enable) {
+        foreach (var renderedObject in _renderedObjects) {
+            if (renderedObject != null) {
+                renderedObject.SetActive(enable);
+            }
+        }
     }
 
     void DisableRigidbody() {

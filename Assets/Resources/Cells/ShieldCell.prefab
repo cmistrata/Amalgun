@@ -517,7 +517,7 @@ Transform:
   m_LocalScale: {x: 0.31, y: 0.21, z: 0.31}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1311479454778295513}
+  m_Father: {fileID: 215270546412232817}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5958385169687551232
 MeshFilter:
@@ -713,7 +713,6 @@ Transform:
   - {fileID: 8395991141384379622}
   - {fileID: 915853864556777677}
   - {fileID: 215270546412232817}
-  - {fileID: 7859541643706411166}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &4285473706910082698
@@ -1150,6 +1149,7 @@ MonoBehaviour:
   TargetDirection: {x: 0, y: 0, z: 0}
   MaxSpeed: 4
   BaseAcceleration: 4
+  ClockwiseTorque: 0
 --- !u!114 &403084100878242838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1492,6 +1492,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2530492095597916841}
+  - {fileID: 7859541643706411166}
   m_Father: {fileID: 1311479454778295513}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3052877762930121199
