@@ -41,12 +41,12 @@ public class Amalgamator : MonoBehaviour {
             [gameObject] = new()
         };
         _rb = GetComponent<Rigidbody>();
-        CellHealthManager.SignalPlayerCellDeath += HandlePlayerCellDeath;
+        CellHealthManager.SignalAttachedCellDeath += HandleAttachedCellDeath;
         UpdateMass();
     }
 
     void OnDestroy() {
-        CellHealthManager.SignalPlayerCellDeath -= HandlePlayerCellDeath;
+        CellHealthManager.SignalAttachedCellDeath -= HandleAttachedCellDeath;
     }
 
     void Update() {
@@ -430,14 +430,13 @@ public class Amalgamator : MonoBehaviour {
         }
     }
 
-    public void HandlePlayerCellDeath(GameObject cell) {
-        if (cell == gameObject) {
-            foreach (var secondaryCell in new HashSet<GameObject>(GetLinkedCells(gameObject))) {
-                Disconnect(secondaryCell, neutralize: true);
-            }
-        }
-        else {
-            Disconnect(cell, neutralize: false);
+    public void HandleAttachedCellDeath(GameObject cell) {
+        Disconnect(cell, neutralize: false);
+    }
+
+    public void HandlePlayerDeath() {
+        foreach (var secondaryCell in new HashSet<GameObject>(GetLinkedCells(gameObject))) {
+            Disconnect(secondaryCell, neutralize: true);
         }
     }
 

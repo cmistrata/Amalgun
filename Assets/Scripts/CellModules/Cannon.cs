@@ -74,11 +74,9 @@ public class Cannon : CellModule {
     }
 
     private void FixedUpdate() {
-        if (!GameManager.Instance.Paused) {
-            _aimingDirection = GetAimingDirection();
-            _aimingAngle = Mathf.Atan2(_aimingDirection.x, _aimingDirection.z) * Mathf.Rad2Deg;
-            CannonBase.transform.rotation = Quaternion.AngleAxis(_aimingAngle, Vector3.up);
-        }
+        _aimingDirection = GetAimingDirection();
+        _aimingAngle = Mathf.Atan2(_aimingDirection.x, _aimingDirection.z) * Mathf.Rad2Deg;
+        CannonBase.transform.rotation = Quaternion.AngleAxis(_aimingAngle, Vector3.up);
     }
 
     public void FireProjectiles() {

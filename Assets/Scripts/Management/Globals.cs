@@ -6,6 +6,7 @@ using UnityEngine;
 public class Globals : MonoBehaviour {
     public static Globals Instance = null;
     public GameObject PlayerPrefab;
+    public GameObject ArenaPrefab;
 
     [Header("Materials")]
 

@@ -9,6 +9,7 @@ using UnityEngine;
 public class Player : MonoBehaviour {
     private Rigidbody _rb;
     private Mover _mover;
+    private Amalgamator _amalgamator;
     public static Player Instance;
     public int Health = 4;
 
@@ -26,6 +27,7 @@ public class Player : MonoBehaviour {
     private void Awake() {
         _rb = GetComponent<Rigidbody>();
         _mover = GetComponent<Mover>();
+        _amalgamator = GetComponent<Amalgamator>();
         CurrentDashCharge = MaxDashes;
 
         Instance = this;
@@ -63,6 +65,7 @@ public class Player : MonoBehaviour {
     private void Die() {
         PlayDeathFX();
         gameObject.SetActive(false);
+        _amalgamator.HandlePlayerDeath();
         SignalPlayerDeath?.Invoke();
     }
 
@@ -94,5 +97,8 @@ public class Player : MonoBehaviour {
         AudioManager.Instance.PlayPlayerDamagedSound(1 + (4f - Health) / 8f);
         CameraManager.Instance.FlashDamageFilter();
         Health -= 1;
+        if (Health <= 0) {
+            Die();
+        }
     }
 }

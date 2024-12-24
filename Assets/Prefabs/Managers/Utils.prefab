@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerPrefab: {fileID: 9055605997633475303, guid: a177af0cf3ac37d41ba247c87907c3aa, type: 3}
+  ArenaPrefab: {fileID: 3051504253774045428, guid: 6c560aeafa10c4d48acd578299649edd, type: 3}
   friendlyCellMaterials: {fileID: 11400000, guid: 0562c92cce66a9740964b47d12832abc, type: 2}
   neutralCellMaterials: {fileID: 11400000, guid: be23172c6d69a8e418c5ebcf2c661418, type: 2}
   enemyCellMaterials: {fileID: 11400000, guid: 3b4ef10e5f5b821468281a5f77c61a9d, type: 2}
@@ -898,7 +899,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 85fe803dafa0f5a42a7f8d7241c953e5, type: 3}
   m_Resource: {fileID: 8300000, guid: 85fe803dafa0f5a42a7f8d7241c953e5, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.3
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0

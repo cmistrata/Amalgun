@@ -29,11 +29,8 @@ public class CinemachineCameraManager : MonoBehaviour {
 
     private IEnumerator StopShakingCoroutine() {
         while (_currentShakeTimeLeft > 0) {
-            if (!GameManager.Instance.Paused) {
-                _currentShakeTimeLeft -= Time.deltaTime;
-                yield return null;
-            }
-
+            _currentShakeTimeLeft -= Time.deltaTime;
+            yield return null;
         }
         _cameraShake.AmplitudeGain = 0;
         _cameraShake.FrequencyGain = 0;

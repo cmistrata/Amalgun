@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class CellHealthManager : MonoBehaviour {
     public static event Action<GameObject> SignalEnemyCellDefeat;
-    public static event Action<GameObject> SignalPlayerCellDeath;
+    public static event Action<GameObject> SignalAttachedCellDeath;
 
 
     private Cell _stateTracker;
@@ -56,7 +56,7 @@ public class CellHealthManager : MonoBehaviour {
     public void Defeat() {
         switch (_stateTracker.State) {
             case CellState.Friendly:
-                SignalPlayerCellDeath?.Invoke(gameObject);
+                SignalAttachedCellDeath?.Invoke(gameObject);
                 Destruct();
                 break;
             case CellState.Enemy:

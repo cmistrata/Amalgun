@@ -11,7 +11,6 @@ public class ShieldModule : CellModule {
     private int _currentShieldHealth;
 
     protected override void ExtraAwake() {
-        Debug.Log($"Calling extra awake in {gameObject}");
         ShieldCollider.SignalShieldHit += HandleShieldHit;
         _currentShieldHealth = MaxShieldHealth;
         _shieldParticleSystemMainModule = ShieldCollider.gameObject.GetComponent<ParticleSystem>().main;

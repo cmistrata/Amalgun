@@ -41,8 +41,10 @@ public class EnemySpawner : MonoBehaviour {
 
     static IEnumerator<WaitForSeconds> ActivateEnemyAfterDelay(GameObject enemy, float delay) {
         yield return new WaitForSeconds(delay);
-        EffectsManager.InstantiateEffect(Effect.RedSmoke, enemy.transform.position);
-        enemy.SetActive(true);
+        if (enemy != null) {
+            EffectsManager.InstantiateEffect(Effect.RedSmoke, enemy.transform.position);
+            enemy.SetActive(true);
+        }
     }
 
     private static string ConvertToCellName(CellType cellType) {

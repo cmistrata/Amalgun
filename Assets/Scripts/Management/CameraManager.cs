@@ -38,12 +38,9 @@ public class CameraManager : MonoBehaviour {
 
     private IEnumerator ShakeCameraCoroutine() {
         while (_currentShakeTimeLeft > 0) {
-            if (!GameManager.Instance.Paused) {
-                Camera.transform.position += UnityEngine.Random.insideUnitSphere * _currentShakeMagnitude;
-                _currentShakeTimeLeft -= Time.deltaTime;
-                yield return null;
-            }
-
+            Camera.transform.position += UnityEngine.Random.insideUnitSphere * _currentShakeMagnitude;
+            _currentShakeTimeLeft -= Time.deltaTime;
+            yield return null;
         }
         _currentShakeMagnitude = 0;
     }

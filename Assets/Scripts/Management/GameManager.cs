@@ -8,6 +8,7 @@ public enum GameState {
     Fighting,
     Shop,
     GameOver,
+    MainMenus,
 }
 
 [System.Serializable]
@@ -33,9 +34,9 @@ public class GameManager : MonoBehaviour {
 
 
     [Header("General State")]
-    public bool Paused = false;
     public GameObject Player;
     public GameState State;
+    public GameObject Arena;
 
     [Header("Fighting State")]
     public LevelList Levels;
@@ -58,11 +59,6 @@ public class GameManager : MonoBehaviour {
     public int MeldCost = 2;
     [HideInInspector]
     public ShopItem SelectedShopItem;
-
-
-    [Header("UI and Menus")]
-    public GameObject PauseOverlay;
-    public GameObject GameOverScreen;
 
     private Dictionary<Action, Action> _signalHandlers = new Dictionary<Action, Action>();
 
@@ -87,13 +83,12 @@ public class GameManager : MonoBehaviour {
     }
 
     void Start() {
-        StartNewGame();
+        if (State == GameState.Fighting) {
+            StartNewGame();
+        }
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.R)) {
-            StartNewGame();
-        }
         if (State == GameState.Fighting) {
             FightingUpdate();
         }
@@ -106,7 +101,6 @@ public class GameManager : MonoBehaviour {
     }
 
     void DisableStatefulObjects() {
-        GameOverScreen.SetActive(false);
         Shop.Disappear();
     }
 
@@ -160,21 +154,23 @@ public class GameManager : MonoBehaviour {
         _enemiesSpawnedInWave = 0;
     }
 
-    public void ForceEndLevel() {
+    public void ForceEndLevel(bool destroyEnemies = false) {
         _wavesToSpawn.Clear();
         _enemyTypesToSpawn.Clear();
         int safetyCheck = 0;
-        while (_activeEnemies.Count() > 0 && safetyCheck < 100) {
-            safetyCheck += 1;
-            _activeEnemies.First().GetComponent<CellHealthManager>().Defeat();
+        EnemySpawner.Instance.StopAllCoroutines();
+        if (destroyEnemies) {
+            foreach (var enemy in _activeEnemies) {
+                Destroy(enemy);
+            }
         }
-        // foreach (GameObject enemy in _activeEnemies) {
-        //     if (enemy == null) {
-        //         Debug.LogError("Found null enemy when force ending level.");
-        //         continue;
-        //     }
-        //     enemy.GetComponent<CellHealthManager>().Defeat();
-        // }
+        else {
+            while (_activeEnemies.Count() > 0 && safetyCheck < 100) {
+                safetyCheck += 1;
+                _activeEnemies.First().GetComponent<CellHealthManager>().Defeat();
+            }
+        }
+        _activeEnemies.Clear();
     }
 
     void HandleCellClick() {
@@ -215,27 +211,34 @@ public class GameManager : MonoBehaviour {
     }
 
     public void EnterGameOverState() {
-        DisableStatefulObjects();
-        GameOverScreen.SetActive(true);
         State = GameState.GameOver;
+        DisableStatefulObjects();
         Debug.Log("Game over!");
         MusicManager.Instance.StopMusic();
+        MenuManager.LoadMenu(Menu.GameOver);
     }
 
     public void EnterShopState() {
+        State = GameState.Shop;
         DisableStatefulObjects();
         foreach (Transform bullet in Containers.Bullets) {
             Destroy(bullet.gameObject);
         }
         Shop.Appear();
-        State = GameState.Shop;
+    }
+
+    public void EnterMainMenuState() {
+        State = GameState.MainMenus;
+        DestroyGameElements();
+        MenuManager.SetBattleUIActive(false);
+        MenuManager.LoadMenu(Menu.MainMenu);
     }
 
     public void EnterFightingState() {
+        State = GameState.Fighting;
         DisableStatefulObjects();
         Wave0Indexed = -1;
         LoadLevel(Level0Indexed);
-        State = GameState.Fighting;
     }
 
     public void ExitFightingState() {
@@ -245,6 +248,9 @@ public class GameManager : MonoBehaviour {
     void DestroyGameElements() {
         if (Player != null) {
             Destroy(Player);
+        }
+        if (Arena != null) {
+            Destroy(Arena);
         }
         foreach (Transform cell in Containers.Cells) {
             Destroy(cell.gameObject);
@@ -259,13 +265,15 @@ public class GameManager : MonoBehaviour {
 
     public void StartNewGame() {
         Debug.Log("Starting new game.");
+        MenuManager.SetBattleUIActive(true);
 
         // Reset state.
+        ForceEndLevel(destroyEnemies: true);
         Money = 0;
         Level0Indexed = 0;
-        GameOverScreen.SetActive(false);
         DestroyGameElements();
 
+        Arena = Instantiate(Globals.Instance.ArenaPrefab);
         Player = Instantiate(Globals.Instance.PlayerPrefab);
         Player.name = "Player";
         Player.transform.position = Vector3.zero;
