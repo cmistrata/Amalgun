@@ -94,13 +94,6 @@ public class GameManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.R)) {
             StartNewGame();
         }
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            Application.Quit();
-        }
-        if (State == GameState.Fighting || State == GameState.Shop) {
-            CheckForPause();
-        }
-
         if (State == GameState.Fighting) {
             FightingUpdate();
         }
@@ -109,20 +102,6 @@ public class GameManager : MonoBehaviour {
         }
         else if (State == GameState.Shop) {
             ShopUpdate();
-        }
-    }
-
-    void CheckForPause() {
-        if (Input.GetKeyDown(KeyCode.P)) {
-            Paused = !Paused;
-            if (Paused) {
-                Time.timeScale = 0f;
-                PauseOverlay.SetActive(true);
-            }
-            else {
-                Time.timeScale = 1f;
-                PauseOverlay.SetActive(false);
-            }
         }
     }
 
@@ -318,6 +297,10 @@ public class GameManager : MonoBehaviour {
             Debug.LogError("Error in while loop while generating wave.");
         }
         return wave;
+    }
+
+    public static void ExitToDesktop() {
+        Application.Quit();
     }
 
     #region Signal Handlers

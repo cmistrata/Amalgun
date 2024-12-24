@@ -23,10 +23,10 @@ public class LevelText : MonoBehaviour {
 
     void UpdateText() {
         if (GameManager.Instance.State == GameState.Fighting) {
-            Text.text = $"Level {_level + 1} Wave {_wave + 1}";
+            Text.text = $"level {_level + 1} wave {_wave + 1}";
         }
         else if (GameManager.Instance.State == GameState.Shop) {
-            Text.text = $"Level {_level + 1} Shop";
+            Text.text = $"level {_level + 1} shop";
         }
         else {
             Text.text = "";
