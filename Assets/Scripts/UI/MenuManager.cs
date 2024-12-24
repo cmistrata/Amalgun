@@ -32,6 +32,7 @@ public class MenuManager : MonoBehaviour {
     public void Update() {
         if (GameManager.Instance.State == GameState.Fighting || GameManager.Instance.State == GameState.Shop) {
             CheckForPause();
+            CheckForMenuPress();
         }
     }
 
@@ -54,14 +55,29 @@ public class MenuManager : MonoBehaviour {
         if (GameManager.Instance.State == GameState.MainMenus) {
             return;
         }
-        if (Input.GetKeyDown(KeyCode.P) || Actions.Cancel.WasPressedThisFrame()) {
-            Paused = !Paused;
-            if (Paused) {
+        if (InputManager.Cancel.WasPressedThisFrame()) {
+            if (!Paused) {
                 Pause();
                 LoadMenuObject(PauseMenu);
             }
             else {
                 Unpause();
+            }
+        }
+    }
+
+    void CheckForMenuPress() {
+        if (GameManager.Instance.State == GameState.MainMenus) {
+            return;
+        }
+        if (InputManager.Menu.WasPressedThisFrame()) {
+            if (!Paused) {
+                Pause();
+                LoadMenuObject(PauseMenu);
+            }
+            else {
+                Unpause();
+                UnloadMenuObject();
             }
         }
     }
@@ -86,7 +102,9 @@ public class MenuManager : MonoBehaviour {
     }
 
     public void UnloadMenuObject() {
-        _activeMenu.SetActive(false);
+        if (_activeMenu) {
+            _activeMenu.SetActive(false);
+        }
         _activeMenu = null;
         Unpause();
     }

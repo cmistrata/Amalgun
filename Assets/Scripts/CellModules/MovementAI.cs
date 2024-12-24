@@ -19,6 +19,7 @@ public class MovementAI : CellModule {
     }
 
     void Update() {
+        if (MenuManager.Instance.Paused) return;
         // Update moving timer
         _movingRecalculateTimer -= Time.deltaTime;
         if (_movingRecalculateTimer <= 0) {

@@ -89,6 +89,7 @@ public class GameManager : MonoBehaviour {
     }
 
     void Update() {
+        if (MenuManager.Instance.Paused) return;
         if (State == GameState.Fighting) {
             FightingUpdate();
         }
@@ -198,16 +199,14 @@ public class GameManager : MonoBehaviour {
 
     void ShopUpdate() {
         HandleCellClick();
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (InputManager.Submit.WasPressedThisFrame()) {
             Level0Indexed += 1;
             EnterFightingState();
         }
     }
 
     void GameOverUpdate() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            StartNewGame();
-        }
+        return;
     }
 
     public void EnterGameOverState() {

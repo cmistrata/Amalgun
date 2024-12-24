@@ -14,6 +14,7 @@ public class Bullet : MonoBehaviour {
         _rb = GetComponent<Rigidbody>();
     }
     void Update() {
+        if (MenuManager.Instance.Paused) return;
         _lifetime += Time.deltaTime;
     }
 

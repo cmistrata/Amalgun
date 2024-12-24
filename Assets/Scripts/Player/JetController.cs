@@ -27,7 +27,7 @@ public class JetController : MonoBehaviour {
 
     public AudioSource RocketSound;
 
-    private const float _rotationPower = 7f;
+    private const float _rotationPower = .002f;
     private const float _translationPower = 35f;
 
     private void Awake() {
@@ -66,13 +66,14 @@ public class JetController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (MenuManager.Instance.Paused) return;
         Vector3 globalTargetDirection = _mover.TargetDirection;
         Vector3 localTargetDirection = transform.InverseTransformVector(globalTargetDirection).normalized;
         float lateralMovement = localTargetDirection.x;
         float forwardMovement = localTargetDirection.z;
-        float clockwiseRotationInput = Input.GetAxis("Rotate Clockwise");
+        float clockwiseTorque = _mover.ClockwiseTorque;
 
-        bool propelling = lateralMovement != 0 || forwardMovement != 0 || clockwiseRotationInput != 0;
+        bool propelling = lateralMovement != 0 || forwardMovement != 0 || clockwiseTorque != 0;
         if (propelling && !RocketSound.isPlaying) {
             RocketSound.Play();
         }
@@ -90,13 +91,13 @@ public class JetController : MonoBehaviour {
         float effectiveTranslationPower = _translationPower;
         if (_mover.Dashing) effectiveTranslationPower *= 3;
 
-        if (clockwiseRotationInput > 0) {
-            leftBackJetPower += _rotationPower * clockwiseRotationInput;
-            rightFrontJetPower += _rotationPower * clockwiseRotationInput;
+        if (clockwiseTorque > 0) {
+            leftBackJetPower += _rotationPower * clockwiseTorque;
+            rightFrontJetPower += _rotationPower * clockwiseTorque;
         }
-        else if (clockwiseRotationInput < 0) {
-            leftFrontJetPower += _rotationPower * Mathf.Abs(clockwiseRotationInput);
-            rightBackJetPower += _rotationPower * Mathf.Abs(clockwiseRotationInput);
+        else if (clockwiseTorque < 0) {
+            leftFrontJetPower += _rotationPower * Mathf.Abs(clockwiseTorque);
+            rightBackJetPower += _rotationPower * Mathf.Abs(clockwiseTorque);
         }
 
         if (lateralMovement > 0) {

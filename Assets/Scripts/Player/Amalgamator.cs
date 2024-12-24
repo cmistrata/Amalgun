@@ -50,6 +50,7 @@ public class Amalgamator : MonoBehaviour {
     }
 
     void Update() {
+        if (MenuManager.Instance.Paused) return;
         HandleHinges();
     }
 

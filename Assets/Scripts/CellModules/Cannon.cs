@@ -29,9 +29,9 @@ public class Cannon : CellModule {
     public enum TargetingStrategy {
         StaticDirection,
         TargetPlayer,
-        TargetMouseCursor
+        PlayerDirected
     }
-    public TargetingStrategy PlayerTargetingStrategy = TargetingStrategy.TargetMouseCursor;
+    public TargetingStrategy PlayerTargetingStrategy = TargetingStrategy.PlayerDirected;
     public TargetingStrategy EnemyTargetingStrategy = TargetingStrategy.TargetPlayer;
     private TargetingStrategy _currentTargetingStrategy = TargetingStrategy.StaticDirection;
 
@@ -51,6 +51,7 @@ public class Cannon : CellModule {
 
     // Update is called once per frame
     void Update() {
+        if (MenuManager.Instance.Paused) return;
         bool firingAllowedInGameState = GameManager.Instance == null || GameManager.Instance.State == GameState.Fighting;
         if (AutoFiring
             && firingAllowedInGameState
@@ -120,9 +121,23 @@ public class Cannon : CellModule {
     Vector3 GetAimingDirection() {
         return _currentTargetingStrategy switch {
             TargetingStrategy.TargetPlayer => (GameManager.Instance.Player != null ? GameManager.Instance.Player.transform.position - AimFrom.position : _aimingDirection).UpdateCoords(y: 0),
-            TargetingStrategy.TargetMouseCursor => (Utils.GetMousePosition() - AimFrom.position).UpdateCoords(y: 0),
+            TargetingStrategy.PlayerDirected => GetPlayerAimingDirection(),
             _ => _aimingDirection,
         };
+    }
+
+    Vector3 GetPlayerAimingDirection() {
+        bool mouseRecentlyMoved = InputManager.MouseMovement.ReadValue<Vector2>().sqrMagnitude != 0;
+        Vector2 lookInput = InputManager.Look.ReadValue<Vector2>();
+        if (mouseRecentlyMoved || lookInput.sqrMagnitude == 0) {
+            return (Utils.GetMousePosition() - AimFrom.position).UpdateCoords(y: 0);
+        }
+        else if (lookInput.sqrMagnitude != 0) {
+            return new Vector3(lookInput.x, 0, lookInput.y);
+        }
+        else {
+            return _aimingDirection;
+        }
     }
 
     protected override void HandleStateChange(CellState newState) {

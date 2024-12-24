@@ -34,22 +34,29 @@ public class Player : MonoBehaviour {
     }
 
     public void Update() {
+        if (MenuManager.Instance.Paused) return;
         if (CurrentDashCharge < MaxDashes) {
             CurrentDashCharge += Time.deltaTime / _secondsPerDash;
         }
-        if (CurrentDashCharge >= 1 && Input.GetKeyDown(KeyCode.Space)) {
-            Vector3 newTargetDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-            _mover.TargetDirection = newTargetDirection.normalized;
-            _mover.Dash();
-            CurrentDashCharge -= 1;
+        if (CurrentDashCharge >= 1 && InputManager.Dash.WasPressedThisFrame()) {
+            _mover.TargetDirection = GetTargetDirection().normalized;
+            if (_mover.TargetDirection.sqrMagnitude > 0) {
+                _mover.Dash();
+                CurrentDashCharge -= 1;
+            }
         }
     }
 
+    private Vector3 GetTargetDirection() {
+        Vector2 moveInput = InputManager.MoveAnalogue.ReadValue<Vector2>();
+        Vector3 newTargetDirection = new Vector3(moveInput.x, 0, moveInput.y);
+        return newTargetDirection;
+    }
+
     private void FixedUpdate() {
-        Vector3 newTargetDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        _mover.TargetDirection = newTargetDirection.normalized;
-        float clockwiseRotationInput = Input.GetAxis("Rotate Clockwise");
-        _rb.AddTorque(_torque * clockwiseRotationInput * Vector3.up);
+        _mover.TargetDirection = GetTargetDirection();
+        float clockwiseRotationInput = InputManager.TurnClockwise.ReadValue<float>();
+        _mover.ClockwiseTorque = _torque * clockwiseRotationInput;
     }
 
     public void Heal(int amount) {

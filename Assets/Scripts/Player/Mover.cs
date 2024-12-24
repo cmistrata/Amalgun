@@ -11,6 +11,7 @@ public class Mover : MonoBehaviour {
     private float _dashSpeed = 20;
     private float _dashDuration = .2f;
     private float _dashTimer = 0f;
+    public float ClockwiseTorque = 0f;
     // private readonly float _decelerationForce = 100 * 40;
     public bool Dashing {
         get => _dashTimer > 0;
@@ -32,17 +33,19 @@ public class Mover : MonoBehaviour {
     }
 
     public void FixedUpdate() {
-        if (TargetDirection == Vector3.zero) {
-            return;
-        }
         if (_rb == null) {
             Utils.LogOncePerSecond($"Tried moving {gameObject} with no RigidBody.");
         }
         // Add movement
-        Vector3 propulsiveForce = TargetDirection * _propulsiveForceMagnitude;
-        _rb.AddForce(propulsiveForce);
-        if (_dashTimer > 0) {
-            _dashTimer -= Time.deltaTime;
+        if (TargetDirection != Vector3.zero) {
+            Vector3 propulsiveForce = TargetDirection * _propulsiveForceMagnitude;
+            _rb.AddForce(propulsiveForce);
+            if (_dashTimer > 0) {
+                _dashTimer -= Time.deltaTime;
+            }
+        }
+        if (ClockwiseTorque != 0) {
+            _rb.AddTorque(ClockwiseTorque * Vector3.up);
         }
         // Slow down the body if it is moving too fast outside of a dash.
         // else if (_rb.linearVelocity.sqrMagnitude > _sqrMaximumVelocity) {
