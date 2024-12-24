@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class Mover : MonoBehaviour {
+public class Mover : CellModule {
     // private float _sqrMaximumVelocity;
     public Vector3 TargetDirection = Vector3.zero;
     public float MaxSpeed = 4;
@@ -18,7 +18,7 @@ public class Mover : MonoBehaviour {
     }
 
     private Rigidbody _rb;
-    private void Awake() {
+    protected override void ExtraAwake() {
         _rb = gameObject.GetComponent<Rigidbody>();
         if (_rb == null) {
             Debug.LogError($"Mover on {gameObject} doesn't have a rigidbody attached!");
@@ -35,6 +35,7 @@ public class Mover : MonoBehaviour {
     public void FixedUpdate() {
         if (_rb == null) {
             Utils.LogOncePerSecond($"Tried moving {gameObject} with no RigidBody.");
+            return;
         }
         // Add movement
         if (TargetDirection != Vector3.zero) {
@@ -61,5 +62,9 @@ public class Mover : MonoBehaviour {
 
     public void StopMoving() {
         TargetDirection = Vector3.zero;
+    }
+
+    protected override void HandleStateChange(CellState newState) {
+        enabled = newState == CellState.Enemy || TryGetComponent<Player>(out var _);
     }
 }
